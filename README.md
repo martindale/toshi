@@ -2,7 +2,7 @@
 
 Toshi is a full bitcoin node that is ideal for building scalable web applications or analyzing blockchain data.
 
-It provides an API, simple blockchain explorer, and SQL datastore of blockchain data.  It can be used as a complete replacement for [bitcoind](https://github.com/bitcoin/bitcoin), and strives for 100% compatibility (block and transaction verification code is copied line for line from bitcoind).
+It provides an API, simple blockchain explorer, and SQL datastore of blockchain data.  It can be used as a complete replacement for [bitcoind](https://github.com/bitcoin/bitcoin), and strives for 100% compatibility with bitcoind (block and transaction verification code is as close as possible).
 
 Toshi is a spin out of http://coinbase.com and is actively maintained by the Coinbase [team](https://coinbase.com/careers).  Our goal is to migrate to using Toshi in production in the near future. Toshi is a Japanese word (トシ) which means bright and intelligent, and is a play on the name Satoshi Nakamoto (the creator of bitcoin).  It is pronounced "toe-shee".
 
@@ -17,7 +17,7 @@ Toshi is a spin out of http://coinbase.com and is actively maintained by the Coi
 
 ## Comparison to bitcoind
 
-Toshi is written in ruby and uses a PostgreSQL datastore. Bitcoind is written in C++ and uses LevelDB.  Bitcoind is much faster at syncing with the blockchain, but provides a limited interface to blockchain data through LevelDB.  Toshi is slower to sync but makes it easier to create web applications by using a SQL datastore (PostgreSQL) and may be more accessible to people familiar with Ruby.
+Toshi is written in Ruby and uses a PostgreSQL datastore. Bitcoind is written in C++ and uses LevelDB.  Bitcoind is much faster at syncing with the blockchain, but provides a limited interface to blockchain data through LevelDB.  Toshi is slower to sync but allows much more complex queries against the blockchain in SQL. This makes it easier to create web applications or do blockchain analysis.
 
 ## Docs TODO
 
