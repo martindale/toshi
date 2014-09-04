@@ -2,3 +2,7 @@ language: ruby
 rvm:
   - "2.0.0"
   - "2.1.1"
+  - "2.1.2"
+services:
+  - redis-server
+env: DATABASE_URL=postgres://postgres@127.0.0.1:5432/toshi_test REDIS_URL=redis://127.0.0.1:6379/
