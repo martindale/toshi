@@ -2,6 +2,8 @@
 
 トシ - Bright, intelligent
 
+[![Build Status](https://magnum.travis-ci.com/coinbase/toshi.svg?token=q4SuyNeyMuRZNwTyVWkw&branch=master)](https://magnum.travis-ci.com/coinbase/toshi)
+
 ## Prerequisites
 
 Vagrant will install and run all prerequisites (postgresql, redis):
