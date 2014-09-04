@@ -1,0 +1,29 @@
+@font-face {
+  font-family: 'proxima-nova';
+  src: url('../fonts/proxima-nova/297D54_2_0.eot');
+  src: url('../fonts/proxima-nova/297D54_2_0.eot?#iefix') format('embedded-opentype'),
+    url('../fonts/proxima-nova/297D54_2_0.woff') format('woff'),
+    url('../fonts/proxima-nova/297D54_2_0.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'proxima-nova-bold';
+  src: url('../fonts/proxima-nova-bold/297D68_2_0.eot');
+  src: url('../fonts/proxima-nova-bold/297D68_2_0.eot?#iefix') format('embedded-opentype'),
+    url('../fonts/proxima-nova-bold/297D68_2_0.woff') format('woff'),
+    url('../fonts/proxima-nova-bold/297D68_2_0.ttf') format('truetype');
+  font-weight: bold;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'proxima-nova-light';
+  src: url('../fonts/proxima-nova-light/proxima-nova-light.eot');
+  src: url('../fonts/proxima-nova-light/proxima-nova-light.eot?#iefix') format('embedded-opentype'),
+    url('../fonts/proxima-nova-light/proxima-nova-light.woff') format('woff'),
+    url('../fonts/proxima-nova-light/proxima-nova-light.ttf') format('truetype');
+  font-weight: light;
+  font-style: normal;
+}

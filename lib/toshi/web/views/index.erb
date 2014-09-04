@@ -1,0 +1,136 @@
+<section class="page_wraper">
+  <div class="container">
+    <article class="stats">
+      <div class="row">
+        <div class="col-md-7">
+          <div class="section_title">
+            <h2>Latest Blocks
+              <!-- <span>Toshi displays last 10 block</span> -->
+            </h2>
+          </div>
+
+          <script type="text/js-template" id="block-template">
+            <div class="block">
+              <span class="block_num">Block No.#<span class="height"></span></span>
+              <ul class="clearfix">
+                <li>
+                  <h5>Height</h5>
+                  <span class="height"></span>
+                </li>
+                <li>
+                  <h5>Num. Tx.</h5>
+                  <span class="num-tx"></span>
+                </li>
+                <li>
+                  <h5>Timestamp</h5>
+                  <span class="timestamp"></span>
+                </li>
+                <li>
+                  <h5>Created At</h5>
+                  <span class="created-at"></span>
+                </li>
+              </ul>
+              <div class="clearfix">
+                <h5>Block Hash</h5>
+                <span class="hash"></span>
+              </div>
+            </div>
+          </script>
+
+          <div class="stats_block">
+            <% Toshi::Models::Block.main_branch.offset(1).limit(10).order(Sequel.desc(:height)).each{|block| %>
+            <div class="block">
+              <span class="block_num">Block No.#<%= block.height %></span>
+              <ul class="clearfix">
+                <li>
+                  <h5>Height</h5>
+                  <span><%= block.height %></span>
+                </li>
+                <li>
+                  <h5>Num. Tx.</h5>
+                  <span><%= block.transactions.count %></span>
+                </li>
+                <li>
+                  <h5>Timestamp</h5>
+                  <span><%= Time.at(block.time).utc %></span>
+                </li>
+                <li>
+                  <h5>Created At</h5>
+                  <span><%= Time.at(block.created_at).utc %></span>
+                </li>
+              </ul>
+              <div class="clearfix">
+                <h5>Block Hash</h5>
+                <span><%= block.hsh %></span>
+              </div>
+            </div>
+            <% } %>
+          </div>
+        </div>
+
+        <div class="col-md-4 col-md-offset-1">
+          <div class="section_title">
+            <h2>Peer info</h2>
+          </div>
+
+          <div class="info_block">
+              <ul class="clearfix">
+                <li class="clearfix">
+                  <h5>Available peers</h5>
+                  <span class="available-peers"><%= @available_peers %></span>
+                </li>
+                <li class="clearfix">
+                  <h5>connected peers</h5>
+                  <span class="connected-peers"><%= @connected_peers %></span>
+                </li>
+              </ul>
+          </div>
+        </div>
+      </div>
+    </article>
+  </div>
+
+</section> <!-- page_wraper -->
+
+<script>
+  var url = window.location.href.replace('http', 'ws');
+  var connection = new WebSocket(url);
+  connection.onopen = function() {
+    console.log('Websocket connection open!');
+    connection.send(JSON.stringify({ op: 'blocks' }));
+    connection.send(JSON.stringify({ op: 'transactions' }));
+  }
+  connection.onclose = function(){
+    console.log('Connection closed');
+  }
+  connection.onerror = function(error){
+    console.log('Error detected: ' + error);
+  }
+  connection.onmessage = function(e) {
+    var obj = JSON.parse(e.data);
+    if(obj.op === 'block') {
+      new_block(obj.data);
+    }
+  }
+  function new_block(obj) {
+    var template = $($('#block-template').html());
+
+    template.find('.hash').html(obj.hash);
+    template.find('.height').html(obj.height);
+    template.find('.num-tx').html(obj.transactions_count);
+    template.find('.timestamp').html(moment.utc(obj.time).format('YYYY-MM-DD HH:mm:ss UTC'));
+    template.find('.created-at').html(moment.utc(obj.created_at).format('YYYY-MM-DD HH:mm:ss UTC'));
+
+    $(".stats_block").prepend(template);
+    $('.stats_block .block:gt(10)').remove();
+  }
+
+  window.setInterval(function(){
+    $.getJSON("/api/toshi.json", function(data) {
+      $('.available-peers').html(data.available_peers);
+      $('.connected-peers').html(data.connected_peers);
+      $('.available-clients').html(data.available_clients);
+      $('.available-workers').html(data.available_workers);
+    });
+  }, 5000);
+</script>

@@ -1,0 +1,627 @@
+/* ==========================================================================
+   Base styles: opinionated defaults
+   ========================================================================== */
+@-webkit-keyframes fadeInDown {
+	0% {
+	  opacity: 0;
+	  -webkit-transform: translate(0, -50px);
+	  transform: translate(0, -50px);
+	}
+	30% {
+	   opacity: 0;
+	}
+	100% {
+	  opacity: 1;
+	  -webkit-transform: none;
+	  transform: none;
+	}
+	}
+	@keyframes fadeInDown {
+	0% {
+	  opacity: 0;
+	  -webkit-transform: translate(0, -50px);
+	  -ms-transform: translate(0, -50px);
+	  transform: translate(0, -50px);
+	}
+	30% {
+	   opacity: 0;
+	}
+	100% {
+	  opacity: 1;
+	  -webkit-transform: none;
+	  -ms-transform: none;
+	  transform: none;
+	}
+}
+
+@-webkit-keyframes fadeInUp {
+	0% {
+	  opacity: 0;
+	  -webkit-transform: translate(0, 30px);
+	  transform: translate(0, 30px);
+	}
+	100% {
+	  opacity: 1;
+	  -webkit-transform: none;
+	  transform: none;
+	}
+	}
+	@keyframes fadeInUp {
+	0% {
+	  opacity: 0;
+	  -webkit-transform: translate(0, 30px);
+	  -ms-transform: translate(0, 30px);
+	  transform: translate(0, 30px);
+	}
+	100% {
+	  opacity: 1;
+	  -webkit-transform: none;
+	  -ms-transform: none;
+	  transform: none;
+	}
+}
+
+body {
+	font-weight: 400;
+	font-size:14px;
+	color: #333333;
+	-webkit-font-smoothing: antialiased;
+}
+h1,h2, h3, h4, h5 {
+	font-weight: bold;
+}
+header {
+	background-color: #142d5c;
+	background-image: url("../images/toshi_net.png");
+	background-repeat: no-repeat;
+	background-position: center bottom;
+	background-size: 100%;
+
+	-webkit-transition: all 0.3s ease-in-out;
+	-moz-transition: all 0.3s ease-in-out;
+	-o-transition: all 0.3s ease-in-out;
+	transition: all 0.3s ease-in-out;
+}
+#header {
+	padding: 70px 0 120px;
+	min-height: 550px;
+	display: table;
+}
+.page #header {
+	padding: 40px 0 60px;
+	min-height: 325px;
+}
+#header .logo,
+#header .header-text {
+	display: table-row;
+}
+#header .toshi_logo {
+	display: block;
+	width: 105px;
+	height: 120px;
+	background-image: url("../images/toshi_logo.png");
+	background-repeat: no-repeat;
+	background-position: center center;
+	background-size: 100%;
+	margin: 0 auto;
+
+	-webkit-animation-name: fadeInDown;
+	animation-name: fadeInDown;
+	-webkit-animation-duration: 1s;
+	animation-duration: 1s;
+	-webkit-animation-fill-mode: both;
+	animation-fill-mode: both;
+}
+#header h1 {
+	font-family: "proxima-nova-light", sans-serif;
+	color: #fff;
+	letter-spacing: 14px;
+	font-size: 50px;
+	text-align: center;
+	margin-bottom: 30px;
+	font-weight: lighter;
+}
+#header h1 span {
+	font-size: 14px;
+	letter-spacing: 0;
+	font-weight: bold;
+	margin-left: 146px;
+	text-transform: uppercase;
+	margin-top: -8px;
+	display: block;
+}
+#header h1 {
+	-webkit-animation-name: fadeInUp;
+	animation-name: fadeInUp;
+	-webkit-animation-duration: 1.8s;
+	animation-duration: 1.8s;
+	-webkit-animation-fill-mode: both;
+	animation-fill-mode: both;
+	-webkit-animation-delay: .2s;
+	animation-delay: .2s;
+}
+#header p,
+#header .toshi_links{
+	-webkit-animation-name: fadeInUp;
+	animation-name: fadeInUp;
+	-webkit-animation-duration: 1.5s;
+	animation-duration: 1.5s;
+	-webkit-animation-fill-mode: both;
+	animation-fill-mode: both;
+	-webkit-animation-delay: .4s;
+	animation-delay: .4s;
+}
+#header p {
+	color: #fff;
+	font-size: 17px;
+	text-align: center;
+	line-height: 27px;
+	margin-bottom: 30px;
+	letter-spacing: .2px;
+}
+#header .toshi_links {
+	text-align: center;
+}
+#header button {
+	text-transform: uppercase;
+	border: 1px solid #fff;
+	padding: 10px 25px;
+	background: transparent;
+	color: #fff;
+	font-size: 11px;
+	margin: 0 15px 10px 10px;
+	-webkit-transition: all 0.3s ease-in-out;
+	-moz-transition: all 0.3s ease-in-out;
+	-o-transition: all 0.3s ease-in-out;
+	transition: all 0.3s ease-in-out;
+}
+#header button:hover {
+	background: #fff;
+	color: #142d5c;
+}
+.features h3 {
+	position: relative;
+	font-size: 18px;
+	display: inline-block;
+	text-transform: uppercase;
+	font-family: "proxima-nova-bold", sans-serif;
+	margin: 0 0 10px;
+}
+.features h3:before {
+	position: absolute;
+	color: #333333;
+	font-size: 20px;
+	line-height: 25px;
+	left: -40px;
+	top: -5px;
+	font-family: "entypo";
+	font-style: normal;
+	font-weight: normal;
+}
+div[class*="feature"] > div {
+	position: relative;
+	padding-left: 60px;
+}
+.feature_a h3:before {
+	content: '\e73e';
+	left: -38px;
+}
+.feature_b h3:before {
+	content: '\e754';
+	left: -37px;
+}
+.feature_c h3:before {
+	content: '\2692';
+}
+.page_wraper article {
+	padding: 70px 0;
+}
+/* ==========================================================================
+   Navigation
+   ========================================================================== */
+.navbar {
+	background-color: transparent;
+	border-radius: 0;
+	border: none;
+	border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+.navbar-collapse {
+	padding:0;
+}
+.navbar-default .navbar-nav > .active > a,
+.navbar-default .navbar-nav > .active > a:hover,
+.navbar-default .navbar-nav > .active > a:focus {
+	background-color: transparent;
+	color: #fff;
+}
+.navbar-default .navbar-nav > li > a {
+	color: rgba(255, 255, 255, 0.5);
+	-webkit-transition: all 0.2s linear;
+	-moz-transition: all 0.2s linear;
+	-o-transition: all 0.2s linear;
+	transition: all 0.2s linear;
+}
+.navbar-default .navbar-nav > li > a:hover {
+	color: #fff;
+}
+/* ==========================================================================
+   Section style
+   ========================================================================== */
+.quick_api {
+	padding: 50px 0;
+	border-top:1px solid #dedede;
+	border-bottom:1px solid #dedede;
+}
+.section_title {
+	margin-bottom: 50px;
+}
+.section_title h2  {
+	text-align: left;
+	margin: 0;
+	color:#132b58;
+	text-transform: uppercase;
+	font-family: "proxima-nova-bold", sans-serif;
+}
+.section_title span {
+	text-transform: uppercase;
+	font-family: "proxima-nova-light", sans-serif;
+	font-size: 17px;
+	display: block;;
+}
+.quick_api_nav {
+	border-bottom:1px solid #dedede;
+	margin-bottom: 30px;
+	display: inline-block;
+}
+.quick_api_nav a {
+	margin-right: 15px;
+	padding: 0 5px;
+	color: rgba(6, 21, 45, 0.5);
+	font-weight: bold;
+	font-size: 13px;
+	cursor: pointer;
+	text-decoration: none;
+	 -webkit-transition: all 0.3s ease-in-out;
+	-moz-transition: all 0.3s ease-in-out;
+	-o-transition: all 0.3s ease-in-out;
+	transition: all 0.3s ease-in-out;
+}
+.quick_api_nav a:hover {
+	color: #333333;
+}
+.quick_api_nav a.active {
+	border-bottom: 2px solid #333333;
+	color: #333333;
+	padding-bottom: 2px;
+}
+.quick_api_link {
+	margin-top: 40px;
+}
+.quick_api_link,
+.quick_api_code {
+	position: relative;
+	border: 1px solid rgba(178, 178, 178, 0.4);
+	padding: 20px 10px;
+	margin-bottom: 30px;
+}
+.quick_api_link h5,
+.quick_api_code h5 {
+	position: absolute;
+	left: 0;
+	top: -17px;
+	font-size: 12px;
+	background-color: #fff;
+	padding: 0 10px;
+	text-transform: uppercase;
+}
+.link_wraper {
+	overflow: hidden;
+	text-overflow:ellipsis;
+}
+.quick_api_code pre {
+	background: transparent;
+	border: none;
+	padding: 0;
+	margin: 0;
+}
+.documentation_link button {
+	text-transform: uppercase;
+	border: 1px solid #2155a9;
+	padding: 10px 25px;
+	background: transparent;
+	color: #2155a9;
+	font-size: 11px;
+	display: inline-block;
+	-webkit-transition: all 0.3s ease-in-out;
+	-moz-transition: all 0.3s ease-in-out;
+	-o-transition: all 0.3s ease-in-out;
+	transition: all 0.3s ease-in-out;
+}
+.documentation_link button:hover {
+	background: #2155a9;
+	color: #ffffff;
+}
+.toshi_cite {
+	margin-top: -144px;
+}
+.toshi_cite h2 {
+	position: relative;
+	font-weight: lighter;
+	padding: 150px 230px 0px;
+	text-align: center;
+	font-size: 21px;
+	line-height: 30px;
+	color: #2155a9;
+	font-family: "proxima-nova", sans-serif;
+	text-transform: uppercase;
+}
+.toshi_cite h2 strong {
+	text-transform: uppercase;
+}
+.toshi_cite h2:before {
+	position: absolute;
+	content: "";
+	background-image: url("../images/toshi_logo_gray.png");
+	background-color: #fff;
+	background-repeat: no-repeat;
+	background-position: center center;
+	background-size: 50%;
+	width: 140px;
+	height: 100px;
+	left: 50%;
+	margin-left: -70px;
+	top: 0;
+}
+/* ==========================================================================
+   Stats Blocks
+   ========================================================================== */
+.stats_block div.block {
+	margin-bottom: 10px;
+	border-top: 2px solid #132b58;
+	display: block;
+	padding: 40px 0;
+	color: #333333;
+	text-decoration: none;
+	position: relative;
+}
+.stats_block .block_num {
+	background-color: #132b58;
+	padding: 4px 10px;
+	position: absolute;
+	left: -10px;
+	top: -20px;
+	color: #fff;
+	font-size: 11px;
+	line-height: 11px;
+	text-align: center;
+	font-weight: bold;
+	border: 10px solid #fff;
+
+	-webkit-border-radius: 20px;
+	-moz-border-radius: 20px;
+	border-radius: 20px;
+}
+.stats_block div.block ul,
+.info_block ul  {
+	list-style: none;
+	padding: 0;
+}
+.stats_block div.block li {
+	float: left;
+	border-left: 1px solid rgba(0, 0, 0, 0.1);
+	padding: 0px 3%;
+}
+.stats_block div.block li:first-child {
+	border-left: none;
+	padding: 0px 3% 0 1%;
+}
+.stats_block div {
+	padding: 10px 1% 0;
+	border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+.stats_block h5 {
+	text-transform: uppercase;
+	margin: 0 0 3px 0;
+	font-size: 14px;
+}
+.stats_block div.block li > span,
+.stats_block div > span {
+	font-size: 13px;
+	font-style: italic;
+}
+/* ==========================================================================
+   Info Blocks
+   ========================================================================== */
+.info_block li {
+	border-top: 1px solid rgba(0, 0, 0, 0.1);
+	margin-bottom: 15px;
+}
+.info_block li:last-child {
+	margin-bottom: 0;
+}
+.info_block ul {
+	margin-bottom: 0;
+}
+.peers_info {
+	border-left: 1px solid rgba(0, 0, 0, 0.1);
+	padding-left: 20px !important;
+	margin-left: 10px;
+	padding-top: 20px !important;
+	margin-bottom: 30px !important;
+}
+.info_block li > h5,
+.info_block li > span {
+	display: inline-block;
+	position: relative;
+	background-color: #fff;
+	top: -7px;
+	margin: 0;
+	line-height: 12px;
+	font-size: 13px;
+}
+.peers_info li > h5,
+.peers_info li > span {
+	text-transform: none;
+	color: rgba(0, 0, 0, 0.7);
+}
+.peers_info li > span {
+	font-size: 12px;
+}
+.info_block li > h5 {
+	padding-right: 10px;
+}
+.info_block li > span {
+	padding-left: 10px;
+}
+.info_block li > span {
+	float: right;
+	text-align: right;
+}
+.info_block li > h5 {
+	float: left;
+	text-align: left;
+}
+.info_block div {
+	padding: 10px 0 0;
+	margin-bottom: 10px;
+	border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+	border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+.info_block div > h5 {
+	position: relative;
+	top: -20px;
+	background-color: #fff;
+	padding-right: 10px;
+	display: inline-block;
+}
+.info_block h5 {
+	text-transform: uppercase;
+	margin: 0 0 3px 0;
+	font-size: 14px;
+}
+.info_block li > span {
+	color: rgba(0, 0, 0, 0.7);
+}
+.info_block h4 {
+	text-transform: uppercase;
+	margin: 0 0 20px 0;
+}
+
+/* ==========================================================================
+   Footer
+   ========================================================================== */
+footer {
+	border-top: 1px solid rgba(178, 178, 178, 0.4);
+	padding: 15px 0;
+	background-color: #142d5c;
+}
+footer p {
+	display: inline-flex;
+	color: rgba(255, 255, 255, 0.5);
+	margin: 0 auto;
+}
+footer a {
+	width: 60px;
+	height: 20px;
+	background-image: url("../images/coinbase-white.png");
+	background-repeat: no-repeat;
+	background-position: center center;
+	background-size: 100%;
+	display: block;
+	margin: 0 0 0 3px;
+	font: 0/0px a;
+	color: transparent;
+	text-shadow: none;
+	opacity: .5;
+}
+footer a:hover {
+	opacity: 1;
+}
+/* ==========================================================================
+   RESPONSIVE PARAMETERS
+   ========================================================================== */
+@media (min-width: 1600px) {
+	header {
+		background-size: 100%;
+	}
+}
+@media (max-width: 1200px) {
+	header {
+		background-size: 170%;
+	}
+	.toshi_cite h2 {
+		padding: 150px 150px 0px;
+	}
+}
+@media (max-width: 991px) {
+	header {
+		background-size: 220%;
+	}
+	.toshi_cite h2 {
+		padding: 150px 50px 0px;
+	}
+}
+@media (max-width: 768px) {
+	header {
+		background-size: 270%;
+	}
+	.navbar-nav > li {
+		float: left;
+	}
+}
+@media (max-width: 540px) {
+	header {
+		background-size: 330%;
+	}
+	#header {
+		padding: 25px 0 70px;
+	}
+	#header p {
+		font-size: 15px;
+		line-height: 21px;
+	}
+	.toshi_cite h2 {
+		padding: 120px 0px 0px;
+	}
+}
+@media (max-width: 400px) {
+	header {
+		background-size: 400%;
+	}
+	#header {
+		min-height: 425px;
+	}
+	#header h1 {
+		font-size: 30px;
+		 margin-bottom: 25px;
+		 letter-spacing: 8px;
+	}
+	#header p {
+		font-size: 13px;
+		line-height: 21px;
+	}
+	#header .toshi_logo {
+		height: 110px;
+		width: 96px;
+	}
+	.toshi_cite h2 {
+		line-height: 28px;
+		font-size: 19px;
+	}
+	div[class*="feature"] p {
+		margin-bottom: 20px;
+		padding-bottom: 20px;
+		border-bottom: 1px solid rgba(178, 178, 178, 0.4);
+	}
+	div[class*="feature"]:last-child p {
+		border: none;
+		margin-bottom: 0;
+		padding-bottom: 0;
+	}
+	.quick_api h2,
+	.features h2  {
+		text-align: left;
+		padding-left: 15px;
+	}
+}
+

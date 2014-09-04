@@ -1,0 +1,3 @@
+[submodule "spec/regtest/test-scripts"]
+	path = spec/regtest/test-scripts
+	url = git://github.com/TheBlueMatt/test-scripts.git

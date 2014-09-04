@@ -1,0 +1,76 @@
+<script language="javascript" type="text/javascript">
+  var wsUri = "ws://localhost:5000/";
+  var output;
+
+  function init() {
+    output = document.getElementById("output");
+    testWebSocket();
+  }
+
+  function testWebSocket() {
+    websocket = new WebSocket(wsUri);
+    websocket.onopen = function(evt) {
+      onOpen(evt)
+    };
+    websocket.onclose = function(evt) {
+      onClose(evt)
+    };
+    websocket.onmessage = function(evt) {
+      onMessage(evt)
+    };
+    websocket.onerror = function(evt) {
+      onError(evt)
+    };
+  }
+
+  function onOpen(evt) {
+    output.innerHTML += '<span style="color: blue;">CONNECTED<\/span><br/>';
+    doSend(JSON.stringify({op: 'blocks'}));
+    doSend(JSON.stringify({op: 'transactions'}));
+  }
+
+  function onClose(evt) {
+    output.innerHTML += '<span style="color: blue;">DISCONNECTED<\/span><br/>';
+  }
+
+  function onMessage(evt) {
+    writeToScreen(evt.data);
+  }
+
+  function onError(evt) {
+    output.innerHTML += '<span style="color: red;">ERROR: ' + evt.data + '<\/span><br/>';
+  }
+
+  function doSend(message) {
+    output.innerHTML += '<span style="color: blue;">SENT:' + message + '<\/span><br/>';
+    websocket.send(message);
+  }
+
+  function writeToScreen(message) {
+    obj = JSON.parse(message);
+    switch(obj.op) {
+      case 'block':
+        blocks = document.getElementById('blocks')
+        blocks.innerHTML = '<span style="color: blue;">' + JSON.stringify(obj.data) + '<\/span>';
+      break;
+      case 'transaction':
+        transactions = document.getElementById('transactions')
+        transactions.innerHTML = '<span style="color: blue;">' + JSON.stringify(obj.data) + '<\/span>';
+      break;
+      default:
+        output.innerHTML += '<span style="color: red;">UNHANDLED:' + JSON.stringify(obj.data) + '<\/span><br/>';
+    }
+  }
+  window.addEventListener("load", init, false);
+</script>
+
+<h2>WebSocket Test</h2>
+
+<h3>Console</h3>
+<div id="output"></div>
+<br/>
+<h3>Blocks</h3>
+<div id="blocks"></div>
+<br/>
+<h3>Transactions</h3>
+<div id="transactions"></div>
