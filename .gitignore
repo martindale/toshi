@@ -2,6 +2,7 @@
 /*.dump
 /.bundle
 /.env
+/.ruby-version
 /.vagrant
 /BitcoindComparisonTool.*
 /bootstrap_last_offset.txt
