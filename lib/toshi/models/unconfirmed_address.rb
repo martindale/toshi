@@ -63,7 +63,7 @@ module Toshi
         tids = Toshi.db[:unconfirmed_ledger_entries].where(address_id: id)
                            .select(:transaction_id).group_by(:transaction_id)
                            .order(:transaction_id).offset(offset).limit(limit).map(:transaction_id)
-        return [] unless transactions.any?
+        return [] unless tids.any?
         UnconfirmedTransaction.where(id: tids).order(Sequel.desc(:id))
       end
 
