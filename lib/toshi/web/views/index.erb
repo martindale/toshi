@@ -3,69 +3,13 @@
   <div class="col-md-7">
     <!-- Nav tabs -->
     <ul class="nav nav-tabs" role="tablist">
-      <li class="active"><a href="#transaction" role="tab" data-toggle="tab">Transactions</a></li>
-      <li><a href="#block" role="tab" data-toggle="tab">Blocks</a></li>
+      <li class="active"><a href="#block" role="tab" data-toggle="tab">Blocks</a></li>
+      <li><a href="#transaction" role="tab" data-toggle="tab">Transactions</a></li>
     </ul>
 
     <!-- Tab panes -->
     <div class="tab-content">
-      <div class="tab-pane active" id="transaction">
-        <div class="last_tx">
-          <script id="tx-template" type="text/x-handlebars-template">
-            <div class="tx">
-              <span class="tx_num">Unconfirmed {{pool}} transaction</span>
-               <ul class="clearfix">
-                <li>
-                  <h5>Size</h5>
-                  <span>{{size}}</span>
-                </li>
-                {{#if amount}}
-                <li>
-                  <h5>Amount</h5>
-                  <span>{{amount}}</span>
-                </li>
-                {{/if}}
-                <li>
-                  <h5>Created At</h5>
-                  <span>{{created_at}}</span>
-                </li>
-              </ul>
-              <div class="clearfix tx_hash">
-                <h5>Hash</h5>
-                <a href="/api/transactions/{{hash}}"><span>{{hash}}</span></a>
-              </div>
-            </div>
-          </script>
-          <div class="stats_tx">
-            <% Toshi::Models::UnconfirmedTransaction.offset(0).limit(5).order(Sequel.desc(:created_at)).each{|tx| %>
-            <div class="tx">
-              <span class="tx_num">Unconfirmed <%= tx.to_hash[:pool] %> transaction</span>
-               <ul class="clearfix">
-                <li>
-                  <h5>Size</h5>
-                  <span><%= tx.size %></span>
-                </li>
-                <% if tx.to_hash[:pool] == 'mempool' %>
-                <li>
-                  <h5>Amount</h5>
-                  <span><%= "%.8f" % (tx.total_out_value / 1e8) %></span>
-                </li>
-                <% end %>
-                <li>
-                  <h5>Created At</h5>
-                  <span><%= Time.at(tx.created_at).utc %></span>
-                </li>
-              </ul>
-              <div class="clearfix tx_hash">
-                <h5>Hash</h5>
-                <a href="/api/transactions/<%= tx.hsh %>"><span><%= tx.hsh %></span></a>
-              </div>
-            </div>
-            <% } %>
-          </div>
-        </div><!-- last_tx -->
-      </div><!-- tab-pane -->
-      <div class="tab-pane" id="block">
+      <div class="tab-pane active" id="block">
         <div class="last_block">
           <script id="block-template" type="text/x-handlebars-template">
             <div class="block">
@@ -125,6 +69,62 @@
           </div>
         </div><!-- last_block -->
       </div><!-- tab-pane -->
+      <div class="tab-pane" id="transaction">
+        <div class="last_tx">
+          <script id="tx-template" type="text/x-handlebars-template">
+            <div class="tx">
+              <span class="tx_num">Unconfirmed {{pool}} transaction</span>
+               <ul class="clearfix">
+                <li>
+                  <h5>Size</h5>
+                  <span>{{size}}</span>
+                </li>
+                {{#if amount}}
+                <li>
+                  <h5>Amount</h5>
+                  <span>{{amount}}</span>
+                </li>
+                {{/if}}
+                <li>
+                  <h5>Created At</h5>
+                  <span>{{created_at}}</span>
+                </li>
+              </ul>
+              <div class="clearfix tx_hash">
+                <h5>Hash</h5>
+                <a href="/api/transactions/{{hash}}"><span>{{hash}}</span></a>
+              </div>
+            </div>
+          </script>
+          <div class="stats_tx">
+            <% Toshi::Models::UnconfirmedTransaction.offset(0).limit(5).order(Sequel.desc(:created_at)).each{|tx| %>
+            <div class="tx">
+              <span class="tx_num">Unconfirmed <%= tx.to_hash[:pool] %> transaction</span>
+               <ul class="clearfix">
+                <li>
+                  <h5>Size</h5>
+                  <span><%= tx.size %></span>
+                </li>
+                <% if tx.to_hash[:pool] == 'mempool' %>
+                <li>
+                  <h5>Amount</h5>
+                  <span><%= "%.8f" % (tx.total_out_value / 1e8) %></span>
+                </li>
+                <% end %>
+                <li>
+                  <h5>Created At</h5>
+                  <span><%= Time.at(tx.created_at).utc %></span>
+                </li>
+              </ul>
+              <div class="clearfix tx_hash">
+                <h5>Hash</h5>
+                <a href="/api/transactions/<%= tx.hsh %>"><span><%= tx.hsh %></span></a>
+              </div>
+            </div>
+            <% } %>
+          </div>
+        </div><!-- last_tx -->
+      </div><!-- tab-pane -->
     </div><!-- tab-content -->
   </div>
 
@@ -171,7 +171,7 @@
                 <span class="side-blocks-count"><%= @side_blocks_count %></span>
               </li>
               <li class="clearfix">
-                <h5>orphan branch</h5>
+                <h5>orphaned</h5>
                 <span class="orphan-blocks-count"><%= @orphan_blocks_count %></span>
               </li>
             </ul>

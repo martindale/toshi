@@ -16,7 +16,7 @@ module Toshi
       @network = Toshi.settings[:network]
       @available_peers = Toshi::Models::Peer.count
       @connected_peers = Toshi::Models::Peer.connected.count
-      @database_size = Toshi.db["SELECT pg_size_pretty(pg_database_size('#{Toshi.settings[:database_name]}'))"].first[:pg_size_pretty]
+      @database_size = Toshi::Utils.database_size
       @tx_count = Toshi.db[:transactions].count()
       @unconfirmed_tx_count = Toshi.db[:unconfirmed_transactions].count()
       @blocks_count = Toshi.db[:blocks].where(branch: 0).count()

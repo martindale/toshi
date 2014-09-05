@@ -66,8 +66,6 @@ module Toshi
 
       Bitcoin.network = settings[:network] # TODO: where should this live?
 
-      settings[:database_name] = URI(settings[:database_url]).path[1..-1]
-
       settings
     end
   end
@@ -91,18 +89,6 @@ module Toshi
 
   def self.logger=(logger)
     @logger = logger
-  end
-
-  def self.status
-    block = Toshi.db[:blocks].where(branch: 0).first
-
-    if (Time.at(block[:time]) > (Time.now - (2 * 3600))) && Toshi::Models::Peer.connected.count > 0
-      return "active"
-    elsif (Time.at(block[:time]) < (Time.now - (2 * 3600)))
-      return "syncing"
-    else
-      return "offline"
-    end
   end
 end
 

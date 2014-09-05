@@ -184,7 +184,7 @@ module Toshi
           info: Toshi::Models::Peer.connected.map{|peer| peer.to_hash}
         },
         database: {
-          size: Toshi.db["SELECT pg_size_pretty(pg_database_size('#{Toshi.settings[:database_name]}'))"].first[:pg_size_pretty]
+          size: Toshi::Utils.database_size
         },
         transactions: {
           count: Toshi.db[:transactions].count(),
@@ -195,7 +195,7 @@ module Toshi
           side_count: Toshi.db[:blocks].where(branch: 1).count(),
           orphan_count: Toshi.db[:blocks].where(branch: 2).count(),
         },
-        status: Toshi.status
+        status: Toshi::Utils.status
       }
 
       case format
