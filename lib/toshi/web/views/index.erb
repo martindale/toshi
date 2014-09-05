@@ -1,46 +1,103 @@
-<section class="page_wraper">
-  <div class="container">
-    <article class="stats">
-      <div class="row">
-        <div class="col-md-7">
-          <div class="section_title">
-            <h2>Latest Blocks
-              <!-- <span>Toshi displays last 10 block</span> -->
-            </h2>
-          </div>
+<div class="row">
 
-          <script type="text/js-template" id="block-template">
-            <div class="block">
-              <span class="block_num">Block No.#<span class="height"></span></span>
-              <ul class="clearfix">
+  <div class="col-md-7">
+    <!-- Nav tabs -->
+    <ul class="nav nav-tabs" role="tablist">
+      <li class="active"><a href="#transaction" role="tab" data-toggle="tab">Transactions</a></li>
+      <li><a href="#block" role="tab" data-toggle="tab">Blocks</a></li>
+    </ul>
+
+    <!-- Tab panes -->
+    <div class="tab-content">
+      <div class="tab-pane active" id="transaction">
+        <div class="last_tx">
+          <script id="tx-template" type="text/x-handlebars-template">
+            <div class="tx">
+              <span class="tx_num">Unconfirmed {{pool}} transaction</span>
+               <ul class="clearfix">
                 <li>
-                  <h5>Height</h5>
-                  <span class="height"></span>
+                  <h5>Size</h5>
+                  <span>{{size}}</span>
                 </li>
+                {{#if amount}}
                 <li>
-                  <h5>Num. Tx.</h5>
-                  <span class="num-tx"></span>
+                  <h5>Amount</h5>
+                  <span>{{amount}}</span>
                 </li>
-                <li>
-                  <h5>Timestamp</h5>
-                  <span class="timestamp"></span>
-                </li>
+                {{/if}}
                 <li>
                   <h5>Created At</h5>
-                  <span class="created-at"></span>
+                  <span>{{created_at}}</span>
                 </li>
               </ul>
-              <div class="clearfix">
-                <h5>Block Hash</h5>
-                <span class="hash"></span>
+              <div class="clearfix tx_hash">
+                <h5>Hash</h5>
+                <a href="/api/transactions/{{hash}}"><span>{{hash}}</span></a>
               </div>
             </div>
           </script>
-
-          <div class="stats_block">
-            <% Toshi::Models::Block.main_branch.offset(1).limit(10).order(Sequel.desc(:height)).each{|block| %>
+          <div class="stats_tx">
+            <% Toshi::Models::UnconfirmedTransaction.offset(0).limit(5).order(Sequel.desc(:created_at)).each{|tx| %>
+            <div class="tx">
+              <span class="tx_num">Unconfirmed <%= tx.to_hash[:pool] %> transaction</span>
+               <ul class="clearfix">
+                <li>
+                  <h5>Size</h5>
+                  <span><%= tx.size %></span>
+                </li>
+                <% if tx.to_hash[:pool] == 'mempool' %>
+                <li>
+                  <h5>Amount</h5>
+                  <span><%= "%.8f" % (tx.total_out_value / 1e8) %></span>
+                </li>
+                <% end %>
+                <li>
+                  <h5>Created At</h5>
+                  <span><%= Time.at(tx.created_at).utc %></span>
+                </li>
+              </ul>
+              <div class="clearfix tx_hash">
+                <h5>Hash</h5>
+                <a href="/api/transactions/<%= tx.hsh %>"><span><%= tx.hsh %></span></a>
+              </div>
+            </div>
+            <% } %>
+          </div>
+        </div><!-- last_tx -->
+      </div><!-- tab-pane -->
+      <div class="tab-pane" id="block">
+        <div class="last_block">
+          <script id="block-template" type="text/x-handlebars-template">
             <div class="block">
-              <span class="block_num">Block No.#<%= block.height %></span>
+              <span class="block_num">Block No. {{height}}</span>
+              <ul class="clearfix">
+                <li>
+                  <h5>Height</h5>
+                  <span>{{height}}</span>
+                </li>
+                <li>
+                  <h5>Num. Tx.</h5>
+                  <span>{{num_tx}}</span>
+                </li>
+                <li>
+                  <h5>Timestamp</h5>
+                  <span>{{timestamp}}</span>
+                </li>
+                <li>
+                  <h5>Created At</h5>
+                  <span>{{created_at}}</span>
+                </li>
+              </ul>
+              <div class="clearfix block_hash">
+                <h5>Block Hash</h5>
+                <a href="/api/blocks/{{hash}}" target="_blank"><span>{{hash}}</span></a>
+              </div>
+            </div>
+          </script>
+          <div class="stats_block">
+            <% Toshi::Models::Block.main_branch.offset(0).limit(5).order(Sequel.desc(:height)).each{|block| %>
+            <div class="block">
+              <span class="block_num">Block No. <%= block.height %></span>
               <ul class="clearfix">
                 <li>
                   <h5>Height</h5>
@@ -59,78 +116,90 @@
                   <span><%= Time.at(block.created_at).utc %></span>
                 </li>
               </ul>
-              <div class="clearfix">
+              <div class="clearfix block_hash">
                 <h5>Block Hash</h5>
-                <span><%= block.hsh %></span>
+                <a href="/api/blocks/<%= block.hsh %>" target="_blank"><span><%= block.hsh %></span></a>
               </div>
             </div>
             <% } %>
           </div>
-        </div>
-
-        <div class="col-md-4 col-md-offset-1">
-          <div class="section_title">
-            <h2>Peer info</h2>
-          </div>
-
-          <div class="info_block">
-              <ul class="clearfix">
-                <li class="clearfix">
-                  <h5>Available peers</h5>
-                  <span class="available-peers"><%= @available_peers %></span>
-                </li>
-                <li class="clearfix">
-                  <h5>connected peers</h5>
-                  <span class="connected-peers"><%= @connected_peers %></span>
-                </li>
-              </ul>
-          </div>
-        </div>
-      </div>
-    </article>
+        </div><!-- last_block -->
+      </div><!-- tab-pane -->
+    </div><!-- tab-content -->
   </div>
 
-</section> <!-- page_wraper -->
+  <div class="col-md-4 col-md-offset-1">
+    <div class="toshi_links">
+      <iframe src="http://ghbtns.com/github-btn.html?user=mdo&repo=github-buttons&type=watch&count=true"
+      allowtransparency="true" frameborder="0" scrolling="0" width="110" height="20"></iframe>
+
+      <iframe src="http://ghbtns.com/github-btn.html?user=mdo&repo=github-buttons&type=fork&count=true"
+      allowtransparency="true" frameborder="0" scrolling="0" width="95" height="20"></iframe>
+    </div>
+    <div class="section_title clearfix">
+      <div class="left">
+        <h2><%= @network %></h2>
+      </div>
+      <div class="right websocket_wrap">
+        <span class="websocket_stats active" style="display: none">ACTIVE</span>
+        <span class="websocket_stats syncing" style="display: none">SYNCING</span>
+        <span class="websocket_stats offline" style="display: none">OFFLINE</span>
+      </div>
+    </div>
+
+    <div class="info_block">
+        <ul class="clearfix">
+          <li class="clearfix">
+            <h5>Available peers</h5>
+            <span class="available-peers"><%= @available_peers %></span>
+            <p>Number of peers discovered by toshi</p>
+          </li>
+          <li class="clearfix">
+            <h5>connected peers</h5>
+            <span class="connected-peers"><%= @connected_peers %></span>
+            <p>Number of peers that toshi is connected to</p>
+          </li>
+          <li class="clearfix sub">
+            <h5>blocks</h5>
+            <ul class="clearfix">
+              <li class="clearfix">
+                <h5>main branch</h5>
+                <span class="blocks-count"><%= @blocks_count %></span>
+              </li>
+              <li class="clearfix">
+                <h5>side branch</h5>
+                <span class="side-blocks-count"><%= @side_blocks_count %></span>
+              </li>
+              <li class="clearfix">
+                <h5>orphan branch</h5>
+                <span class="orphan-blocks-count"><%= @orphan_blocks_count %></span>
+              </li>
+            </ul>
+          </li>
+          <li class="clearfix sub">
+            <h5>transactions</h5>
+            <ul class="clearfix">
+              <li class="clearfix">
+                <h5>confirmed</h5>
+                <span class="tx-count"><%= @tx_count %></span>
+              </li>
+              <li class="clearfix">
+                <h5>unconfirmed</h5>
+                <span class="unconfirmed-tx-count"><%= @unconfirmed_tx_count %></span>
+              </li>
+            </ul>
+          </li>
+          <li class="clearfix">
+            <h5>databse size</h5>
+            <span class="database-size"><%= @database_size %></span>
+          </li>
+        </ul>
+    </div>
+  </div>
+</div>
 
 <script>
-  var url = window.location.href.replace('http', 'ws');
-  var connection = new WebSocket(url);
-  connection.onopen = function() {
-    console.log('Websocket connection open!');
-    connection.send(JSON.stringify({ op: 'blocks' }));
-    connection.send(JSON.stringify({ op: 'transactions' }));
-  }
-  connection.onclose = function(){
-    console.log('Connection closed');
-  }
-  connection.onerror = function(error){
-    console.log('Error detected: ' + error);
-  }
-  connection.onmessage = function(e) {
-    var obj = JSON.parse(e.data);
-    if(obj.op === 'block') {
-      new_block(obj.data);
-    }
-  }
-  function new_block(obj) {
-    var template = $($('#block-template').html());
-
-    template.find('.hash').html(obj.hash);
-    template.find('.height').html(obj.height);
-    template.find('.num-tx').html(obj.transactions_count);
-    template.find('.timestamp').html(moment.utc(obj.time).format('YYYY-MM-DD HH:mm:ss UTC'));
-    template.find('.created-at').html(moment.utc(obj.created_at).format('YYYY-MM-DD HH:mm:ss UTC'));
-
-    $(".stats_block").prepend(template);
-    $('.stats_block .block:gt(10)').remove();
-  }
-
-  window.setInterval(function(){
-    $.getJSON("/api/toshi.json", function(data) {
-      $('.available-peers').html(data.available_peers);
-      $('.connected-peers').html(data.connected_peers);
-      $('.available-clients').html(data.available_clients);
-      $('.available-workers').html(data.available_workers);
-    });
-  }, 5000);
+  $(document).ready(function() {
+    toshi.init()
+  })
 </script>

@@ -13,10 +13,15 @@ module Toshi
     set :views,           Proc.new { File.join(root, "toshi/web/views") }
 
     get '/' do
+      @network = Toshi.settings[:network]
       @available_peers = Toshi::Models::Peer.count
       @connected_peers = Toshi::Models::Peer.connected.count
-      @available_clients = RedisMQ::Channel.clients_count
-      @available_workers = RedisMQ::Channel.workers_count
+      @database_size = Toshi.db["SELECT pg_size_pretty(pg_database_size('#{Toshi.settings[:database_name]}'))"].first[:pg_size_pretty]
+      @tx_count = Toshi.db[:transactions].count()
+      @unconfirmed_tx_count = Toshi.db[:unconfirmed_transactions].count()
+      @blocks_count = Toshi.db[:blocks].where(branch: 0).count()
+      @side_blocks_count = Toshi.db[:blocks].where(branch: 1).count()
+      @orphan_blocks_count = Toshi.db[:blocks].where(branch: 2).count()
 
       content_type 'text/html'
       erb :index

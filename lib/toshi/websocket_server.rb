@@ -74,7 +74,6 @@ module Toshi
       case cmd['op']
       when 'blocks'
         subscribe_channel(:blocks, :on_channel_send_block)
-        on_channel_send_block(nil) # hack, send the current tip
       when 'transactions'
         subscribe_channel(:transactions, :on_channel_send_tx)
       end
@@ -100,10 +99,12 @@ module Toshi
 
     # send a transaction to a connected websocket
     def on_channel_send_tx(msg)
-      tx = Toshi::Models::UnconfirmedTransaction.from_hsh(msg['hash']) if msg
-      return unless tx
-      hash = tx.to_hash
-      write_socket({ op: 'transaction', data: hash }.to_json)
+      if msg
+        tx = Toshi::Models::UnconfirmedTransaction.from_hsh(msg['hash']).first
+      else
+        tx = Toshi::Models::UnconfirmedTransaction.first
+      end
+      write_socket({ op: 'transaction', data: tx.to_hash }.to_json)
     end
 
     def subscribe_channel(channel_name, method_name)
