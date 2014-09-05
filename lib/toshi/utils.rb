@@ -56,6 +56,22 @@ module Toshi
       return nil if !hash
       [hash].pack('H*').reverse
     end
+
+    def database_size
+      Toshi.db['SELECT pg_size_pretty(pg_database_size(current_database()))'].get(:pg_size_pretty)
+    end
+
+    def status
+      head = Toshi::Models::Block.head
+
+      if Toshi::Models::Peer.connected.count == 0
+        "offline"
+      elsif head && Time.at(head.time) > (Time.now - (2 * 60 * 60))
+        "active"
+      else
+        "syncing"
+      end
+    end
   end
 
   def self.db_stats

@@ -9,19 +9,37 @@
   <meta name="description" content="">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="/css/admin.css">
+
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+  <script src="js/plugins.js"></script>
+  <script src="js/bootstrap.js"></script>
+  <script src="js/moment.js"></script>
+  <script src="js/handlebars-v2.0.0.js"></script>
+  <script src="js/main.js"></script>
 </head>
 <body class="page status">
   <header>
     <div id="header" class="container">
-      <div class="row logo">
-        <div class="col-md-8 col-md-push-2">
-          <span class="toshi_logo"></span>
-          <h1>TOSHI<span>beta</span></h1>
+      <div class="row">
+        <div class="col-md-5 logo">
+          <h1><a href="http://toshi.io">TOSHI</a><i>v 0.1.0</i></h1>
+        </div>
+        <div class="col-md-7 features">
+          <div class="text-left">
+            <h3>A full bitcoin node backed by PostgreSQL</h3>
+            <p>Toshi is an open source bitcoin node for building scalable web applications or analyzing blockchain data.</p>
+          </div>
         </div>
       </div>
     </div> <!-- container -->
   </header>
-  <%= yield %>
+<section class="page_wraper">
+  <div class="container">
+    <article class="stats">
+      <%= yield %>
+    </article>
+  </div>
+</section>
   <footer>
     <div class="container text-center">
       <div class="row">
@@ -32,10 +50,5 @@
         </div>
       </div>
     </footer>
-
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-    <script src="js/plugins.js"></script>
-    <script src="js/bootstrap.js"></script>
-    <script src="js/moment.js"></script>
 </body>
 </html>

@@ -178,11 +178,24 @@ module Toshi
 
     get '/toshi.?:format?' do
       hash = {
-        available_peers: Toshi::Models::Peer.count,
-        connected_peers: Toshi::Models::Peer.connected.count,
-        connected_peers_info: Toshi::Models::Peer.connected.map{|peer| peer.to_hash},
-        available_clients: RedisMQ::Channel.clients_count,
-        available_workers: RedisMQ::Channel.workers_count,
+        peers: {
+          available: Toshi::Models::Peer.count,
+          connected: Toshi::Models::Peer.connected.count,
+          info: Toshi::Models::Peer.connected.map{|peer| peer.to_hash}
+        },
+        database: {
+          size: Toshi::Utils.database_size
+        },
+        transactions: {
+          count: Toshi.db[:transactions].count(),
+          unconfirmed_count: Toshi.db[:unconfirmed_transactions].count()
+        },
+        blocks: {
+          main_count: Toshi::Models::Block.main_branch.count(),
+          side_count: Toshi::Models::Block.side_branch.count(),
+          orphan_count: Toshi::Models::Block.orphan_branch.count(),
+        },
+        status: Toshi::Utils.status
       }
 
       case format
