@@ -43,7 +43,7 @@ This is the easiest way to get up and running. You can also run your own version
 
 #### Running your own copy in production
 
-To run Toshi on Heroku:
+Toshi can be installed on Heroku in just a few minutes:
 
     $ git clone https://github.com/coinbase/toshi.git
     $ cd toshi
@@ -111,7 +111,7 @@ For POST/PUT requests, the extension specifies the format of the request body.
 
 ## Configuration
 
-Toshi parses `config/toshi.yml` according to its current environment (determined by the `TOSHI_ENV` environment variable). Toshi will default to the `development` environment when run normally and the `test` environment during rspec tests.
+Toshi parses `config/toshi.yml` according to its current environment (determined by the `TOSHI_ENV` environment variable). Toshi will default to the `development` environment if one isn't specified and the `test` environment during rspec tests.
 
 ## Testing
 
