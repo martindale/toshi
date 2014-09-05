@@ -17,7 +17,7 @@ Toshi is a spin out of http://coinbase.com and is actively maintained by the Coi
 
 ## Comparison to bitcoind
 
-Toshi is written in Ruby and uses a PostgreSQL datastore. Bitcoind is written in C++ and uses LevelDB.  Bitcoind is much faster at syncing with the blockchain, but provides a limited interface to blockchain data through LevelDB.  Toshi is slower to sync but allows much more complex queries against the blockchain in SQL. This makes it easier to create web applications or do blockchain analysis.
+Toshi is written in Ruby and uses a PostgreSQL datastore. Bitcoind is written in C++ and uses LevelDB.  Bitcoind is much faster at syncing with the blockchain, but provides a limited interface to blockchain data through LevelDB.  Toshi is slower to sync but allows much more complex queries against the blockchain in SQL. This makes it easier to create web applications or to do blockchain analysis.
 
 ## Docs TODO
 
