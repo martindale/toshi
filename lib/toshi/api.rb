@@ -191,9 +191,9 @@ module Toshi
           unconfirmed_count: Toshi.db[:unconfirmed_transactions].count()
         },
         blocks: {
-          main_count: Toshi.db[:blocks].where(branch: 0).count(),
-          side_count: Toshi.db[:blocks].where(branch: 1).count(),
-          orphan_count: Toshi.db[:blocks].where(branch: 2).count(),
+          main_count: Toshi::Models::Block.main_branch.count(),
+          side_count: Toshi::Models::Block.side_branch.count(),
+          orphan_count: Toshi::Models::Block.orphan_branch.count(),
         },
         status: Toshi::Utils.status
       }
