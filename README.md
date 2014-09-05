@@ -113,6 +113,8 @@ For POST/PUT requests, the extension specifies the format of the request body.
 
 Toshi parses `config/toshi.yml` according to its current environment (determined by the `TOSHI_ENV` environment variable). Toshi will default to the `development` environment if one isn't specified and the `test` environment during rspec tests.
 
+Toshi will use the `config/toshi.yml.example` file if the `config/toshi.yml` file does not exist.
+
 ## Testing
 
 You can run the test suite for Toshi as follows:
