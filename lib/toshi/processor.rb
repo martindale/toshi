@@ -1487,12 +1487,17 @@ module Toshi
     # Verifies that block hash matches the declared target ("bits")
     # See CheckProofOfWork() in bitcoind.
     def check_proof_of_work(block)
-      actual = block.hash.to_i(16)
+      if Bitcoin.network_name == :litecoin
+        actual = block.recalc_block_scrypt_hash.to_i(16)
+      else
+        actual = block.hash.to_i(16)
+      end
+
       expected_target = Bitcoin.decode_compact_bits(block.bits).to_i(16)
       max_target = Bitcoin.decode_compact_bits(Bitcoin.network[:proof_of_work_limit]).to_i(16)
 
       # Check the range.
-      if expected_target <= 0 || expected_target > max_target
+      if expected_target <= 0 || (max_target > 0 && expected_target > max_target)
         return false
       end
 
