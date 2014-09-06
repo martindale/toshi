@@ -11,16 +11,16 @@ ADD Gemfile /Gemfile
 ADD Gemfile.lock /Gemfile.lock
 
 # Install gems
-RUN bundle install 
+RUN bundle install
 
 # Add the source dir
 ADD . /toshi
-
-# Copy the config template
-ADD config/toshi.yml.example /toshi/config/toshi.yml
 
 # Set up our working dir
 WORKDIR /toshi
 
 # Expose port 5000 of the container to the host
 EXPOSE 5000
+
+# Start Toshi
+CMD ["bundle", "exec", "foreman", "start"]
