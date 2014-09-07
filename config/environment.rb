@@ -4,8 +4,10 @@ require 'bugsnag'
 Bugsnag.configure do |config|
   config.api_key = ENV['BUGSNAG_API_KEY']
   config.endpoint = ENV['BUGSNAG_URL']
-  config.use_ssl = true
   config.notify_release_stages = ['production']
+  config.project_root = Toshi.root.to_s
+  config.release_stage = Toshi.env.to_s
+  config.use_ssl = true
 end
 
 # sync stdout to make logging easier
