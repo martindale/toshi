@@ -536,6 +536,13 @@ module Toshi
       def to_json(options={})
         to_hash(options).to_json
       end
+
+      # This is much faster than a count(*) on the table.
+      # See: https://wiki.postgresql.org/wiki/Slow_Counting
+      def self.total_count
+        res = Toshi.db.fetch("SELECT reltuples AS total FROM pg_class WHERE relname = 'transactions'").first
+        res[:total].to_i
+      end
     end
   end
 end

@@ -187,7 +187,7 @@ module Toshi
           size: Toshi::Utils.database_size
         },
         transactions: {
-          count: Toshi.db[:transactions].count(),
+          count: Toshi::Models::Transaction.total_count,
           unconfirmed_count: Toshi.db[:unconfirmed_transactions].count()
         },
         blocks: {
