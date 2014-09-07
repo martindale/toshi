@@ -1,16 +1,18 @@
-# Toshi: A PostgreSQL Backed Full Bitcoin Node
+# Toshi
 
-Toshi is a full bitcoin node that is ideal for building scalable web applications or analyzing blockchain data.
+[![Build Status](https://magnum.travis-ci.com/coinbase/toshi.svg?token=q4SuyNeyMuRZNwTyVWkw&branch=master)](https://magnum.travis-ci.com/coinbase/toshi)
 
-It provides an API, simple blockchain explorer, and SQL datastore of blockchain data.  It can be used as a complete replacement for [bitcoind](https://github.com/bitcoin/bitcoin), and strives for 100% compatibility with bitcoind (block and transaction verification code is as close as possible).
+Toshi is a complete implementation of the bitcoin protocol, written in Ruby and backed by PostgreSQL. It provides a RESTful API that is ideal for building scalable web applications or analyzing blockchain data.
 
-Toshi is a spin out of http://coinbase.com and is actively maintained by the Coinbase [team](https://coinbase.com/careers).  Our goal is to migrate to using Toshi in production in the near future. Toshi is a Japanese word (トシ) which means bright and intelligent, and is a play on the name Satoshi Nakamoto (the creator of bitcoin).  It is pronounced "toe-shee".
+Toshi is designed to be 100% compatible with [Bitcoin Core](https://github.com/bitcoin/bitcoin). It performs complete transaction and block verification, and is tested against TheBlueMatt's [regression test suite](https://github.com/TheBlueMatt/test-scripts).
+
+Toshi was built at [Coinbase](https://coinbase.com) to meet our requirements for a highly scalable bitcoin node. It is currently used for querying blockchain data, but our goal is for Toshi to replace our core bitcoin infrastructure in the near future.
 
 ## Features
 
- * Full bitcoin node implementation (including block and transaction verification rules)
+ * Complete Bitcoin node implementation
  * Does not require bitcoind
- * Passes 100% of BlueMatt's bitcoin node [test suite](https://github.com/TheBlueMatt/test-scripts)
+ * Fully tested against TheBlueMatt's [regression test suite](https://github.com/TheBlueMatt/test-scripts)
  * PostgeSQL backed (more convenient for web applications and research)
  * JSON, Hex, and Binary API
  * Simple web interface to monitor node status
@@ -18,18 +20,6 @@ Toshi is a spin out of http://coinbase.com and is actively maintained by the Coi
 ## Comparison to bitcoind
 
 Toshi is written in Ruby and uses a PostgreSQL datastore. Bitcoind is written in C++ and uses LevelDB.  Bitcoind is much faster at syncing with the blockchain, but provides a limited interface to blockchain data through LevelDB.  Toshi is slower to sync but allows much more complex queries against the blockchain in SQL. This makes it easier to create web applications or to do blockchain analysis.
-
-## Docs TODO
-
- * double check if Heroku setup steps work
- * add heroku deploy button?
- * DONE comparison to bitcoind? (language, performance, etc)
- * check docker example - does this work?
- * push a ruby gem?
- * do we still need to add pagination to blocks/txns?
- * why does push tx only allow hex or binary? can we support all three?
- * i think we should add an api call that returns the current height of the blockchain? /blockchainheight
- * document websocket?
 
 ## Usage
 
