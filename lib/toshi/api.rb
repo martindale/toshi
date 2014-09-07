@@ -188,7 +188,7 @@ module Toshi
         },
         transactions: {
           count: Toshi::Models::Transaction.total_count,
-          unconfirmed_count: Toshi.db[:unconfirmed_transactions].count()
+          unconfirmed_count: Toshi::Models::UnconfirmedTransaction.total_count
         },
         blocks: {
           main_count: Toshi::Models::Block.main_branch.count(),
