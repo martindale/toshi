@@ -1,7 +1,6 @@
 GIT
-  remote: https://github.com/lian/bitcoin-ruby
-  revision: b7bd36fe7e6ac30ad5910a73c527617974e3086e
-  branch: master
+  remote: git://github.com/lian/bitcoin-ruby.git
+  revision: 0e4f9c4019dbb62f909b4ff417fc1e0aba5afe3d
   specs:
     bitcoin-ruby (0.0.5)
 
@@ -86,10 +85,6 @@ GEM
       rack-test
       sinatra (~> 1.4.0)
       tilt (~> 1.3)
-    slim (2.0.3)
-      temple (~> 0.6.6)
-      tilt (>= 1.3.3, < 2.1)
-    temple (0.6.8)
     thin (1.6.2)
       daemons (>= 1.0.9)
       eventmachine (>= 1.0.0)
@@ -120,5 +115,4 @@ DEPENDENCIES
   sidekiq-unique-jobs
   sinatra
   sinatra-contrib
-  slim
   thin
