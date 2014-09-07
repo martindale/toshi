@@ -39,7 +39,7 @@
             </div>
           </script>
           <div class="stats_block">
-            <% Toshi::Models::Block.main_branch.offset(0).limit(5).order(Sequel.desc(:height)).each{|block| %>
+            <% Toshi::Models::Block.main_branch.offset(0).limit(5).order(Sequel.desc(:id)).each{|block| %>
             <div class="block">
               <span class="block_num">Block No. <%= block.height %></span>
               <ul class="clearfix">
@@ -49,7 +49,7 @@
                 </li>
                 <li>
                   <h5>Num. Tx.</h5>
-                  <span><%= block.transactions.count %></span>
+                  <span><%= block.transactions_count %></span>
                 </li>
                 <li>
                   <h5>Timestamp</h5>
@@ -97,7 +97,7 @@
             </div>
           </script>
           <div class="stats_tx">
-            <% Toshi::Models::UnconfirmedTransaction.offset(0).limit(5).order(Sequel.desc(:created_at)).each{|tx| %>
+            <% Toshi::Models::UnconfirmedTransaction.offset(0).limit(5).order(Sequel.desc(:id)).each{|tx| %>
             <div class="tx">
               <span class="tx_num">Unconfirmed <%= tx.to_hash[:pool] %> transaction</span>
                <ul class="clearfix">
