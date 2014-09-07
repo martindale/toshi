@@ -17,8 +17,8 @@ module Toshi
       @available_peers = Toshi::Models::Peer.count
       @connected_peers = Toshi::Models::Peer.connected.count
       @database_size = Toshi::Utils.database_size
-      @tx_count = Toshi.db[:transactions].count()
-      @unconfirmed_tx_count = Toshi.db[:unconfirmed_transactions].count()
+      @tx_count = Toshi::Models::Transaction.total_count,
+      @unconfirmed_tx_count = Toshi::Models::UnconfirmedTransaction.total_count,
       @blocks_count = Toshi.db[:blocks].where(branch: 0).count()
       @side_blocks_count = Toshi.db[:blocks].where(branch: 1).count()
       @orphan_blocks_count = Toshi.db[:blocks].where(branch: 2).count()
