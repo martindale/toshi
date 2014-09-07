@@ -73,7 +73,7 @@
         <div class="last_tx">
           <script id="tx-template" type="text/x-handlebars-template">
             <div class="tx">
-              <span class="tx_num">Unconfirmed {{pool}} transaction</span>
+              <span class="tx_num">Unconfirmed {{pool}} pool transaction</span>
                <ul class="clearfix">
                 <li>
                   <h5>Size</h5>
@@ -99,13 +99,13 @@
           <div class="stats_tx">
             <% Toshi::Models::UnconfirmedTransaction.offset(0).limit(5).order(Sequel.desc(:id)).each{|tx| %>
             <div class="tx">
-              <span class="tx_num">Unconfirmed <%= tx.to_hash[:pool] %> transaction</span>
+              <span class="tx_num">Unconfirmed <%= tx.pool_name %> pool transaction</span>
                <ul class="clearfix">
                 <li>
                   <h5>Size</h5>
                   <span><%= tx.size %></span>
                 </li>
-                <% if tx.to_hash[:pool] == 'mempool' %>
+                <% if tx.pool_name == 'memory' %>
                 <li>
                   <h5>Amount</h5>
                   <span><%= "%.8f" % (tx.total_out_value / 1e8) %></span>
