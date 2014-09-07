@@ -6,20 +6,31 @@ Toshi is a complete implementation of the bitcoin protocol, written in Ruby and 
 
 Toshi is designed to be 100% compatible with [Bitcoin Core](https://github.com/bitcoin/bitcoin). It performs complete transaction and block verification, and is tested against TheBlueMatt's [regression test suite](https://github.com/TheBlueMatt/test-scripts).
 
-Toshi was built at [Coinbase](https://coinbase.com) to meet our requirements for a highly scalable bitcoin node. It is currently used for querying blockchain data, but our goal is for Toshi to replace our core bitcoin infrastructure in the near future.
+Toshi was built at [Coinbase](https://coinbase.com) to meet our requirements for a highly scalable bitcoin node. It is currently used for basic blockchain analysis, but our goal is for Toshi to replace our core bitcoin network infrastructure in the near future.
 
 ## Features
 
- * Complete Bitcoin node implementation
- * Does not require bitcoind
+ * Complete bitcoin node implementation
  * Fully tested against TheBlueMatt's [regression test suite](https://github.com/TheBlueMatt/test-scripts)
  * PostgeSQL backed (more convenient for web applications and research)
  * JSON, Hex, and Binary API
  * Simple web interface to monitor node status
 
-## Comparison to bitcoind
+## Comparison to Bitcoin Core
 
-Toshi is written in Ruby and uses a PostgreSQL datastore. Bitcoind is written in C++ and uses LevelDB.  Bitcoind is much faster at syncing with the blockchain, but provides a limited interface to blockchain data through LevelDB.  Toshi is slower to sync but allows much more complex queries against the blockchain in SQL. This makes it easier to create web applications or to do blockchain analysis.
+Toshi is a bitcoin implementation designed for building scalable web applications. It allows you to query the blockchain using a REST API or raw SQL. It comprises a number of individual services, using a shared database. Because Toshi indexes every transaction and block in the blockchain, it requires much more space to store the blockchain than Bitcoin Core (~200GB vs ~25GB as of September 2014). However, this makes it possible to run much richer queries that would otherwise not be possible with Bitcoin Core.
+
+Bitcoin Core (the reference implementation) is designed to run on a single server, and uses a mixture of raw files and LevelDB to store the blockchain. It allows you to query the blockchain using a JSON-RPC interface.
+
+Some examples of queries which Toshi can easily answer, which are not possible with Bitcoin Core:
+
+* List all unspent outputs for any address (Bitcoin Core only indexes unspent outputs for specific addresses added to the local "wallet").
+* Get the balance of any address
+* Get the balance of any address at a specific point in time
+* Find all transactions for any address
+* Find all transactions in a certain time period
+* Find all transactions over a certain amount
+* Find previous outputs (and addresses) for any given set of transactions
 
 ## Usage
 
