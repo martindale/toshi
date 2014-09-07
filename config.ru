@@ -7,8 +7,6 @@ require "toshi/api"
 require "toshi/websocket_server"
 require 'sidekiq/web'
 
-Faye::WebSocket.load_adapter('thin')
-
 use Rack::CommonLogger
 use Bugsnag::Rack
 

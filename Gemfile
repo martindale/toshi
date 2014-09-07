@@ -12,7 +12,7 @@ gem 'sidekiq'
 gem 'sidekiq-unique-jobs'
 gem 'sinatra', require: 'sinatra/base'
 gem 'sinatra-contrib'
-gem 'thin'
+gem 'puma'
 gem 'faye-websocket'
 gem 'bugsnag-em'
 
