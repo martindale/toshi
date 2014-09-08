@@ -977,14 +977,6 @@ module Toshi
     # Well-known transactions for which we don't verify input scripts
     # because the existing script runner in bitcoin-ruby could not process them correctly.
     SKIP_TXS = [
-      "eb3b82c0884e3efa6d8b0be55b4915eb20be124c9766245bcc7f34fdac32bccb",
-      "055707ce7fea7b9776fdc70413f65ceec413d46344424ab01acd5138767db137",
-      "6d36bc17e947ce00bb6f12f8e7a56a1585c5a36188ffa2b05e10b4743273a74b",
-      "bc179baab547b7d7c1d5d8d6f8b0cc6318eaa4b0dd0a093ad6ac7f5a1cb6b3ba",
-      "4d932e00d5e20e31211136651f1665309a11908e438bb4c30799154d26812491",
-      "0157f2eec7bf856d66714856182a146998910dc6fa576bec200a9fa8039459e7",
-      "ddd070541bf2fddaa5e08a9d93126f73211fe15291beb897c762908949420ad9",
-      "e335562f7e297aadeed88e5954bc4eeb8dc00b31d829eedb232e39d672b0c009",
     ]
 
     # Returns true if all inputs are valid.
