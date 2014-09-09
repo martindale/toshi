@@ -8,14 +8,15 @@ describe Toshi::Api, :type => :request do
     @app ||= Toshi::Api
   end
 
-  before do
-    processor = Toshi::Processor.new
-    blockchain = Blockchain.new
-
-    blockchain.load_from_json("simple_chain_1.json")
-    blockchain.chain['main'].each{|height, block|
-      processor.process_block(block, raise_errors=true)
-    }
+  before do |it|
+    unless it.metadata[:skip_before]
+      processor = Toshi::Processor.new
+      blockchain = Blockchain.new
+      blockchain.load_from_json("simple_chain_1.json")
+      blockchain.chain['main'].each{|height, block|
+        processor.process_block(block, raise_errors=true)
+      }
+    end
   end
 
   describe "GET /blocks" do
@@ -181,32 +182,9 @@ describe Toshi::Api, :type => :request do
   end
 
   describe "Test filled previous output info for inputs to reorg blockchain transactions" do
-    it "checks previous outputs for etotheipi's chain" do
-      DatabaseCleaner.clean # FIXME: hack, really just don't want before hook to run
-      processor = Toshi::Processor.new
-      blockchain = Blockchain.new
-      blockchain.load_from_json("reorg_etotheipi_chain.json")
-      blockchain.blocks.each_with_index{|block,i|
-        processor.process_block(block, raise_errors=true)
-      }
-
-      get '/blocks'
-
-      expect(last_response).to be_ok
-      expect(json.count).to eq(8)
-
-      # verify the block order looks good and that they're the right blocks
-      expect(json[0]['hash']).to eq(blockchain.chain['main']['5'].hash)
-      expect(json[1]['hash']).to eq(blockchain.chain['main']['4'].hash)
-      expect(json[2]['hash']).to eq(blockchain.chain['main']['3'].hash)
-      expect(json[3]['hash']).to eq(blockchain.chain['side']['4'].hash)
-      expect(json[4]['hash']).to eq(blockchain.chain['side']['3'].hash)
-      expect(json[5]['hash']).to eq(blockchain.chain['main']['2'].hash)
-      expect(json[6]['hash']).to eq(blockchain.chain['main']['1'].hash)
-      expect(json[7]['hash']).to eq(blockchain.chain['main']['0'].hash)
-
-      # check 3A, 4A and 5A -- they end up the tip after reorg
-
+    # helper used by the two test cases: check API output for 3A, 4A and 5A.
+    # they're interesting because they end up on the tip after reorg.
+    def check_api(blockchain, json)
       # block 3A
       block_3a = blockchain.chain['main']['3']
       get "/blocks/#{block_3a.hash}/transactions"
@@ -289,6 +267,69 @@ describe Toshi::Api, :type => :request do
       expect(json['transactions'][1]['outputs'][0]['amount']).to eq(50*(10**8))
       expect(json['transactions'][1]['outputs'][0]['addresses'].count).to eq(1)
       expect(json['transactions'][1]['outputs'][0]['addresses'].first).to eq(blockchain.address_from_label('D'))
+    end
+
+    it "checks previous outputs for etotheipi's chain", :skip_before do
+      processor = Toshi::Processor.new
+      blockchain = Blockchain.new
+      blockchain.load_from_json("reorg_etotheipi_chain.json")
+      blockchain.blocks.each_with_index{|block,i|
+        processor.process_block(block, raise_errors=true)
+      }
+
+      get '/blocks'
+
+      expect(last_response).to be_ok
+      expect(json.count).to eq(8)
+
+      # verify the block order looks good and that they're the right blocks
+      expect(json[0]['hash']).to eq(blockchain.chain['main']['5'].hash)
+      expect(json[1]['hash']).to eq(blockchain.chain['main']['4'].hash)
+      expect(json[2]['hash']).to eq(blockchain.chain['main']['3'].hash)
+      expect(json[3]['hash']).to eq(blockchain.chain['side']['4'].hash)
+      expect(json[4]['hash']).to eq(blockchain.chain['side']['3'].hash)
+      expect(json[5]['hash']).to eq(blockchain.chain['main']['2'].hash)
+      expect(json[6]['hash']).to eq(blockchain.chain['main']['1'].hash)
+      expect(json[7]['hash']).to eq(blockchain.chain['main']['0'].hash)
+
+      # verify the API output for the txs is what we expect
+      check_api(blockchain, json)
+    end
+
+    it "checks previous outputs for etotheipi's chain when processed with an orphan", :skip_before do
+      processor = Toshi::Processor.new
+      blockchain = Blockchain.new
+      blockchain.load_from_json("reorg_etotheipi_chain.json")
+      missing_parent = nil
+      blockchain.blocks.each_with_index{|block,i|
+        if i == 2
+          # don't process 2 until the very end --
+          # we want the missing parent to have outputs spent by
+          # a future child block. it's a more interesting test.
+          missing_parent = block
+          next
+        end
+        processor.process_block(block, raise_errors=true)
+      }
+      processor.process_block(missing_parent, raise_errors=true)
+
+      get '/blocks'
+
+      expect(last_response).to be_ok
+      expect(json.count).to eq(8)
+
+      # verify the block order looks good and that they're the right blocks
+      expect(json[0]['hash']).to eq(blockchain.chain['main']['2'].hash)
+      expect(json[1]['hash']).to eq(blockchain.chain['main']['5'].hash)
+      expect(json[2]['hash']).to eq(blockchain.chain['main']['4'].hash)
+      expect(json[3]['hash']).to eq(blockchain.chain['main']['3'].hash)
+      expect(json[4]['hash']).to eq(blockchain.chain['side']['4'].hash)
+      expect(json[5]['hash']).to eq(blockchain.chain['side']['3'].hash)
+      expect(json[6]['hash']).to eq(blockchain.chain['main']['1'].hash)
+      expect(json[7]['hash']).to eq(blockchain.chain['main']['0'].hash)
+
+      # verify the API output for the txs is what we expect
+      check_api(blockchain, json)
     end
   end
 end

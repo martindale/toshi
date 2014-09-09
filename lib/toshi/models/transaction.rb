@@ -280,6 +280,9 @@ module Toshi
             else
               binary_hash = [input[:prev_out]].pack('H*').reverse
               output = output_cache.output_for_outpoint(binary_hash, input[:index])
+              # no point in creating the ledger entry now.
+              # Transaction#update_address_ledger_for_missing_inputs will add it later.
+              next if !output
               amount = output ? output.amount * -1 : 0
             end
             entries << {
