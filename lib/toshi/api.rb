@@ -28,17 +28,9 @@ module Toshi
       end
     end
 
-    get '/stats.?:format?' do
-      case format
-      when 'json'
-        {
-          height: Toshi::Models::Block.max_height.to_s,
-          peers: Toshi::Models::Peer.connected.count,
-        }.to_json
-      else
-        raise InvalidFormatError
-      end
-    end
+    ####
+    ## /blocks
+    ####
 
     # get collection of blocks
     get '/blocks.?:format?' do
@@ -94,6 +86,25 @@ module Toshi
       end
     end
 
+    ####
+    ## /transactions
+    ####
+
+    # submit new transaction to network
+    put '/transactions.?:format?' do
+      begin
+        ptx = Bitcoin::P::Tx.new([params[:hex]].pack("H*"))
+      rescue
+        return { error: 'malformed transaction' }.to_json
+      end
+      if Toshi::Models::RawTransaction.where(hsh: ptx.hash).first
+        return { error: 'transaction already received' }.to_json
+      end
+      Toshi::Models::RawTransaction.create(hsh: ptx.hash, payload: Sequel.blob(ptx.payload))
+      Toshi::Workers::TransactionWorker.perform_async ptx.hash, { 'sender' => nil }
+      { hash: ptx.hash }.to_json
+    end
+
     get '/transactions/:hash.?:format?' do
       @tx = (params[:hash].bytesize == 64 && Toshi::Models::Transaction.where(hsh: params[:hash]).first)
       @tx ||= (params[:hash].bytesize == 64 && Toshi::Models::UnconfirmedTransaction.where(hsh: params[:hash]).first)
@@ -111,20 +122,22 @@ module Toshi
       end
     end
 
-    # submit new transaction to network
-    post '/transactions.?:format?' do
-      begin
-        ptx = Bitcoin::P::Tx.new([params[:transaction]].pack("H*"))
-      rescue
-        return { error: 'malformed transaction' }.to_json
+    get '/transactions/unconfirmed' do
+      mempool = Toshi::Models::UnconfirmedTransaction.mempool
+      raise NotFoundError unless mempool
+
+      case format
+      when 'json'
+        mempool = Toshi::Models::UnconfirmedTransaction.to_hash_collection(mempool)
+        mempool.to_json
+      else
+        raise InvalidFormatError
       end
-      if Toshi::Models::RawTransaction.where(hsh: ptx.hash).first
-        return { error: 'transaction already received' }.to_json
-      end
-      Toshi::Models::RawTransaction.create(hsh: ptx.hash, payload: Sequel.blob(ptx.payload))
-      Toshi::Workers::TransactionWorker.perform_async ptx.hash, { 'sender' => nil }
-      { success: true }.to_json
     end
+
+    ####
+    ## /addresses
+    ####
 
     get '/addresses/:address.?:format?' do
       @address = Toshi::Models::Address.where(address: params[:address]).first
@@ -163,18 +176,9 @@ module Toshi
       end
     end
 
-    get '/unconfirmed_transactions' do
-      mempool = Toshi::Models::UnconfirmedTransaction.mempool
-      raise NotFoundError unless mempool
-
-      case format
-      when 'json'
-        mempool = Toshi::Models::UnconfirmedTransaction.to_hash_collection(mempool)
-        mempool.to_json
-      else
-        raise InvalidFormatError
-      end
-    end
+    ####
+    ## /toshi
+    ####
 
     get '/toshi.?:format?' do
       hash = {
