@@ -4,14 +4,14 @@
 
 Toshi is a complete implementation of the bitcoin protocol, written in Ruby and backed by PostgreSQL. It provides a RESTful API that is ideal for building scalable web applications or analyzing blockchain data.
 
-Toshi is designed to be 100% compatible with [Bitcoin Core](https://github.com/bitcoin/bitcoin). It performs complete transaction and block verification, and is tested against TheBlueMatt's [regression test suite](https://github.com/TheBlueMatt/test-scripts).
+Toshi is designed to be 100% compatible with [Bitcoin Core](https://github.com/bitcoin/bitcoin). It performs complete transaction and block verification, and passes 100% of TheBlueMatt's [regression test suite](https://github.com/TheBlueMatt/test-scripts).
 
-Toshi was built at [Coinbase](https://coinbase.com) to meet our requirements for a highly scalable bitcoin node. It is currently used for basic blockchain analysis, but our goal is for Toshi to replace our core bitcoin network infrastructure in the near future.
+Toshi was built at [Coinbase](https://coinbase.com) to meet our requirements for a highly scalable bitcoin node. Our goal is for Toshi to replace our core bitcoin network infrastructure in the near future.
 
 ## Features
 
  * Complete bitcoin node implementation
- * Fully tested against TheBlueMatt's [regression test suite](https://github.com/TheBlueMatt/test-scripts)
+ * Fully passes TheBlueMatt's [regression test suite](https://github.com/TheBlueMatt/test-scripts)
  * PostgeSQL backed (more convenient for web applications and research)
  * JSON, Hex, and Binary API
  * Simple web interface to monitor node status
@@ -48,6 +48,7 @@ Toshi can be installed on Heroku in just a few minutes:
 
     $ git clone https://github.com/coinbase/toshi.git
     $ cd toshi
+    $ cp config/toshi.yml.example config/toshi.yml
     $ heroku create [APP NAME]
     $ heroku addons:add heroku-postgresql:dev
     $ heroku addons:add redistogo
@@ -56,6 +57,8 @@ Toshi can be installed on Heroku in just a few minutes:
     $ heroku scale block_worker=1 peer_manager=1 transaction_worker=2 web=1
     $ heroku open
     $ heroku logs -t
+
+Note that the free PostgreSQL database on Heroku will need to be upgraded if you want to sync mainnet of bitcoin.
 
 #### Running your own copy in development
 
@@ -78,7 +81,7 @@ Alternatively, you can use Docker:
 
 ## HTTP API
 
-> Note: The Toshi API provides raw blockchain data only. If you are looking for APIs to store bitcoin securely, buy/sell bitcoin, send/request bitcoin, accept merchant payments, etc) please check out the [Coinbase API](https://coinbase.com/docs/api/overview).
+> Note: The Toshi API provides raw blockchain data only. If you are looking for APIs to store bitcoin securely, buy/sell bitcoin, send/request bitcoin, accept merchant payments, etc) please check out the proprietary [Coinbase API](https://coinbase.com/docs/api/overview).
 
 The API supports three data types by adding an extension on any URL.
 
