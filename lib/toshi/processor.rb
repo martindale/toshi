@@ -1217,6 +1217,7 @@ module Toshi
 
       tx.inputs.each do |txin|
         txout = @storage.output_for_outpoint(txin.prev_out, txin.prev_out_index, for_test)
+        txout = @mempool.output_for_outpoint(txin) if !txout
         pk_script = Bitcoin::Script.new(txout.pk_script)
         # check that the script pubkey is standard
         return false if !pk_script.is_standard?
