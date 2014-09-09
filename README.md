@@ -69,7 +69,7 @@ Toshi uses [Vagrant](http://www.vagrantup.com/) to install and run all prerequis
     $ vagrant up # other useful commands: 'vagrant halt', 'vagrant reload --provision', 'vagrant destroy'
     $ gem install bundler
     $ bundle install
-    $ foreman run rake db:migrate
+    $ foreman run rake db:create
     $ foreman start
     $ open http://localhost:5000/
 
