@@ -182,7 +182,7 @@ header .fork {
 #header h1 {
 	position: relative;
 	display: inline-block;
-	padding-left: 70px;
+	padding-left: 80px;
 	font-weight: lighter;
 	margin: 0;
 }
@@ -199,7 +199,7 @@ header .fork {
 	display: block;
 	position: absolute;
 	left: 0;
-	top: -9px;
+	top: -7px;
 	width: 58px;
 	height: 67px;
 	background-image: url("../images/toshi_logo_white.png");
