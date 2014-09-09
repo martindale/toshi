@@ -18,5 +18,5 @@ production:
   log_level: <%= ENV['LOG_LEVEL'] || 'info' %>
   max_peers: 8
   network: <%= ENV['TOSHI_NETWORK'] || 'bitcoin' %>
-  peers: <%= ENV['BITCOIN_PEERS'].to_s.split(';') %>
+  peers: <%= ENV['TOSHI_PEERS'].to_s.split(';') %>
   redis_url: <%= ENV[ENV['REDIS_PROVIDER'] || 'REDIS_URL'] %>
