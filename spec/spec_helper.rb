@@ -1,6 +1,6 @@
 ENV['RACK_ENV'] ||= 'test'
 ENV['TOSHI_ENV'] ||= 'test'
-ENV['BITCOIN_NETWORK'] ||= 'testnet3'
+ENV['TOSHI_NETWORK'] ||= 'testnet3'
 
 require_relative '../config/environment'
 require 'database_cleaner'

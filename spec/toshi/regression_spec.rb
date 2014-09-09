@@ -21,7 +21,7 @@ describe 'TheBlueMatt BitcoindComparisionTool', type: :regression do
   before(:all) do
     # setup regtest environment
     run_env = ENV.to_hash.merge(
-      {'BITCOIN_NETWORK' => 'regtest',
+      {'TOSHI_NETWORK' => 'regtest',
        'NODE_ACCEPT_INCOMING' => "true",
        'NODE_LISTEN_PORT' => '18444'})
     @pids = []

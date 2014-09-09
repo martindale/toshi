@@ -2,7 +2,7 @@ development: &development
   database_url: <%= ENV['DATABASE_URL'] || 'postgres://postgres:postgres@127.0.0.1:21001/toshi_development' %>
   log_level: <%= ENV['LOG_LEVEL'] || 'debug' %>
   max_peers: 8
-  network: <%= ENV['BITCOIN_NETWORK'] || 'testnet3' %>
+  network: <%= ENV['TOSHI_NETWORK'] || 'testnet3' %>
   peers: []
   redis_url: <%= ENV['REDIS_URL'] || 'redis://127.0.0.1:21002/0' %>
 
@@ -17,6 +17,6 @@ production:
   database_url: <%= ENV['DATABASE_URL'] %>
   log_level: <%= ENV['LOG_LEVEL'] || 'info' %>
   max_peers: 8
-  network: <%= ENV['BITCOIN_NETWORK'] || 'bitcoin' %>
+  network: <%= ENV['TOSHI_NETWORK'] || 'bitcoin' %>
   peers: <%= ENV['BITCOIN_PEERS'].to_s.split(';') %>
   redis_url: <%= ENV[ENV['REDIS_PROVIDER'] || 'REDIS_URL'] %>
