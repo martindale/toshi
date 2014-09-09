@@ -39,7 +39,10 @@
 	}
 
 	50% {
-		padding-right: 30px;
+		padding-right: 50px;
+	}
+	85% {
+		padding-right: 5px;
 	}
 
 	100% {
@@ -52,7 +55,11 @@
 	}
 
 	50% {
-		padding-right: 30px;
+		padding-right: 50px;
+	}
+
+	85% {
+		padding-right: 5px;
 	}
 
 	100% {
@@ -64,7 +71,10 @@
 		opacity: 0;
 	}
 
-	50% {
+	30% {
+		opacity: 1;
+	}
+	20% {
 		opacity: 1;
 	}
 
@@ -77,12 +87,35 @@
 		opacity: 0;
 	}
 
-	50% {
+	30% {
+		opacity: 1;
+	}
+	20% {
 		opacity: 1;
 	}
 
 	100% {
+		opacity:0;
+	}
+}
+@-webkit-keyframes openLeft {
+	0% {
+		width: 0;
 		opacity: 0;
+	}
+	100% {
+		width: auto;
+		opacity: 1;
+	}
+}
+@keyframes openLeft {
+	0% {
+		width: 0;
+		opacity: 0;
+	}
+	100% {
+		width: auto;
+		opacity: 1;
 	}
 }
 @-webkit-keyframes openLeft {
@@ -368,8 +401,8 @@ header .fork {
 .last_tx .stats_tx > div:first-child .tx_num:after {
 	-webkit-animation-name: fade;
 	animation-name: fade;
-	-webkit-animation-duration: .4s;
-	animation-duration: .4s;
+	-webkit-animation-duration: .5s;
+	animation-duration: .5s;
 	-webkit-animation-fill-mode: both;
 	animation-fill-mode: both;
   -webkit-transform-origin: center bottom;
@@ -380,8 +413,8 @@ header .fork {
 .last_tx .stats_tx > div:first-child .tx_num {
 	-webkit-animation-name: bounce;
 	animation-name: bounce;
-	-webkit-animation-duration: .8s;
-	animation-duration: .8s;
+	-webkit-animation-duration: .85s;
+	animation-duration: .85s;
 	-webkit-animation-fill-mode: both;
 	animation-fill-mode: both;
   -webkit-transform-origin: center bottom;
