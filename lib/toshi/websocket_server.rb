@@ -6,7 +6,12 @@ module Toshi
     attr_accessor :mq_client, :connections
     attr_reader :chan
 
+    def ensure_reactor_running
+      @reactor = Thread.new { EM.run } unless EM.reactor_running?
+    end
+
     def initialize(app)
+      ensure_reactor_running
       @app = app
 
       @connections = []
