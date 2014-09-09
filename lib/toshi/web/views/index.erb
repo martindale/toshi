@@ -39,7 +39,7 @@
             </div>
           </script>
           <div class="stats_block">
-            <% Toshi::Models::Block.main_branch.offset(0).limit(5).order(Sequel.desc(:id)).each{|block| %>
+            <% Toshi::Models::Block.main_branch.offset(0).limit(5).order(Sequel.desc(:height)).each{|block| %>
             <div class="block">
               <span class="block_num">Block No. <%= block.height %></span>
               <ul class="clearfix">
