@@ -133,12 +133,18 @@ module Toshi
 
     # FIXME: bitcoind won't relay inventory to peers that are known to already have it.
     def relay_transaction_to_peers(tx)
+      # this is for peers
       @mq.workers_push_all({ 'msg' => 'relay_tx', 'hash' => tx.hash })
+      # this is for websocket consumers
+      @mq.clients_push_all({ 'msg' => 'new_tx', 'hash' => tx.hash })
     end
 
     # FIXME: bitcoind won't relay inventory to peers that are known to already have it.
     def relay_block_to_peers(block)
+      # this is for peers
       @mq.workers_push_all({ 'msg' => 'relay_block', 'hash' => block.hash })
+      # this is for websocket consumers
+      @mq.clients_push_all({ 'msg' => 'new_block', 'hash' => block.hash })
     end
 
     # Returns true if transaction is valid if included in the next block.

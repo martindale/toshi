@@ -31,11 +31,6 @@ module Toshi
           end
 
           logger.info{ result }
-
-          # announce a new tip to clients
-          if result && block.is_main_chain?
-            processor.mq.clients_push_all({ 'msg' => 'new_block', 'hash' => block_hash })
-          end
         end
 
         # let the connection know we've processed this block so it can potentially send us more.

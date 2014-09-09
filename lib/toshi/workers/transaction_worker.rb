@@ -23,12 +23,6 @@ module Toshi
         end
 
         logger.info{ result }
-
-        # announce a new memory pool tx to clients
-        tx = Toshi::Models::UnconfirmedTransaction.where(hsh: tx_hash).first if result
-        if result && tx.in_memory_pool?
-          processor.mq.clients_push_all({ 'msg' => 'new_tx', 'hash' => tx_hash })
-        end
       end
 
       def processor
