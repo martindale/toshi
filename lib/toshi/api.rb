@@ -96,7 +96,7 @@ module Toshi
 
     get '/transactions/:hash.?:format?' do
       @tx = (params[:hash].bytesize == 64 && Toshi::Models::Transaction.where(hsh: params[:hash]).first)
-      @tx = (params[:hash].bytesize == 64 && Toshi::Models::UnconfirmedTransaction.where(hsh: params[:hash]).first) unless @tx
+      @tx ||= (params[:hash].bytesize == 64 && Toshi::Models::UnconfirmedTransaction.where(hsh: params[:hash]).first)
       raise NotFoundError unless @tx
 
       case format
