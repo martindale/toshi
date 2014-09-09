@@ -34,7 +34,7 @@ Some examples of queries which Toshi can easily answer, which are not possible w
 
 ## Usage
 
-#### Using the hosted version
+### Hosted Toshi
 
 Coinbase maintains a hosted version of Toshi that you can use at:
 
@@ -42,25 +42,7 @@ Coinbase maintains a hosted version of Toshi that you can use at:
 
 This is the easiest way to get up and running. You can also run your own version of Toshi as described below.
 
-#### Running your own copy in production
-
-Toshi can be installed on Heroku in just a few minutes:
-
-    $ git clone https://github.com/coinbase/toshi.git
-    $ cd toshi
-    $ cp config/toshi.yml.example config/toshi.yml
-    $ heroku create [APP NAME]
-    $ heroku addons:add heroku-postgresql:dev
-    $ heroku addons:add redistogo
-    $ git push heroku master
-    $ heroku run rake db:migrate
-    $ heroku scale block_worker=1 peer_manager=1 transaction_worker=2 web=1
-    $ heroku open
-    $ heroku logs -t
-
-Note that the free PostgreSQL database on Heroku will need to be upgraded if you want to sync mainnet of bitcoin.
-
-#### Running your own copy in development
+### Running Toshi locally
 
 Toshi uses [Vagrant](http://www.vagrantup.com/) to install and run all prerequisites (postgresql, redis).
 
@@ -78,8 +60,27 @@ Alternatively, you can use Docker:
     $ docker build -t=coinbase/node .
     $ docker run -e REDIS_URL=redis://... -e DATABASE_URL=postgres://... -e TOSHI_ENV=production coinbase/node foreman start
 
+### Deployment
 
-## HTTP API
+Toshi can be deployed directly to Heroku:
+
+[![Deploy](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy?template=https://github.com/coinbase/toshi)
+
+Toshi can also be installed on your own server. You will need:
+
+* PostgreSQL (300gb+ disk space required to sync mainnet)
+* Redis (50mb+ RAM recommended)
+* Ruby 2.0.0+
+
+To run Toshi on your server, simply:
+
+    $ git clone https://github.com/coinbase/toshi.git
+    $ cd toshi
+    $ cp config/toshi.yml.example config/toshi.yml
+    $ vi config/toshi.yml
+    $ REDIS_URL=redis://... DATABASE_URL=postgres://... TOSHI_ENV=production bundle exec foreman start
+
+## API
 
 > Note: The Toshi API provides raw blockchain data only. If you are looking for APIs to store bitcoin securely, buy/sell bitcoin, send/request bitcoin, accept merchant payments, etc) please check out the proprietary [Coinbase API](https://coinbase.com/docs/api/overview).
 
