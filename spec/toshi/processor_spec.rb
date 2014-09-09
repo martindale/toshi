@@ -587,7 +587,7 @@ describe Toshi::Processor do
       expect(Toshi::Models::UnconfirmedTransaction.where(pool: Toshi::Models::UnconfirmedTransaction::MEMORY_POOL).count).to eq(0)
 
       # make sure the expected double-spend is marked as a conflict
-      double_spend_tx = blockchain.chain['main']['3'].tx[2]
+      double_spend_tx = blockchain.chain['side']['3'].tx[2]
       expect(Toshi::Models::Transaction.where(hsh: double_spend_tx.hash).first.pool).to eq(Toshi::Models::Transaction::CONFLICT_POOL)
 
       # walk back from tip and verify the main chain ends up as what we expect
@@ -595,11 +595,7 @@ describe Toshi::Processor do
       wlkr = Toshi::Models::Block.head
       expect(wlkr.branch_name).to eq('main')
       while wlkr.height >= 0 do
-        if wlkr.height > 2
-          expect(wlkr.hsh).to eq(blockchain.chain['side'][wlkr.height.to_s].hash)
-        else
-          expect(wlkr.hsh).to eq(blockchain.chain['main'][wlkr.height.to_s].hash)
-        end
+        expect(wlkr.hsh).to eq(blockchain.chain['main'][wlkr.height.to_s].hash)
         expect(wlkr.branch_name).to eq('main')
         count += 1
         break if wlkr.height == 0

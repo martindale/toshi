@@ -131,9 +131,9 @@ new_tx2.in[input_index].script_sig = Bitcoin::Script.to_signature_pubkey_script(
 new_tx2 = Bitcoin::Protocol::Tx.new(new_tx2.to_payload)
 raise "failed to generate tx" unless new_tx2.verify_input_signature(input_index, prev_tx) == true
 
-height = blockchain.next_height(:main)
+height = 3
 block = blockchain.build_next_block(block, height, [new_tx, new_tx2], time+=Bitcoin.network[:next_block_time_target], 0, key_C)
-blockchain.chain[:main][height] = block
+blockchain.chain[:side][height] = block
 blockchain.add_block_in_sequence(block)
 
 #
@@ -159,9 +159,9 @@ raise "failed to generate tx" unless new_tx.verify_input_signature(input_index, 
 
 block_4_dup_tx = new_tx
 
-height = blockchain.next_height(:main)
+height = 4
 block = blockchain.build_next_block(block, height, [new_tx], time+=Bitcoin.network[:next_block_time_target], 0, key_A)
-blockchain.chain[:main][height] = block
+blockchain.chain[:side][height] = block
 blockchain.add_block_in_sequence(block)
 
 #
@@ -191,7 +191,7 @@ raise "failed to generate tx" unless new_tx.verify_input_signature(input_index, 
 
 height = fork_height+1
 block = blockchain.build_next_block(fork_block, height, [block_3_dup_tx, new_tx], time=fork_time, 0, key_D)
-blockchain.chain[:side][height] = block
+blockchain.chain[:main][height] = block
 blockchain.add_block_in_sequence(block)
 
 #
@@ -201,7 +201,7 @@ blockchain.add_block_in_sequence(block)
 #
 height += 1
 block = blockchain.build_next_block(block, height, [], time+=Bitcoin.network[:next_block_time_target], 0, key_A)
-blockchain.chain[:side][height] = block
+blockchain.chain[:main][height] = block
 blockchain.add_block_in_sequence(block)
 
 #
@@ -212,7 +212,7 @@ blockchain.add_block_in_sequence(block)
 #
 height += 1
 block = blockchain.build_next_block(block, height, [block_4_dup_tx], time+=Bitcoin.network[:next_block_time_target], 0, key_A)
-blockchain.chain[:side][height] = block
+blockchain.chain[:main][height] = block
 blockchain.add_block_in_sequence(block)
 
 # dump the blockchain to JSON

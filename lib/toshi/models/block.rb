@@ -202,6 +202,13 @@ module Toshi
           t.total_out_value = fields[:total_out_value] || 0
           t.fee             = fields[:fee] || 0
           t.save
+          if tx_index == 0
+            # update the coinbase ledger entry --
+            # we might not have known what the correct block reward was until now
+            # in the case of a former side/orphan block because we don't fully
+            # process them until their chain is connected.
+            t.update_address_ledger_for_coinbase(t.total_out_value - b.fees)
+          end
         end
 
         # create any txs that didn't already exist in the db

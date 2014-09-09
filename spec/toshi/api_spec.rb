@@ -179,4 +179,116 @@ describe Toshi::Api, :type => :request do
       expect(json['transactions'][0]['block_branch']).to eq('main')
     end
   end
+
+  describe "Test filled previous output info for inputs to reorg blockchain transactions" do
+    it "checks previous outputs for etotheipi's chain" do
+      DatabaseCleaner.clean # FIXME: hack, really just don't want before hook to run
+      processor = Toshi::Processor.new
+      blockchain = Blockchain.new
+      blockchain.load_from_json("reorg_etotheipi_chain.json")
+      blockchain.blocks.each_with_index{|block,i|
+        processor.process_block(block, raise_errors=true)
+      }
+
+      get '/blocks'
+
+      expect(last_response).to be_ok
+      expect(json.count).to eq(8)
+
+      # verify the block order looks good and that they're the right blocks
+      expect(json[0]['hash']).to eq(blockchain.chain['main']['5'].hash)
+      expect(json[1]['hash']).to eq(blockchain.chain['main']['4'].hash)
+      expect(json[2]['hash']).to eq(blockchain.chain['main']['3'].hash)
+      expect(json[3]['hash']).to eq(blockchain.chain['side']['4'].hash)
+      expect(json[4]['hash']).to eq(blockchain.chain['side']['3'].hash)
+      expect(json[5]['hash']).to eq(blockchain.chain['main']['2'].hash)
+      expect(json[6]['hash']).to eq(blockchain.chain['main']['1'].hash)
+      expect(json[7]['hash']).to eq(blockchain.chain['main']['0'].hash)
+
+      # check 3A, 4A and 5A -- they end up the tip after reorg
+
+      # block 3A
+      block_3a = blockchain.chain['main']['3']
+      get "/blocks/#{block_3a.hash}/transactions"
+      json = JSON.parse(last_response.body)
+      expect(last_response).to be_ok
+      expect(json['transactions'].count).to eq(3)
+
+      # first tx
+      expect(json['transactions'][0]['inputs'].count).to eq(1)
+      expect(json['transactions'][0]['outputs'].count).to eq(1)
+      expect(json['transactions'][0]['inputs'][0]['coinbase']).to_not be_nil
+      expect(json['transactions'][0]['inputs'][0]['amount']).to eq(50*(10**8))
+      expect(json['transactions'][0]['outputs'][0]['amount']).to eq(50*(10**8))
+      expect(json['transactions'][0]['outputs'][0]['addresses'].count).to eq(1)
+      expect(json['transactions'][0]['outputs'][0]['addresses'].first).to eq(blockchain.address_from_label('D'))
+
+      # second tx
+      expect(json['transactions'][1]['inputs'].count).to eq(1)
+      expect(json['transactions'][1]['outputs'].count).to eq(1)
+      expect(json['transactions'][1]['inputs'][0]['coinbase']).to be_nil
+      expect(json['transactions'][1]['inputs'][0]['amount']).to eq(40*(10**8))
+      expect(json['transactions'][1]['inputs'][0]['addresses'].count).to eq(1)
+      expect(json['transactions'][1]['inputs'][0]['addresses'].first).to eq(blockchain.address_from_label('B'))
+      expect(json['transactions'][1]['outputs'][0]['amount']).to eq(40*(10**8))
+      expect(json['transactions'][1]['outputs'][0]['addresses'].count).to eq(1)
+      expect(json['transactions'][1]['outputs'][0]['addresses'].first).to eq(blockchain.address_from_label('D'))
+
+      # third tx
+      expect(json['transactions'][2]['inputs'].count).to eq(1)
+      expect(json['transactions'][2]['outputs'].count).to eq(1)
+      expect(json['transactions'][2]['inputs'][0]['coinbase']).to be_nil
+      expect(json['transactions'][2]['inputs'][0]['amount']).to eq(10*(10**8))
+      expect(json['transactions'][2]['inputs'][0]['addresses'].count).to eq(1)
+      expect(json['transactions'][2]['inputs'][0]['addresses'].first).to eq(blockchain.address_from_label('C'))
+      expect(json['transactions'][2]['outputs'][0]['amount']).to eq(10*(10**8))
+      expect(json['transactions'][2]['outputs'][0]['addresses'].count).to eq(1)
+      expect(json['transactions'][2]['outputs'][0]['addresses'].first).to eq(blockchain.address_from_label('B'))
+
+      # block 4A
+      block_4a = blockchain.chain['main']['4']
+      get "/blocks/#{block_4a.hash}/transactions"
+      json = JSON.parse(last_response.body)
+      expect(last_response).to be_ok
+
+      expect(json['transactions'].count).to eq(1)
+
+      # first tx
+      expect(json['transactions'][0]['inputs'].count).to eq(1)
+      expect(json['transactions'][0]['outputs'].count).to eq(1)
+      expect(json['transactions'][0]['inputs'][0]['coinbase']).to_not be_nil
+      expect(json['transactions'][0]['inputs'][0]['amount']).to eq(50*(10**8))
+      expect(json['transactions'][0]['outputs'][0]['amount']).to eq(50*(10**8))
+      expect(json['transactions'][0]['outputs'][0]['addresses'].count).to eq(1)
+      expect(json['transactions'][0]['outputs'][0]['addresses'].first).to eq(blockchain.address_from_label('A'))
+
+      # block 5A
+      block_5a = blockchain.chain['main']['5']
+      get "/blocks/#{block_5a.hash}/transactions"
+      json = JSON.parse(last_response.body)
+      expect(last_response).to be_ok
+
+      expect(json['transactions'].count).to eq(2)
+
+      # first tx
+      expect(json['transactions'][0]['inputs'].count).to eq(1)
+      expect(json['transactions'][0]['outputs'].count).to eq(1)
+      expect(json['transactions'][0]['inputs'][0]['coinbase']).to_not be_nil
+      expect(json['transactions'][0]['inputs'][0]['amount']).to eq(50*(10**8))
+      expect(json['transactions'][0]['outputs'][0]['amount']).to eq(50*(10**8))
+      expect(json['transactions'][0]['outputs'][0]['addresses'].count).to eq(1)
+      expect(json['transactions'][0]['outputs'][0]['addresses'].first).to eq(blockchain.address_from_label('A'))
+
+      # second tx
+      expect(json['transactions'][1]['inputs'].count).to eq(1)
+      expect(json['transactions'][1]['outputs'].count).to eq(1)
+      expect(json['transactions'][1]['inputs'][0]['coinbase']).to be_nil
+      expect(json['transactions'][1]['inputs'][0]['amount']).to eq(50*(10**8))
+      expect(json['transactions'][1]['inputs'][0]['addresses'].count).to eq(1)
+      expect(json['transactions'][1]['inputs'][0]['addresses'].first).to eq(blockchain.address_from_label('B'))
+      expect(json['transactions'][1]['outputs'][0]['amount']).to eq(50*(10**8))
+      expect(json['transactions'][1]['outputs'][0]['addresses'].count).to eq(1)
+      expect(json['transactions'][1]['outputs'][0]['addresses'].first).to eq(blockchain.address_from_label('D'))
+    end
+  end
 end

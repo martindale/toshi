@@ -360,6 +360,11 @@ module Toshi
         Toshi.db[:address_ledger_entries].multi_insert(entries)
       end
 
+      def update_address_ledger_for_coinbase(block_reward)
+        Toshi.db[:address_ledger_entries].where(transaction_id: id).where(amount: 0)
+          .where(input_id: inputs.first.id).update(:amount => (block_reward * -1))
+      end
+
       def self.create_from_tx(tx, pool, branch, output_cache=nil, block=nil, index=0)
         RawTransaction.new(hsh: tx.hash, payload: Sequel.blob(tx.payload)).save unless !RawTransaction.where(hsh: tx.hash).empty?
 
