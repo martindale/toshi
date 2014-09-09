@@ -299,11 +299,11 @@ describe Toshi::Processor do
       expect(Toshi::Models::Address.where(address: address).first.balance).to eq(COINBASE_REWARD)
       expect(Toshi::Models::Address.where(address: address).first.spent_outputs.count).to eq(0)
       expect(Toshi::Models::Address.where(address: address).first.unspent_outputs.count).to eq(2)
-      output = Toshi::Models::Address.where(address: address).first.unspent_outputs.all[0]
+      output = Toshi::Models::Address.where(address: address).first.unspent_outputs.order(:output_id).first
       expect(output.amount).to eq(COINBASE_REWARD/2)
       expect(output.hsh).to eq(blockchain.chain['main']['7'].tx[1].hash)
       expect(output.position).to eq(1)
-      output = Toshi::Models::Address.where(address: address).first.unspent_outputs.all[1]
+      output = Toshi::Models::Address.where(address: address).first.unspent_outputs.order(:output_id).last
       expect(output.amount).to eq(COINBASE_REWARD/2)
       expect(output.hsh).to eq(blockchain.chain['main']['8'].tx[1].hash)
       expect(output.position).to eq(0)
