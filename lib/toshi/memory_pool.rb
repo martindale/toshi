@@ -156,11 +156,6 @@ module Toshi
       # make sure the transactions are on the tip pool (if they previously existed.)
       Toshi::Models::Transaction.where(hsh: tx_hashes)
         .update(pool: Toshi::Models::Transaction::TIP_POOL)
-
-      # handle the case of missing inputs for transactions in orphan blocks
-      if Toshi::Models::Block.orphan_branch.where(hsh: block.hash).any?
-        Toshi::Models::Transaction.update_address_ledger_for_missing_inputs(tx_hashes, @output_cache)
-      end
     end
 
     # Create a TxOut given a TxIn.

@@ -163,7 +163,9 @@ module Toshi
           fees:               fields[:fees]
         })
 
+        was_orphan = false
         if b.branch != branch
+          was_orphan        = b.branch == ORPHAN_BRANCH
           b.work            = Sequel.blob(OpenSSL::BN.new((prev_work + block.block_work).to_s).to_s(0)[4..-1])
           b.branch          = branch
           b.height          = height
@@ -186,6 +188,11 @@ module Toshi
         tx_hsh_to_id = {}
 
         pool = branch == MAIN_BRANCH ? Transaction::TIP_POOL : Transaction::BLOCK_POOL
+
+        # handle the case of missing inputs for transactions formerly in orphan blocks
+        if was_orphan
+          Toshi::Models::Transaction.update_address_ledger_for_missing_inputs(all_tx_hashes, output_cache)
+        end
 
         # find existing txs and associate them with the block
         # and update their display fields as well.

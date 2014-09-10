@@ -492,23 +492,26 @@ module Toshi
 
           # inputs
           tx[:inputs] = []
-          inputs = inputs_by_hsh[transaction.hsh].sort_by{|input| input.position}
-          inputs.each{|input|
-            parsed_script = Bitcoin::Script.new(input.script)
-            i = {}
-            i[:previous_transaction_hash] = input.prev_out
-            i[:output_index] = input.index
-            i[:sequence] = input.sequence.unpack("V")[0] if input.sequence != Bitcoin::P::TxIn::DEFAULT_SEQUENCE
-            if input.coinbase?
-              i[:amount] = input_amounts[input.id]
-              i[:coinbase] = input.script.unpack("H*")[0]
-            else
-              i[:amount] = input_amounts[input.id]
-              i[:script] = parsed_script.to_string
-              i[:addresses] = input_address_ids[input.id].map{|address_id| address_id ? addresses[address_id].address : "unknown" }
-            end
-            tx[:inputs] << i
-          }
+          # TODO: display something more sensible for orphans
+          if inputs_by_hsh[transaction.hsh]
+            inputs = inputs_by_hsh[transaction.hsh].sort_by{|input| input.position}
+            inputs.each{|input|
+              parsed_script = Bitcoin::Script.new(input.script)
+              i = {}
+              i[:previous_transaction_hash] = input.prev_out
+              i[:output_index] = input.index
+              i[:sequence] = input.sequence.unpack("V")[0] if input.sequence != Bitcoin::P::TxIn::DEFAULT_SEQUENCE
+              if input.coinbase?
+                i[:amount] = input_amounts[input.id]
+                i[:coinbase] = input.script.unpack("H*")[0]
+              else
+                i[:amount] = input_amounts[input.id]
+                i[:script] = parsed_script.to_string
+                i[:addresses] = input_address_ids[input.id].map{|address_id| address_id ? addresses[address_id].address : "unknown" }
+              end
+              tx[:inputs] << i
+            }
+          end
 
           # outputs
           tx[:outputs] = []
