@@ -153,14 +153,9 @@ module Toshi
       Toshi::Models::UnconfirmedTransaction.where(hsh: tx_hashes).destroy
       Toshi::Models::UnconfirmedRawTransaction.where(hsh: tx_hashes).delete
 
+      # make sure the transactions are on the tip pool (if they previously existed.)
       Toshi::Models::Transaction.where(hsh: tx_hashes)
         .update(pool: Toshi::Models::Transaction::TIP_POOL)
-
-      Toshi::Models::Transaction.where(hsh: tx_hashes).each{|t|
-        if t.in_orphan_block?
-          t.update_address_ledger_for_missing_inputs(@output_cache)
-        end
-      }
     end
 
     # Create a TxOut given a TxIn.
