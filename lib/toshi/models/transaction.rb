@@ -315,7 +315,7 @@ module Toshi
 
       # we might not have been able to add a ledger entry for missing inputs
       # in the case of orphan transactions. this handles that.
-      def self.update_address_ledger_for_missing_inputs(tx_ids, tx_hashes, output_cache)
+      def self.update_address_ledger_for_missing_inputs(tx_ids, output_cache)
         # figure out which ones are missing complete ledger entries.
         # they'll have a 0 amount.
         input_ids, ledger_entry_ids = [], []

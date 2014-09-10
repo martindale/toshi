@@ -221,7 +221,7 @@ module Toshi
         # note that we persist side blocks without validating outputs so we need to do
         # this only when connecting a main branch block.
         if going_main
-          Transaction.update_address_ledger_for_missing_inputs(tx_hsh_to_id, all_tx_hashes, output_cache)
+          Transaction.update_address_ledger_for_missing_inputs(tx_hsh_to_id, output_cache)
         end
 
         # create any txs that didn't already exist in the db
