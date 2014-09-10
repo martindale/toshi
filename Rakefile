@@ -71,3 +71,68 @@ task :perf do
   puts "Logging results to log/bootstrap-perf.log"
   system "time BOOTSTRAP_FILE=#{bootstrap_file} bin/bootstrap.rb 40000 > log/bootstrap-perf.log"
 end
+
+# fix ledger entries with missing previous output info
+task :fixit do
+  Toshi.db = Sequel.connect(Toshi.settings[:database_url])
+  output_cache = Toshi::OutputsCache.new
+  storage = Toshi::BlockchainStorage.new(output_cache)
+
+  storage.transaction do
+    start_time = Time.now
+    puts "#{start_time.to_i}| Looking for affected ledger entries"
+
+    # this is going to be really slow. there's no indexed way to find these entries.
+    # we're looking for input entries with 0 amounts.
+    affected_tx_ids = Toshi.db[:address_ledger_entries].exclude(input_id: nil).where(amount: 0).select_map(:transaction_id)
+
+    end_time = Time.now
+    puts "#{end_time.to_i}| Found #{affected_tx_ids.size} entries in #{end_time.to_i - start_time.to_i} seconds"
+    start_time = end_time
+    lookup_ids = affected_tx_ids.uniq
+    puts "#{start_time.to_i}| Looking up #{lookup_ids.size} affected transaction models"
+
+    counter = 0
+    bitcoin_txs, tx_ids_by_hsh = [], {}
+    Toshi::Models::Transaction.where(id: lookup_ids).each{|t|
+      puts "#{Time.now.to_i}| Model lookup complete" if counter == 0
+      counter += 1
+      if t.is_coinbase?
+        # handle coinbases specially
+        block = t.block
+        t.update_address_ledger_for_coinbase(t.total_out_value - block.fees) if block
+      else
+        tx_ids_by_hsh[t.hsh] = t.id
+      end
+      if counter % 10000 == 0
+        puts "#{Time.now.to_i}| Processed #{counter} txs of #{lookup_ids.size}"
+      end
+    }
+
+    end_time = Time.now
+    puts "#{end_time.to_i}| Found txs in #{end_time.to_i - start_time.to_i} seconds"
+    start_time = end_time
+    puts "#{start_time.to_i}| Fetching raw txs"
+
+    Toshi::Models::RawTransaction.where(hsh: tx_ids_by_hsh.keys.uniq).each{|raw|
+      bitcoin_txs << raw.bitcoin_tx
+    }
+
+    end_time = Time.now
+    puts "#{end_time.to_i}| Loaded raw txs in #{end_time.to_i - start_time.to_i} seconds"
+    start_time = end_time
+    puts "#{start_time.to_i}| Loading output cache"
+
+    storage.load_output_cache(bitcoin_txs)
+
+    end_time = Time.now
+    puts "#{end_time.to_i}| Loaded output cache in #{end_time.to_i - start_time.to_i} seconds"
+    start_time = end_time
+    puts "#{start_time.to_i}| Fixing entries"
+
+    Toshi::Models::Transaction.update_address_ledger_for_missing_inputs(tx_ids_by_hsh, output_cache)
+
+    end_time = Time.now
+    puts "#{end_time.to_i}| Fixed entries in #{end_time.to_i - start_time.to_i} seconds"
+  end
+end

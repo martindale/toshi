@@ -316,6 +316,9 @@ module Toshi
       # we might not have been able to add a ledger entry for missing inputs
       # in the case of orphan transactions. this handles that.
       def self.update_address_ledger_for_missing_inputs(tx_ids, output_cache)
+        start_time = Time.now
+        puts "#{start_time.to_i}| Checking for missing input entries"
+
         # figure out which ones are missing complete ledger entries.
         # they'll have a 0 amount.
         input_ids, ledger_entry_ids = [], []
@@ -325,15 +328,30 @@ module Toshi
           ledger_entry_ids << entry[:id]
         }
 
+        end_time = Time.now
+        puts "#{end_time.to_i}| Found #{ledger_entry_ids.size} entries missing input information in #{end_time.to_i - start_time.to_i} seconds"
+        start_time = end_time
+
         # all there
         return if input_ids.empty?
+
+        puts "#{start_time.to_i}| Deleting #{ledger_entry_ids.size} entries with missing info"
 
         # delete these for re-add
         Toshi.db[:address_ledger_entries].where(id: ledger_entry_ids).delete
 
+        end_time = Time.now
+        puts "#{end_time.to_i}| Deleted entries in #{end_time.to_i - start_time.to_i} seconds"
+        start_time = end_time
+        puts "#{start_time.to_i}| Gathering #{input_ids.size} inputs"
+
         # gather inputs and their ids
         inputs_by_id = {}
         Input.where(id: input_ids).each{|input| inputs_by_id[input.id] = input }
+
+        end_time = Time.now
+        puts "#{end_time.to_i}| Inputs gathered in #{end_time.to_i - start_time.to_i} seconds"
+        start_time = end_time
 
         # gather output ids and their associated address ids
         output_ids, address_ids = {}, {}
@@ -343,10 +361,17 @@ module Toshi
           raise "BUG: missing previous output!" if !output
           output_ids[input.id] = output.id
         }
+
+        start_time = Time.now
+        puts "#{start_time.to_i}| Gathering #{output_ids.values.size} address ids"
+
         Toshi.db[:addresses_outputs].where(output_id: output_ids.values).each{|entry|
           address_ids[entry[:output_id]] ||= []
           address_ids[entry[:output_id]] << entry[:address_id]
         }
+
+        end_time = Time.now
+        puts "#{end_time.to_i}| Address ids gathered in #{end_time.to_i - start_time.to_i} seconds"
 
         # add entries for the formerly missing previous output info
         entries = []
@@ -366,8 +391,14 @@ module Toshi
           }
         }
 
+        start_time = Time.now
+        puts "#{start_time.to_i}| Inserting #{entries.size} updated entries"
+
         # add the updated entries
         Toshi.db[:address_ledger_entries].multi_insert(entries)
+
+        end_time = Time.now
+        puts "#{end_time.to_i}| Entries inserted in #{end_time.to_i - start_time.to_i} seconds"
       end
 
       def update_address_ledger_for_coinbase(block_reward)
