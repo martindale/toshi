@@ -491,7 +491,7 @@ module Toshi
           # inputs
           tx[:inputs] = []
           # TODO: figure out how to more sensibly display orphans
-          if inputs_by_hsh[transaction.hsh].any?
+          if inputs_by_hsh[transaction.hsh]
             inputs = inputs_by_hsh[transaction.hsh].sort_by{|input| input.position}
             inputs.each{|input|
               parsed_script = Bitcoin::Script.new(input.script)
