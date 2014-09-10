@@ -486,6 +486,10 @@ module Toshi
         Toshi.db[:unconfirmed_inputs].where(hsh: hsh).delete
       end
 
+      def to_json(options={})
+        to_hash.to_json
+      end
+
       # See: https://wiki.postgresql.org/wiki/Slow_Counting
       def self.total_count
         res = Toshi.db.fetch("SELECT reltuples AS total FROM pg_class WHERE relname = 'unconfirmed_transactions'").first
