@@ -14,13 +14,13 @@ Toshi was built at [Coinbase](https://coinbase.com) to meet our requirements for
  * Fully passes TheBlueMatt's [regression test suite](https://github.com/TheBlueMatt/test-scripts)
  * PostgeSQL backed (more convenient for web applications and research)
  * JSON, Hex, and Binary API
- * Simple web interface to monitor node status
+ * Simple web [interface](http://network.coinbase.com) to monitor node status
 
 ## Comparison to Bitcoin Core
 
 Toshi is a Bitcoin implementation designed for building scalable web applications. It allows you to query the blockchain using a REST API or raw SQL. It comprises a number of individual services, using a shared database. Because Toshi indexes every transaction and block in the blockchain, it requires much more space to store the blockchain than Bitcoin Core (~270GB vs ~25GB as of September 2014). However, this makes it possible to run much richer queries that would otherwise not be possible with Bitcoin Core.
 
-Bitcoin Core (the reference implementation) is designed to run on a single server, and uses a mixture of raw files and LevelDB to store the blockchain. It allows you to query the blockchain using a JSON-RPC interface.
+Bitcoin Core (the reference implementation) is designed to run on a single server, and uses a mixture of raw files and LevelDB to store the blockchain. It allows you to query the blockchain using a limited JSON-RPC interface. Toshi can be run across multiple servers using replication and load balancing, and allows you to query the blockchain via SQL with more complex queries.
 
 Some examples of queries which Toshi can easily answer, which are not possible with Bitcoin Core:
 
@@ -30,7 +30,7 @@ Some examples of queries which Toshi can easily answer, which are not possible w
 * Find all transactions for any address
 * Find all transactions in a certain time period
 * Find all transactions over a certain amount
-* Find previous outputs (and addresses) for any given set of transactions
+* Find all transactions given a set of addresses
 
 ## Usage
 
@@ -38,7 +38,7 @@ Some examples of queries which Toshi can easily answer, which are not possible w
 
 Coinbase maintains a hosted version of Toshi that you can use at:
 
-**[http://bitcoin.network.coinbase.com](http://bitcoin.network.coinbase.com)**
+**[http://network.coinbase.com](http://network.coinbase.com)**
 
 This is the easiest way to get up and running. You can also run your own version of Toshi as described below.
 
