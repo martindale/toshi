@@ -189,11 +189,6 @@ module Toshi
 
         pool = branch == MAIN_BRANCH ? Transaction::TIP_POOL : Transaction::BLOCK_POOL
 
-        # handle the case of missing inputs for transactions formerly in orphan blocks
-        if was_orphan
-          Toshi::Models::Transaction.update_address_ledger_for_missing_inputs(all_tx_hashes, output_cache)
-        end
-
         # find existing txs and associate them with the block
         # and update their display fields as well.
         Transaction.where(hsh: all_tx_hashes).each do |t|
@@ -216,6 +211,11 @@ module Toshi
             # process them until their chain is connected.
             t.update_address_ledger_for_coinbase(t.total_out_value - b.fees)
           end
+        end
+
+        # handle the case of missing inputs for transactions formerly in orphan blocks
+        if was_orphan
+          Toshi::Models::Transaction.update_address_ledger_for_missing_inputs(tx_hsh_to_id, all_tx_hashes, output_cache)
         end
 
         # create any txs that didn't already exist in the db
