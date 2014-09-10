@@ -191,6 +191,7 @@ describe Toshi::Api, :type => :request do
       json = JSON.parse(last_response.body)
       expect(last_response).to be_ok
       expect(json['transactions'].count).to eq(3)
+      expect(json['branch']).to eq('main')
 
       # first tx
       expect(json['transactions'][0]['inputs'].count).to eq(1)
@@ -230,6 +231,7 @@ describe Toshi::Api, :type => :request do
       expect(last_response).to be_ok
 
       expect(json['transactions'].count).to eq(1)
+      expect(json['branch']).to eq('main')
 
       # first tx
       expect(json['transactions'][0]['inputs'].count).to eq(1)
@@ -247,6 +249,7 @@ describe Toshi::Api, :type => :request do
       expect(last_response).to be_ok
 
       expect(json['transactions'].count).to eq(2)
+      expect(json['branch']).to eq('main')
 
       # first tx
       expect(json['transactions'][0]['inputs'].count).to eq(1)
