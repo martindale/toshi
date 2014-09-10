@@ -316,7 +316,7 @@ module Toshi
       # we might not have been able to add a ledger entry for missing inputs
       # in the case of orphan transactions. this handles that.
       def self.update_address_ledger_for_missing_inputs(tx_ids, tx_hashes, output_cache)
-        # gather inputs and transactions and their ids
+        # gather inputs and their ids
         input_ids = {}
         Input.where(hsh: tx_hashes).each{|input| input_ids[input.id] = input }
 

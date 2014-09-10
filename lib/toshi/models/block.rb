@@ -196,7 +196,6 @@ module Toshi
           tx_associations << { transaction_id: t.id, block_id: b.id, position: tx_index }
           tx_index_hash.delete(t.hsh)
           tx_hsh_to_id[t.hsh] = t.id
-          t.remove_block(b) # there's probably a more graceful way to avoid dups
           t.height = b.height if b.is_main_chain?
           fields = block.tx[tx_index].additional_fields || {}
           # update additional fields
@@ -211,6 +210,11 @@ module Toshi
             # process them until their chain is connected.
             t.update_address_ledger_for_coinbase(t.total_out_value - b.fees)
           end
+        end
+
+        if tx_hsh_to_id.any?
+          # avoid possible dups
+          Toshi.db[:blocks_transactions].where(block_id: b.id).delete
         end
 
         # handle the case of missing inputs for transactions formerly in orphan blocks
