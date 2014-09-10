@@ -163,9 +163,9 @@ module Toshi
           fees:               fields[:fees]
         })
 
-        was_orphan = false
+        going_main = b.branch != MAIN_BRANCH && branch == MAIN_BRANCH
+
         if b.branch != branch
-          was_orphan        = b.branch == ORPHAN_BRANCH
           b.work            = Sequel.blob(OpenSSL::BN.new((prev_work + block.block_work).to_s).to_s(0)[4..-1])
           b.branch          = branch
           b.height          = height
@@ -218,7 +218,9 @@ module Toshi
         end
 
         # handle the case of missing inputs for transactions formerly in orphan blocks
-        if was_orphan
+        # note that we persist side blocks without validating outputs so we need to do
+        # this only when connecting a main branch block.
+        if going_main
           Transaction.update_address_ledger_for_missing_inputs(tx_hsh_to_id, all_tx_hashes, output_cache)
         end
 

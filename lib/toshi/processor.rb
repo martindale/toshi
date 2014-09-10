@@ -694,7 +694,7 @@ module Toshi
       # No further validations will be performed.
       if new_chain_work <= mainchain_work
         # This can only possible on the sidechain, so we simply store the block without further validations.
-        # Outputs will be validate when/if this block will become a part of the mainchain (see below).
+        # Outputs will be validated when/if this block will become a part of the mainchain (see below).
         @storage.load_output_cache(block.tx)
         return persist_block_on_side_branch(block,
                                             @storage.height_for_block_header(thischain_tip) + 1,

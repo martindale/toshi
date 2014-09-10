@@ -280,9 +280,9 @@ module Toshi
             else
               binary_hash = [input[:prev_out]].pack('H*').reverse
               output = output_cache.output_for_outpoint(binary_hash, input[:index])
-              # no point in creating the ledger entry now.
-              # Transaction#update_address_ledger_for_missing_inputs will add it later.
-              next if !output
+              # we may not have the output but still need to create a ledger entry.
+              # otherwise we won't display orphans properly with the API.
+              # we'll fix the entry if we find the previous output.
               amount = output ? output.amount * -1 : 0
             end
             entries << {
@@ -316,22 +316,28 @@ module Toshi
       # we might not have been able to add a ledger entry for missing inputs
       # in the case of orphan transactions. this handles that.
       def self.update_address_ledger_for_missing_inputs(tx_ids, tx_hashes, output_cache)
-        # gather inputs and their ids
-        input_ids = {}
-        Input.where(hsh: tx_hashes).each{|input| input_ids[input.id] = input }
-
-        # figure out which ones are missing ledger entries
-        Toshi.db[:address_ledger_entries].where(transaction_id: tx_ids.values.uniq)
-          .exclude(input_id: nil).select_map(:input_id).each{|input_id|
-          input_ids.delete(input_id)
+        # figure out which ones are missing complete ledger entries.
+        # they'll have a 0 amount.
+        input_ids, ledger_entry_ids = [], []
+        Toshi.db[:address_ledger_entries].where(transaction_id: tx_ids.values)
+          .exclude(input_id: nil).where(amount: 0).each{|entry|
+          input_ids << entry[:input_id]
+          ledger_entry_ids << entry[:id]
         }
 
         # all there
         return if input_ids.empty?
 
+        # delete these for re-add
+        Toshi.db[:address_ledger_entries].where(id: ledger_entry_ids).delete
+
+        # gather inputs and their ids
+        inputs_by_id = {}
+        Input.where(id: input_ids).each{|input| inputs_by_id[input.id] = input }
+
         # gather output ids and their associated address ids
         output_ids, address_ids = {}, {}
-        input_ids.each_value{|input|
+        inputs_by_id.each_value{|input|
           binary_hash = [input.prev_out].pack('H*').reverse
           output = output_cache.output_from_model_cache(binary_hash, input.index)
           raise "BUG: missing previous output!" if !output
@@ -342,9 +348,9 @@ module Toshi
           address_ids[entry[:output_id]] << entry[:address_id]
         }
 
-        # add entries for the previously missing inputs
+        # add entries for the formerly missing previous output info
         entries = []
-        input_ids.each_value{|input|
+        inputs_by_id.each_value{|input|
           binary_hash = [input.prev_out].pack('H*').reverse
           output = output_cache.output_for_outpoint(binary_hash, input.index)
           raise "BUG: missing previous output!" if !output
@@ -360,7 +366,7 @@ module Toshi
           }
         }
 
-        # add the missing entries now that we've found the prev outs
+        # add the updated entries
         Toshi.db[:address_ledger_entries].multi_insert(entries)
       end
 
@@ -491,26 +497,24 @@ module Toshi
 
           # inputs
           tx[:inputs] = []
-          # TODO: display something more sensible for orphans
-          if inputs_by_hsh[transaction.hsh]
-            inputs = inputs_by_hsh[transaction.hsh].sort_by{|input| input.position}
-            inputs.each{|input|
-              parsed_script = Bitcoin::Script.new(input.script)
-              i = {}
-              i[:previous_transaction_hash] = input.prev_out
-              i[:output_index] = input.index
-              i[:sequence] = input.sequence.unpack("V")[0] if input.sequence != Bitcoin::P::TxIn::DEFAULT_SEQUENCE
-              if input.coinbase?
-                i[:amount] = input_amounts[input.id]
-                i[:coinbase] = input.script.unpack("H*")[0]
-              else
-                i[:amount] = input_amounts[input.id]
-                i[:script] = parsed_script.to_string
-                i[:addresses] = input_address_ids[input.id].map{|address_id| address_id ? addresses[address_id].address : "unknown" }
-              end
-              tx[:inputs] << i
-            }
-          end
+          # NOTE: orphan tx inputs will show 0 amount from "unknown" address
+          inputs = inputs_by_hsh[transaction.hsh].sort_by{|input| input.position}
+          inputs.each{|input|
+            parsed_script = Bitcoin::Script.new(input.script)
+            i = {}
+            i[:previous_transaction_hash] = input.prev_out
+            i[:output_index] = input.index
+            i[:sequence] = input.sequence.unpack("V")[0] if input.sequence != Bitcoin::P::TxIn::DEFAULT_SEQUENCE
+            if input.coinbase?
+              i[:amount] = input_amounts[input.id]
+              i[:coinbase] = input.script.unpack("H*")[0]
+            else
+              i[:amount] = input_amounts[input.id]
+              i[:script] = parsed_script.to_string
+              i[:addresses] = input_address_ids[input.id].map{|address_id| address_id ? addresses[address_id].address : "unknown" }
+            end
+            tx[:inputs] << i
+          }
 
           # outputs
           tx[:outputs] = []
