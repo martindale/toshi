@@ -4,9 +4,14 @@
 
 Toshi is a complete implementation of the bitcoin protocol, written in Ruby and backed by PostgreSQL. It provides a RESTful API that is ideal for building scalable web applications or analyzing blockchain data.
 
-Toshi is designed to be 100% compatible with [Bitcoin Core](https://github.com/bitcoin/bitcoin). It performs complete transaction and block verification, and passes 100% of TheBlueMatt's [regression test suite](https://github.com/TheBlueMatt/test-scripts).
+Toshi is designed to be fully compatible with [Bitcoin Core](https://github.com/bitcoin/bitcoin). It performs complete transaction and block validation, and passes 100% of TheBlueMatt's [regression test suite](https://github.com/TheBlueMatt/test-scripts).
 
-Toshi was built at [Coinbase](https://coinbase.com) to meet our requirements for a highly scalable bitcoin node. Our goal is for Toshi to replace our core bitcoin network infrastructure in the near future.
+Toshi was built at [Coinbase](https://coinbase.com) to meet our requirements for a highly scalable bitcoin node. Toshi is under active development, and our goal is for it to replace our core bitcoin network infrastructure in the near future.
+
+You can see Toshi running on various networks at the following URLs:
+
+* https://network.coinbase.com/
+* https://testnet3.network.coinbase.com/
 
 ## Features
 
@@ -16,11 +21,11 @@ Toshi was built at [Coinbase](https://coinbase.com) to meet our requirements for
  * JSON, Hex, and Binary API
  * Simple web interface to monitor node status
 
-## Comparison to Bitcoin Core
+## Toshi vs. Bitcoin Core
 
-Toshi is a bitcoin implementation designed for building scalable web applications. It allows you to query the blockchain using a REST API or raw SQL. It comprises a number of individual services, using a shared database. Because Toshi indexes every transaction and block in the blockchain, it requires much more space to store the blockchain than Bitcoin Core (~270GB vs ~25GB as of September 2014). However, this makes it possible to run much richer queries that would otherwise not be possible with Bitcoin Core.
+**Toshi** is a bitcoin implementation designed for building scalable web applications. It allows you to query the blockchain using a REST API or raw SQL. It comprises a number of individual services, using a shared database. Because Toshi indexes every transaction and block in the blockchain, it requires much more space to store the blockchain than Bitcoin Core (~270GB vs ~25GB as of September 2014). However, this makes it possible to run much richer queries that would otherwise not be possible with Bitcoin Core.
 
-Bitcoin Core (the reference implementation) is designed to run on a single server, and uses a mixture of raw files and LevelDB to store the blockchain. It allows you to query the blockchain using a JSON-RPC interface.
+**Bitcoin Core** (the reference implementation) is designed to run on a single server, and uses a mixture of raw files and LevelDB to store the blockchain. It allows you to query the blockchain using a JSON-RPC interface.
 
 Some examples of queries which Toshi can easily answer, which are not possible with Bitcoin Core:
 
