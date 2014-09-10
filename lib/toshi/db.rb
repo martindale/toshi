@@ -6,7 +6,7 @@ module Toshi
     attr_accessor :db
 
     def connect
-      self.db = Sequel.connect(settings[:database_url])
+      self.db = Sequel.connect(settings[:database], settings[:database_opts])
     end
   end
 end

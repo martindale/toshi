@@ -62,9 +62,35 @@ module Toshi
         settings[key.to_sym] = value
       end
 
+      # default settings
+      settings[:network] ||= 'testnet3'
+      settings[:max_peers] ||= 8
+      settings[:log_level] ||= 'info'
       settings[:debug] = true # TODO: remove once logging is cleaned up
 
-      Bitcoin.network = settings[:network] # TODO: where should this live?
+      # convert redis setting to hash
+      if settings[:redis].nil?
+        settings[:redis] = {}
+      elsif settings[:redis].is_a?(String)
+        settings[:redis] = { url: settings[:redis] }
+      end
+
+      # additional postgres options
+      settings[:database_opts] = { adapter: 'postgres' }
+
+      # automatic docker support
+      if ENV['REDIS_PORT_6379_TCP_ADDR']
+        settings[:redis][:host] = ENV['REDIS_PORT_6379_TCP_ADDR']
+        settings[:redis][:port] = ENV['REDIS_PORT_6379_TCP_PORT']
+      end
+      if ENV['POSTGRES_PORT_5432_TCP_ADDR']
+        settings[:database_opts][:host] = ENV['POSTGRES_PORT_5432_TCP_ADDR']
+        settings[:database_opts][:port] = ENV['POSTGRES_PORT_5432_TCP_PORT']
+        settings[:database_opts][:user] = 'postgres'
+      end
+
+      # initialize bitcoin-ruby with correct network
+      Bitcoin.network = settings[:network]
 
       settings
     end

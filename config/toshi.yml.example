@@ -1,22 +1,57 @@
-development: &development
-  database_url: <%= ENV['DATABASE_URL'] || 'postgres://postgres:postgres@127.0.0.1:21001/toshi_development' %>
-  log_level: <%= ENV['LOG_LEVEL'] || 'debug' %>
-  max_peers: 8
-  network: <%= ENV['TOSHI_NETWORK'] || 'testnet3' %>
-  peers: []
-  redis_url: <%= ENV['REDIS_URL'] || 'redis://127.0.0.1:21002/0' %>
+development: &default
+  # Database configuration
+  # See: http://sequel.jeremyevans.net/rdoc/files/doc/opening_databases_rdoc.html
+  database:
+    database: toshi_development
+    # host: localhost
+    # user: postgres
+    # password: postgres
+
+  # Redis: A URL or hash which is passed to Redis.new
+  # See: https://github.com/redis/redis-rb
+  redis: 'redis://127.0.0.1/0'
+
+  # Network: bitcoin|testnet3|litecoin
+  # network: testnet3
+
+  # Peers: A list of trusted bitcoin nodes to connect to.
+  #        If this option is set, Toshi will only communicate with trusted nodes.
+  #
+  # peers:
+  #   - 127.0.0.1
+
+  # Max Peers: The maxiumum number of other bitcoin nodes to connect to.
+  #            This option is ignored when using a whitelist of peers.
+  #
+  # max_peers: 8
+
+  # Log Level: debug|info|warn|error|fatal
+  log_level: debug
 
 test:
-  <<: *development
-  database_url: <%= ENV['DATABASE_URL'] || 'postgres://postgres:postgres@127.0.0.1:21001/toshi_test' %>
-  log_level: <%= ENV['LOG_LEVEL'] || 'info' %>
-  max_peers: 1
-  redis_url: <%= ENV['REDIS_URL'] || 'redis://127.0.0.1:21002/1' %>
+  <<: *default
+  database:
+    database: toshi_test
+    # host: localhost
+    # user: postgres
+    # password: postgres
 
+  redis: 'redis://127.0.0.1/1'
+
+# In production we use environment varaibles to specify the configuration options
 production:
-  database_url: <%= ENV['DATABASE_URL'] %>
-  log_level: <%= ENV['LOG_LEVEL'] || 'info' %>
-  max_peers: 8
-  network: <%= ENV['TOSHI_NETWORK'] || 'bitcoin' %>
-  peers: <%= ENV['TOSHI_PEERS'].to_s.split(';') %>
+  database: <%= ENV['DATABASE_URL'] %>
+
+  # Portable redis variable. You can either specify REDIS_URL=redis://...
+  # or REDIS_PROVIDER=OPENREDIS_URL OPENREDIS_URL=redis://...
   redis_url: <%= ENV[ENV['REDIS_PROVIDER'] || 'REDIS_URL'] %>
+
+  network: <%= ENV['TOSHI_NETWORK'] %>
+
+  log_level: <%= ENV['LOG_LEVEL'] %>
+
+  max_peers: <%= ENV['TOSHI_MAX_PEERS'] %>
+
+  # Separate the list of peers with semicolons.
+  # e.g. TOSHI_PEERS=peer1;peer2;peer3
+  peers: <%= ENV['TOSHI_PEERS'].to_s.split(';') %>

@@ -19,9 +19,19 @@ Vagrant.configure("2") do |config|
   config.vm.synced_folder ".", "/vagrant"
 
   config.vm.provision "docker" do |d|
+    # start dependencies
+    d.run "postgres", image: "postgres:9.3.5", args: "-p 5432:5432", daemonize: true
+    d.run "redis", image: "redis:2.8.9", args: "-p 6379:6379", daemonize: true
+
+    # create databases
+    %w(toshi_development toshi_test).each do |db|
+      d.run "createdb", image: "postgres:9.3.5",
+        args: "--link postgres:postgres",
+        cmd: "/bin/bash -c \"createdb -h \$POSTGRES_PORT_5432_TCP_ADDR -p \$POSTGRES_PORT_5432_TCP_PORT -U postgres #{db}\""
+    end
+
+    # build and run toshi
     d.build_image "/vagrant", args: "-t toshi"
-    d.run "postgres",  image: "postgres:9.3.5", args: "-p 5432:5432", daemonize: true
-    d.run "redis",  image: "redis:2.8.9", args: "-p 6379:6379", daemonize: true
     d.run "toshi", args: "-p 5000:5000 --link postgres:postgres --link redis:redis"
   end
 

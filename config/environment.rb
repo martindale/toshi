@@ -25,12 +25,12 @@ end
 
 # connect sidekiq/redis
 Sidekiq.configure_server{|config|
-  config.redis = { url: Toshi.settings[:redis_url] }
+  config.redis = Toshi.settings[:redis]
   config.error_handlers << Proc.new {|ex,ctx_hash| error_handler(ex, ctx_hash) }
 }
 
 Sidekiq.configure_client{|config|
-  config.redis = { url: Toshi.settings[:redis_url] }
+  config.redis = Toshi.settings[:redis]
   config.error_handlers << Proc.new {|ex,ctx_hash| error_handler(ex, ctx_hash) }
 }
 

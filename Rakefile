@@ -8,30 +8,14 @@ namespace :db do
   desc "Run database migrations"
   task :migrate, [:version] do |t, args|
     Sequel.extension :migration
-    puts "sequel connect to #{Toshi.settings[:database_url]}"
-    db = Sequel.connect(Toshi.settings[:database_url])
+    db = Sequel.connect(Toshi.settings[:database])
     if args[:version]
-      puts "Migrating to version #{args[:version]}"
+      puts "Migrating to version #{args[:version].to_i}"
       Sequel::Migrator.run(db, "db/migrations", target: args[:version].to_i)
     else
       puts "Migrating to latest"
       Sequel::Migrator.run(db, "db/migrations")
     end
-  end
-
-  desc "Create test and dev databases"
-  task :create do
-    db_uri = URI(Toshi.settings[:database_url])
-    db_port = db_uri.port
-    db_host = db_uri.host
-    db_user = db_uri.user
-    db_name = db_uri.path[1..-1]
-    ENV["PGPASSWORD"] = db_uri.password
-    sys_db_args = "-p #{db_port} -h #{db_host} -U #{db_user}"
-    system "dropdb #{sys_db_args} #{db_name}"
-    system "createdb #{sys_db_args} #{db_name}"
-    system "bundle exec sequel -E -m db/migrations #{Toshi.settings[:database_url]}"
-    Rake::Task['db:migrate'].invoke
   end
 end
 
@@ -59,7 +43,11 @@ task :test do
   exec 'bundle exec rspec spec'
 end
 
-task :default => ['db:create', 'db:migrate', 'test']
+task :force_test_env do
+  ENV['TOSHI_ENV'] = 'test'
+end
+
+task :default => %w(force_test_env db:migrate test)
 
 # Time the bootstrapping of the first 40K blocks of testnet3
 task :perf do
