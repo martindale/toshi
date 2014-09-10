@@ -72,7 +72,8 @@ module Toshi
         cmd = JSON.parse(event.data)
         raise "parse error" if cmd.nil?
       rescue Exception => e
-        p [:message, event]
+        #p [:message, event]
+        @socket.send({ message_received: event.data }.to_json)
         return nil
       end
 
