@@ -216,6 +216,7 @@ describe Toshi::Api, :type => :request do
       expect(json['transactions'][1]['outputs'][0]['addresses'].first).to eq(blockchain.address_from_label('D'))
 
       # third tx
+      puts "THIRD TX: #{json['transactions'][2]['hash']}"
       expect(json['transactions'][2]['inputs'].count).to eq(1)
       expect(json['transactions'][2]['outputs'].count).to eq(1)
       expect(json['transactions'][2]['inputs'][0]['coinbase']).to be_nil

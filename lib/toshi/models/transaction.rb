@@ -1,3 +1,4 @@
+# encoding: UTF-8
 module Toshi
   module Models
     class Transaction < Sequel::Model
@@ -321,12 +322,17 @@ module Toshi
         inputs.each{|input| input_ids[input.id] = input }
 
         # figure out which ones are missing ledger entries
-        Toshi.db[:address_ledger_entries].where(transaction_id: id).exclude(input_id: 0).each{|entry|
+        Toshi.db[:address_ledger_entries].where(transaction_id: id).exclude(input_id: nil).each{|entry|
           input_ids.delete(entry[:input_id])
         }
 
+        puts "IN UPDATE FOR MISSING: #{self.hsh}"
+
         # all there
-        return if input_ids.empty?
+        if input_ids.empty?
+          puts "ALL THERE: #{self.hsh}"
+          return
+        end
 
         # gather output ids and their associated address ids
         output_ids, address_ids = {}, {}
@@ -356,8 +362,12 @@ module Toshi
               output_id: nil,
               amount: output.amount * -1,
             }
+
+            puts "ADDED ENTRY, input_id: #{input.id}, #{self.hsh}"
           }
         }
+
+        puts "EXIT UPDATE FOR MISSING: #{self.hsh}"
 
         # add the missing entries now that we've found the prev outs
         Toshi.db[:address_ledger_entries].multi_insert(entries)
