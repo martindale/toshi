@@ -321,8 +321,9 @@ module Toshi
         inputs.each{|input| input_ids[input.id] = input }
 
         # figure out which ones are missing ledger entries
-        Toshi.db[:address_ledger_entries].where(transaction_id: id).exclude(input_id: 0).each{|entry|
-          input_ids.delete(entry[:input_id])
+        Toshi.db[:address_ledger_entries].where(transaction_id: id)
+          .exclude(input_id: nil).select_map(:input_id).each{|input_id|
+          input_ids.delete(input_id)
         }
 
         # all there
