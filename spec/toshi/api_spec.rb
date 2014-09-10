@@ -1,3 +1,4 @@
+# encoding: UTF-8
 require 'spec_helper'
 require 'digest'
 
@@ -187,6 +188,7 @@ describe Toshi::Api, :type => :request do
     def check_api(blockchain, json)
       # block 3A
       block_3a = blockchain.chain['main']['3']
+      sleep 3
       get "/blocks/#{block_3a.hash}/transactions"
       json = JSON.parse(last_response.body)
       expect(last_response).to be_ok
