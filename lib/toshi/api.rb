@@ -8,8 +8,8 @@ $client.init_heartbeat
 module Toshi
   class Api < ::Sinatra::Base
     register Sinatra::Namespace
-    class NotFoundError < StandardError; end
-    class InvalidFormatError < StandardError; end
+    NotFoundError      = Class.new(StandardError)
+    InvalidFormatError = Class.new(StandardError)
 
     set :root,            File.dirname(File.dirname(__FILE__))
     set :public_folder,   Proc.new { File.join(root, "toshi/web/static") }
