@@ -1,3 +1,4 @@
+# encoding: UTF-8
 module Toshi
   # This class functions similar to bitcoind's CTxMemPool and uses Sequel/PostgreSQL for storage.
   class MemoryPool
@@ -155,12 +156,6 @@ module Toshi
 
       Toshi::Models::Transaction.where(hsh: tx_hashes)
         .update(pool: Toshi::Models::Transaction::TIP_POOL)
-
-      Toshi::Models::Transaction.where(hsh: tx_hashes).each{|t|
-        if t.in_orphan_block?
-          t.update_address_ledger_for_missing_inputs(@output_cache)
-        end
-      }
     end
 
     # Create a TxOut given a TxIn.

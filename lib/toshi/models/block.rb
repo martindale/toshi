@@ -1,3 +1,4 @@
+# encoding: UTF-8
 module Toshi
   module Models
     class Block < Sequel::Model
@@ -163,7 +164,9 @@ module Toshi
           fees:               fields[:fees]
         })
 
+        was_orphan = false
         if b.branch != branch
+          was_orphan        = b.branch == ORPHAN_BRANCH
           b.work            = Sequel.blob(OpenSSL::BN.new((prev_work + block.block_work).to_s).to_s(0)[4..-1])
           b.branch          = branch
           b.height          = height
@@ -208,6 +211,8 @@ module Toshi
             # in the case of a former side/orphan block because we don't fully
             # process them until their chain is connected.
             t.update_address_ledger_for_coinbase(t.total_out_value - b.fees)
+          elsif was_orphan
+            t.update_address_ledger_for_missing_inputs(output_cache)
           end
         end
 
