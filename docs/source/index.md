@@ -528,7 +528,6 @@ curl "http://toshi.io/api/addresses/12c6DSiU4Rq3P4ZxziKxzrL5LmMBrzjrJX/unspent_o
 
 > The above command returns JSON structured like this:
 
-
 ~~~json
 [
   {
@@ -553,3 +552,177 @@ This endpoint returns address unspent outputs
 ### HTTP Request
 
 `GET http://toshi.io/api/addresses/<hash>/unspent_outputs`
+
+# Websockets
+
+## Subscribe to blocks
+
+```json
+{"subscribe":"blocks"}
+```
+
+> on new block returns JSON structured like this:
+
+```json
+{
+  "subscription": "blocks",
+  "data": {
+    "hash": "0000000023197954763e1b17dc02a6823af1bbc79c12332bdd406e30ab0d2401",
+    "branch": "main",
+    "previous_block_hash": "000000003518748e59b2a48c13fc49755f84512a09903309a9d7c83733b4690f",
+    "next_blocks": [],
+    "height": 8640,
+    "confirmations": 0,
+    "merkle_root": "28fedcdf7dd35ad82f9e62b42baac65aaf27c97f187fa9a4fa802b0e07719826",
+    "time": "2012-05-28T04:57:14Z",
+    "created_at": "2014-09-10T06:25:20Z",
+    "nonce": 2491172923,
+    "bits": 473956288,
+    "difficulty": 4,
+    "reward": 5000000000,
+    "fees": 0,
+    "total_out": 5000000000,
+    "size": 196,
+    "transactions_count": 1,
+    "version": 1,
+    "transaction_hashes": [
+      "28fedcdf7dd35ad82f9e62b42baac65aaf27c97f187fa9a4fa802b0e07719826"
+    ]
+  }
+}
+```
+
+Receive notifications when a new block is found.
+
+### Connection URL
+
+`ws://toshi.io`
+
+## Subscribe to transactions
+
+```json
+{"subscribe":"transactions"}
+```
+
+> on new block returns JSON structured like this:
+
+```json
+{
+  "subscription": "transactions",
+  "data": {
+    "hash": "4990c51b41e0f9986d31d6221ae651ede8833e27bbb1af079f6ef269541044b0",
+    "version": 1,
+    "lock_time": 0,
+    "size": 223,
+    "inputs": [],
+    "outputs": [
+      {
+        "amount": 17971390,
+        "spent": false,
+        "script": "OP_DUP OP_HASH160 b5bd079c4d57cc7fc28ecf8213a6b791625b8183 OP_EQUALVERIFY OP_CHECKSIG",
+        "script_hex": "76a914b5bd079c4d57cc7fc28ecf8213a6b791625b818388ac",
+        "script_type": "hash160",
+        "addresses": [
+          "mx5u3nqdPpzvEZ3vfnuUQEyHg3gHd8zrrH"
+        ]
+      }
+    ],
+    "amount": 0,
+    "fees": 0,
+    "confirmations": 0,
+    "pool": "orphan"
+  }
+}
+```
+
+Receive notifications when a new transactions is submited to the network.
+
+### Connection URL
+
+`ws://toshi.io`
+
+## Fetch latest block
+
+```json
+{"fetch":"latest_block"}
+```
+
+> on new block returns JSON structured like this:
+
+```json
+{
+  "fetched": "latest_block",
+  "data": {
+    "hash": "4990c51b41e0f9986d31d6221ae651ede8833e27bbb1af079f6ef269541044b0",
+    "version": 1,
+    "lock_time": 0,
+    "size": 223,
+    "inputs": [],
+    "outputs": [
+      {
+        "amount": 17971390,
+        "spent": false,
+        "script": "OP_DUP OP_HASH160 b5bd079c4d57cc7fc28ecf8213a6b791625b8183 OP_EQUALVERIFY OP_CHECKSIG",
+        "script_hex": "76a914b5bd079c4d57cc7fc28ecf8213a6b791625b818388ac",
+        "script_type": "hash160",
+        "addresses": [
+          "mx5u3nqdPpzvEZ3vfnuUQEyHg3gHd8zrrH"
+        ]
+      }
+    ],
+    "amount": 0,
+    "fees": 0,
+    "confirmations": 0,
+    "pool": "orphan"
+  }
+}
+```
+
+Fetch latest block data.
+
+### Connection URL
+
+`ws://toshi.io`
+
+## Fetch latest transaction
+
+```json
+{"fetch":"latest_transaction"}
+```
+
+> on new block returns JSON structured like this:
+
+```json
+{
+  "fetched": "latest_transaction",
+  "data": {
+    "hash": "4990c51b41e0f9986d31d6221ae651ede8833e27bbb1af079f6ef269541044b0",
+    "version": 1,
+    "lock_time": 0,
+    "size": 223,
+    "inputs": [],
+    "outputs": [
+      {
+        "amount": 17971390,
+        "spent": false,
+        "script": "OP_DUP OP_HASH160 b5bd079c4d57cc7fc28ecf8213a6b791625b8183 OP_EQUALVERIFY OP_CHECKSIG",
+        "script_hex": "76a914b5bd079c4d57cc7fc28ecf8213a6b791625b818388ac",
+        "script_type": "hash160",
+        "addresses": [
+          "mx5u3nqdPpzvEZ3vfnuUQEyHg3gHd8zrrH"
+        ]
+      }
+    ],
+    "amount": 0,
+    "fees": 0,
+    "confirmations": 0,
+    "pool": "orphan"
+  }
+}
+```
+
+Fetch latest submited transaction data.
+
+### Connection URL
+
+`ws://toshi.io`

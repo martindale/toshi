@@ -76,12 +76,33 @@ module Toshi
         return nil
       end
 
-      case cmd['op']
-      when 'blocks'
-        subscribe_channel(:blocks, :on_channel_send_block)
-      when 'transactions'
-        subscribe_channel(:transactions, :on_channel_send_tx)
+      if cmd.key?('subscribe')
+        case cmd['subscribe']
+          when 'blocks'
+            subscribe_channel(:blocks, :on_channel_send_block)
+          when 'transactions'
+            subscribe_channel(:transactions, :on_channel_send_transaction)
+        end
       end
+
+      if cmd.key?('unsubscribe')
+        case cmd['unsubscribe']
+          when 'blocks'
+            unsubscribe_channel(:blocks)
+          when 'transactions'
+            unsubscribe_channel(:transactions)
+        end
+      end
+
+      if cmd.key?('fetch')
+        case cmd['fetch']
+          when 'latest_block'
+            on_fetch_latest_block()
+          when 'latest_transaction'
+            on_fetch_latest_transaction
+        end
+      end
+
     end
 
     def write_socket(data)
@@ -90,26 +111,28 @@ module Toshi
 
     # send a block to a connected websocket
     def on_channel_send_block(msg)
-      if msg
-        block = Toshi::Models::Block.where(hsh: msg['hash']).first
-      else
-        block = Toshi::Models::Block.head
-      end
-
+      block = Toshi::Models::Block.where(hsh: msg['hash']).first
       return unless block
-
-      hash = block.to_hash
-      write_socket({ op: 'block', data: hash }.to_json)
+      write_socket({ subscription: 'blocks', data: block.to_hash }.to_json)
     end
 
     # send a transaction to a connected websocket
-    def on_channel_send_tx(msg)
-      if msg
-        tx = Toshi::Models::UnconfirmedTransaction.from_hsh(msg['hash']).first
-      else
-        tx = Toshi::Models::UnconfirmedTransaction.first
-      end
-      write_socket({ op: 'transaction', data: tx.to_hash }.to_json)
+    def on_channel_send_transaction(msg)
+      tx = Toshi::Models::UnconfirmedTransaction.from_hsh(msg['hash']).first
+      return unless tx
+      write_socket({ subscription: 'transactions', data: tx.to_hash }.to_json)
+    end
+
+    def on_fetch_latest_block
+      block = Toshi::Models::Block.head
+      return unless block
+      write_socket({ fetched: 'latest_block', data: block.to_hash }.to_json)
+    end
+
+    def on_fetch_latest_transaction
+      tx = Toshi::Models::UnconfirmedTransaction.first
+      return unless tx
+      write_socket({ fetched: 'latest_transaction', data: tx.to_hash }.to_json)
     end
 
     def subscribe_channel(channel_name, method_name)

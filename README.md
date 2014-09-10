@@ -105,7 +105,7 @@ For POST/PUT requests, the extension specifies the format of the request body.
 
     # Transactions
     GET /api/transactions/<hash>                # Get transaction by hash
-    GET /api/unconfirmed_transactions           # Get list of unconfirmed transactions
+    GET /api/transactions/unconfirmed           # Get list of unconfirmed transactions
     POST /api/transactions                      # Broadcast a transaction to the network
 
     # Addresses
