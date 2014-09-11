@@ -11,11 +11,11 @@ use Rack::CommonLogger
 use Bugsnag::Rack
 
 app = Rack::URLMap.new(
-  '/'          => Toshi::Web,
-  '/api'       => Toshi::Api,
+  '/'          => Toshi::Web::WWW,
+  '/api'       => Toshi::Web::Api,
   '/sidekiq'   => Sidekiq::Web,
 )
 
-websocket_middleware = Toshi::WebSocketMiddleware.new(app)
+app = Toshi::Web::WebSockets.new(app)
 
-run websocket_middleware
+run app

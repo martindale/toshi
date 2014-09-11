@@ -195,10 +195,12 @@ module RedisMQ
     # blocking client methods
     #
     def init_poll
+      require 'eventmachine'
       EM.schedule{ EM.add_periodic_timer(POLL_TIMEOUT){ poll } }
     end
 
     def init_heartbeat
+      require 'eventmachine'
       EM.schedule{ EM.add_periodic_timer(PING_TIMEOUT){ ping } }
     end
 
