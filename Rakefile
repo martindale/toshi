@@ -72,6 +72,21 @@ task :perf do
   system "time BOOTSTRAP_FILE=#{bootstrap_file} bin/bootstrap.rb 40000 > log/bootstrap-perf.log"
 end
 
+task :fixit_test do
+  Toshi.db = Sequel.connect(Toshi.settings[:database_url])
+  output_cache = Toshi::OutputsCache.new
+  storage = Toshi::BlockchainStorage.new(output_cache)
+  query = "select outputs.hsh as fix_hsh,
+                  outputs.position as fix_pos,
+                  outputs.id as fix_id,
+                  outputs.amount as fix_amount,
+                  outputs.script as fix_script
+                  from outputs where id = 4000"
+  Toshi.db.fetch(query).each{|row|
+    storage.load_output_cache2(row)
+  }
+end
+
 # fix ledger entries with missing previous output info
 task :fixit do
   Toshi.db = Sequel.connect(Toshi.settings[:database_url])
