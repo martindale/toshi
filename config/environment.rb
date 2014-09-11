@@ -14,7 +14,7 @@ end
 STDOUT.sync = true unless Toshi.env == :production
 
 # connect db
-Toshi.connect
+Toshi.connect_database
 
 def error_handler ex, ctx_hash
   p ex
