@@ -1,11 +1,13 @@
 require 'spec_helper'
 require 'digest'
 
-describe Toshi::Api, :type => :request do
+require 'toshi/web/api'
+
+describe Toshi::Web::Api, :type => :request do
   include Rack::Test::Methods
 
   def app
-    @app ||= Toshi::Api
+    @app ||= Toshi::Web::Api
   end
 
   before do |it|
