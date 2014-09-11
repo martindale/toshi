@@ -117,6 +117,7 @@ task :fixit do
     counter = 0
     Toshi::Models::RawTransaction.where(hsh: tx_ids_by_hsh.keys.uniq).each{|raw|
       bitcoin_txs << raw.bitcoin_tx
+      counter += 1
       if counter % 10000 == 0
         puts "#{Time.now.to_i}| Fecthed #{counter} raw txs"
       end
