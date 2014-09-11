@@ -35,20 +35,10 @@ namespace :db do
   end
 end
 
-task :sidekiq do
-  FileUtils.mkdir_p(ENV['COINBASE_LOG_PATH'] || 'run')
-
-  log_path = ENV['COINBASE_LOG_PATH'] ? File.join(ENV['COINBASE_LOG_PATH'], 'sidekiq.log') : 'log/sidekiq.log'
-  threads = ENV['COINBASE_SIDEKIQ_THREADS'] || "20"
-  sh "bundle exec sidekiq -L #{log_path} -c #{threads} -r ./config/environment.rb"
-end
-
-task :api do
-  exec 'bundle exec ruby ./bin/api.rb'
-end
-
-task :web_sock do
-  exec 'bundle exec thin -C thin.conf restart'
+task :redis_local do
+  db_path   = File.expand_path(File.join(Dir.pwd, 'tmp/db_redis_test'))
+  FileUtils.mkdir_p(db_path) unless File.directory?(db_path)
+  sh %[sh -c 'echo "port 21002\nbind 127.0.0.1\ndaemonize no\nlogfile stdout\ndir \"#{db_path}\"" | redis-server -' 2>&1]
 end
 
 task :console do
