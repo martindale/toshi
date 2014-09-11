@@ -2,9 +2,9 @@ STDOUT.sync = STDERR.sync = true
 
 require_relative 'config/environment'
 
-require "toshi/web"
-require "toshi/api"
-require "toshi/websocket_server"
+require "toshi/web/www"
+require "toshi/web/api"
+require "toshi/web/websocket"
 require 'sidekiq/web'
 
 use Rack::CommonLogger
