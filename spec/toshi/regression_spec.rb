@@ -25,7 +25,7 @@ describe 'TheBlueMatt BitcoindComparisionTool', type: :regression do
        'NODE_ACCEPT_INCOMING' => "true",
        'NODE_LISTEN_PORT' => '18444'})
     @pids = []
-    cmd = "foreman start"
+    cmd = "foreman start -c web=0,block_worker=1,transaction_worker=1,peer_manager=1"
     puts "Starting #{cmd}"
     logfile = "log/foreman.log"
     _, _, _, wait_thr = Open3.popen3(run_env, cmd + " 1>>#{logfile} 2>>#{logfile}" + " &")
