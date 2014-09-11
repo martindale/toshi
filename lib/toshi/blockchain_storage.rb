@@ -466,6 +466,18 @@ module Toshi
       true
     end
 
+    def load_output_cache2(row)
+      txout = Bitcoin::Protocol::TxOut.new(row[:fix_amount].to_i, row[:script])
+      output = Output.new
+      output.id = row[:fix_id]
+      output.amount = row[:fix_amount]
+      output.hsh = row[:fix_hsh]
+      output.position = row[:fix_pos]
+      txout.instance_variable_set(:@cached_model, output)
+      binary_hash = Toshi::Utils.hex_to_bin_hash(output.hsh)
+      @output_cache.set_output_for_outpoint(binary_hash, output.position, txout)
+    end
+
     # Helper method.
     def load_output_cache_from_query(query)
       Toshi::Models::Output.where(query).each{|output|

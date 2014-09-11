@@ -111,24 +111,57 @@ task :fixit do
 
     end_time = Time.now
     puts "#{end_time.to_i}| Processed txs in #{end_time.to_i - start_time.to_i} seconds"
-    start_time = end_time
-    puts "#{start_time.to_i}| Fetching raw txs"
+#    start_time = end_time
+#    puts "#{start_time.to_i}| Fetching raw txs"
 
-    counter = 0
-    Toshi::Models::RawTransaction.where(hsh: tx_ids_by_hsh.keys.uniq).each{|raw|
-      bitcoin_txs << raw.bitcoin_tx
-      counter += 1
-      if counter % 10000 == 0
-        puts "#{Time.now.to_i}| Fecthed #{counter} raw txs"
-      end
-    }
+#    counter = 0
+#    Toshi::Models::RawTransaction.where(hsh: tx_ids_by_hsh.keys.uniq).each{|raw|
+#      bitcoin_txs << raw.bitcoin_tx
+#      counter += 1
+#      if counter % 10000 == 0
+#        puts "#{Time.now.to_i}| Fecthed #{counter} raw txs"
+#      end
+#    }
 
     end_time = Time.now
-    puts "#{end_time.to_i}| Loaded raw txs in #{end_time.to_i - start_time.to_i} seconds"
+#    puts "#{end_time.to_i}| Loaded raw txs in #{end_time.to_i - start_time.to_i} seconds"
     start_time = end_time
     puts "#{start_time.to_i}| Loading output cache"
 
-    storage.load_output_cache(bitcoin_txs)
+    query = "select outputs.hsh as fix_hsh,
+                    outputs.position as fix_pos,
+                    outputs.id as fix_id,
+                    outputs.amount as fix_amount
+                    from outputs, inputs, transactions, address_ledger_entries
+                    where address_ledger_entries.output_id is NULL and
+                          address_ledger_entries.amount = 0 and
+                          transactions.id = address_ledger_entries.transaction_id and
+                          transactions.pool = 1 and
+                          inputs.id = address_ledger_entries.input_id and
+                          inputs.prev_out = outputs.hsh and
+                          inputs.index = outputs.position"
+    counter = 0
+    Toshi.db.fetch(query).each{|row|
+      storage.load_output_cache2(row)
+      counter += 1
+      if counter % 10000 == 0
+        puts "#{Time.now.to_i}| Fecthed #{counter} previous outputs"
+      end
+    }
+
+#    "select count(address_ledger_entries.id)
+#            from address_ledger_entries,
+#                 inputs,
+#                 transactions
+#            where output_id is null and
+#                  amount = 0 and
+#                  transactions.id = address_ledger_entries.transaction_id and
+#                  transactions.pool = 1 and
+#                  inputs.id = address_ledger_entries.input_id and
+#                  inputs.index != 4294967295"
+
+    #storage.load_output_cache(bitcoin_txs)
+    #bitcoin_txs.clear
 
     end_time = Time.now
     puts "#{end_time.to_i}| Loaded output cache in #{end_time.to_i - start_time.to_i} seconds"
