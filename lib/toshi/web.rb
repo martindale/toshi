@@ -1,10 +1,7 @@
-require 'eventmachine'
 require 'sinatra'
-require "sinatra/namespace"
 
 module Toshi
   class Web < ::Sinatra::Base
-    register Sinatra::Namespace
     NotFoundError      = Class.new(StandardError)
     InvalidFormatError = Class.new(StandardError)
 

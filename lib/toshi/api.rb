@@ -1,13 +1,10 @@
-require 'eventmachine'
 require 'sinatra'
-require "sinatra/namespace"
 
 $client = RedisMQ::Channel.new(:client)
 $client.init_heartbeat
 
 module Toshi
   class Api < ::Sinatra::Base
-    register Sinatra::Namespace
     NotFoundError      = Class.new(StandardError)
     InvalidFormatError = Class.new(StandardError)
 
