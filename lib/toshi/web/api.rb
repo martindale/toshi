@@ -20,6 +20,11 @@ module Toshi
           end
           fmt
         end
+
+        def json(obj)
+          options = {:space => ''}
+          JSON.pretty_generate(obj, options)
+        end
       end
 
       ####
@@ -32,7 +37,7 @@ module Toshi
 
         case format
         when 'json'
-          @blocks.map(&:to_hash).to_json
+          json @blocks.map(&:to_hash)
         else
           raise InvalidFormatError
         end
@@ -50,7 +55,7 @@ module Toshi
         raise NotFoundError unless @block
 
         case format
-        when 'json'; @block.to_json
+        when 'json'; json(@block.to_hash)
         when 'hex';  @block.raw.payload.unpack("H*")[0]
         when 'bin';  @block.raw.payload
         else raise InvalidFormatError
@@ -70,7 +75,7 @@ module Toshi
 
         case format
         when 'json'
-          @block.to_json(show_txs=true)
+          json(@block.to_hash(show_txs=true))
         else
           raise InvalidFormatError
         end
@@ -101,7 +106,7 @@ module Toshi
         raise NotFoundError unless @tx
 
         case format
-        when 'json'; @tx.to_json
+        when 'json'; json(@tx.to_hash)
         when 'hex';  @tx.raw.payload.unpack("H*")[0]
         when 'bin';  @tx.raw.payload
         else raise InvalidFormatError
@@ -115,7 +120,7 @@ module Toshi
         case format
         when 'json'
           mempool = Toshi::Models::UnconfirmedTransaction.to_hash_collection(mempool)
-          mempool.to_json
+          json(mempool)
         else
           raise InvalidFormatError
         end
@@ -126,24 +131,24 @@ module Toshi
       ####
 
       get '/addresses/:address.?:format?' do
-        @address = Toshi::Models::Address.where(address: params[:address]).first
-        raise NotFoundError unless @address
+        address = Toshi::Models::Address.where(address: params[:address]).first
+        raise NotFoundError unless address
 
         case format
         when 'json';
-          @address.to_json
+          json(address.to_hash)
         else
           raise InvalidFormatError
         end
       end
 
       get '/addresses/:address/transactions.?:format?' do
-        @address = Toshi::Models::Address.where(address: params[:address]).first
-        raise NotFoundError unless @address
+        address = Toshi::Models::Address.where(address: params[:address]).first
+        raise NotFoundError unless address
 
         case format
         when 'json'
-          @address.to_json options={show_txs:true, offset:params[:offset], limit:params[:limit]}
+          json address.to_hash(options={show_txs:true, offset:params[:offset], limit:params[:limit]})
         else
           raise InvalidFormatError
         end
@@ -156,7 +161,7 @@ module Toshi
         case format
         when 'json'
           unspent_outputs = Toshi::Models::Output.to_hash_collection(@address.unspent_outputs)
-          unspent_outputs.to_json
+          json(unspent_outputs)
         else
           raise InvalidFormatError
         end
@@ -190,7 +195,7 @@ module Toshi
 
         case format
         when 'json'
-          hash.to_json
+          json(hash)
         else
           raise InvalidFormatError
         end

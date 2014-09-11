@@ -11,9 +11,9 @@ module Toshi
         @database_size = Toshi::Utils.database_size
         @tx_count = Toshi::Models::Transaction.total_count
         @unconfirmed_tx_count = Toshi::Models::UnconfirmedTransaction.total_count
-        @blocks_count = Toshi.db[:blocks].where(branch: 0).count()
-        @side_blocks_count = Toshi.db[:blocks].where(branch: 1).count()
-        @orphan_blocks_count = Toshi.db[:blocks].where(branch: 2).count()
+        @blocks_count = Toshi.db[:blocks].where(branch: 0).count
+        @side_blocks_count = Toshi.db[:blocks].where(branch: 1).count
+        @orphan_blocks_count = Toshi.db[:blocks].where(branch: 2).count
 
         content_type 'text/html'
         erb :index
