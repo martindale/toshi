@@ -110,12 +110,16 @@ task :fixit do
     }
 
     end_time = Time.now
-    puts "#{end_time.to_i}| Found txs in #{end_time.to_i - start_time.to_i} seconds"
+    puts "#{end_time.to_i}| Processed txs in #{end_time.to_i - start_time.to_i} seconds"
     start_time = end_time
     puts "#{start_time.to_i}| Fetching raw txs"
 
+    counter = 0
     Toshi::Models::RawTransaction.where(hsh: tx_ids_by_hsh.keys.uniq).each{|raw|
       bitcoin_txs << raw.bitcoin_tx
+      if counter % 10000 == 0
+        puts "#{Time.now.to_i}| Fecthed #{counter} raw txs"
+      end
     }
 
     end_time = Time.now
