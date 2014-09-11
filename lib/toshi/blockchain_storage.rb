@@ -467,7 +467,7 @@ module Toshi
     end
 
     def load_output_cache2(row)
-      txout = Bitcoin::Protocol::TxOut.new(row[:fix_amount].to_i, row[:script])
+      txout = Bitcoin::Protocol::TxOut.new(row[:fix_amount].to_i, row[:fix_script])
       output = Output.new
       output.id = row[:fix_id]
       output.amount = row[:fix_amount]

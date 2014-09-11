@@ -131,7 +131,8 @@ task :fixit do
     query = "select outputs.hsh as fix_hsh,
                     outputs.position as fix_pos,
                     outputs.id as fix_id,
-                    outputs.amount as fix_amount
+                    outputs.amount as fix_amount,
+                    outputs.script as fix_script
                     from outputs, inputs, transactions, address_ledger_entries
                     where address_ledger_entries.output_id is NULL and
                           address_ledger_entries.amount = 0 and
