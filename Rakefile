@@ -112,11 +112,12 @@ task :fixit do
     Toshi::Models::Transaction.where(id: lookup_ids).each{|t|
       puts "#{Time.now.to_i}| Model lookup complete" if counter == 0
       counter += 1
+      next if !t.in_view?
       if t.is_coinbase?
         # handle coinbases specially
         block = t.block
         t.update_address_ledger_for_coinbase(t.total_out_value - block.fees) if block
-      elsif t.in_view?
+      else
         tx_ids_by_hsh[t.hsh] = t.id
       end
       if counter % 10000 == 0
