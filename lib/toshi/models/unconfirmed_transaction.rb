@@ -487,6 +487,16 @@ module Toshi
         Toshi.db[:unconfirmed_transactions].where(id: transaction_ids).delete
       end
 
+      def self.remove_all
+        Toshi.db[:unconfirmed_addresses_outputs].truncate
+        Toshi.db[:unconfirmed_ledger_entries].truncate
+        Toshi.db[:unconfirmed_addresses].truncate(:cascade => true)
+        Toshi.db[:unconfirmed_outputs].truncate(:cascade => true)
+        Toshi.db[:unconfirmed_inputs].truncate(:cascade => true)
+        Toshi.db[:unconfirmed_transactions].truncate(:cascade => true)
+        Toshi.db[:unconfirmed_raw_transactions].truncate
+      end
+
       def to_json(options={})
         to_hash.to_json
       end
