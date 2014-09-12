@@ -859,6 +859,8 @@ module Toshi
         return false
       end
 
+      log_raw_block_events(block.hash, "AADEBUG time: #{(Time.now - start_time).to_f}")
+
       # BIP16 (P2SH scripts) didn't become active until Apr 1 2012.
       bip16_switch_time = 1333238400
       strict_p2sh = (block.time >= bip16_switch_time)
@@ -926,11 +928,17 @@ module Toshi
 
       end # each tx in block
 
+      log_raw_block_events(block.hash, "AADEBUG2 time: #{(Time.now - start_time).to_f}")
+
       # Optimized method for marking outputs in the database in bulk
       @storage.update_outputs_on_connect_block(block)
 
+      log_raw_block_events(block.hash, "AADEBUG3 time: #{(Time.now - start_time).to_f}")
+
       # mempool.removeForBlock() normally done in ConnectTip()
       @mempool.remove_for_block(block)
+
+      log_raw_block_events(block.hash, "AADEBUG4 time: #{(Time.now - start_time).to_f}")
 
       # Verify that coinbase pays no more than fees + block reward.
       coinbase_out_value = tx_value_out(block.tx[0])
