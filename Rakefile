@@ -116,7 +116,7 @@ task :fixit do
         # handle coinbases specially
         block = t.block
         t.update_address_ledger_for_coinbase(t.total_out_value - block.fees) if block
-      else
+      elsif t.in_view?
         tx_ids_by_hsh[t.hsh] = t.id
       end
       if counter % 10000 == 0
