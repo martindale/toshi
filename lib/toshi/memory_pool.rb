@@ -150,7 +150,7 @@ module Toshi
       }
 
       # TODO: should probably transfer timestamps and other information
-      Toshi::Models::UnconfirmedTransaction.where(hsh: tx_hashes).destroy
+      Toshi::Models::UnconfirmedTransaction.remove_for_block(tx_hashes)
       Toshi::Models::UnconfirmedRawTransaction.where(hsh: tx_hashes).delete
 
       # make sure the transactions are on the tip pool (if they previously existed.)

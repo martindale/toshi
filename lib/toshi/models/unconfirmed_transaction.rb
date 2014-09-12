@@ -477,13 +477,14 @@ module Toshi
         transaction
       end
 
-      # cleanup
-      def before_destroy
-        output_ids = Toshi.db[:unconfirmed_outputs].where(hsh: hsh).select_map(:id)
+      def self.remove_for_block(hashes)
+        transaction_ids = Toshi.db[:unconfirmed_transactions].where(hsh: hashes).select_map(:id)
+        output_ids = Toshi.db[:unconfirmed_outputs].where(hsh: hashes).select_map(:id)
         Toshi.db[:unconfirmed_addresses_outputs].where(output_id: output_ids).delete
-        Toshi.db[:unconfirmed_ledger_entries].where(transaction_id: id).delete
+        Toshi.db[:unconfirmed_ledger_entries].where(transaction_id: transaction_ids).delete
         Toshi.db[:unconfirmed_outputs].where(id: output_ids).delete
-        Toshi.db[:unconfirmed_inputs].where(hsh: hsh).delete
+        Toshi.db[:unconfirmed_inputs].where(hsh: hashes).delete
+        Toshi.db[:unconfirmed_transactions].where(id: transaction_ids).delete
       end
 
       def to_json(options={})
