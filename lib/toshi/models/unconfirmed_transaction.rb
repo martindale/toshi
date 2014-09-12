@@ -478,7 +478,6 @@ module Toshi
       end
 
       def self.remove_for_block(hashes)
-        start_time = Time.now.to_i
         transaction_ids = Toshi.db[:unconfirmed_transactions].where(hsh: hashes).select_map(:id)
         output_ids = Toshi.db[:unconfirmed_outputs].where(hsh: hashes).select_map(:id)
         Toshi.db[:unconfirmed_addresses_outputs].where(output_id: output_ids).delete
