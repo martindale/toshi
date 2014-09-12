@@ -152,16 +152,16 @@ module Toshi
         self.remove_conflicts(tx)
       }
 
-      log.debug{ "MEMPOOL DEBUG took: #{Time.now.to_i - start_time.to_i}" }
+      logger.debug{ "MEMPOOL DEBUG took: #{Time.now.to_i - start_time.to_i}" }
 
       # TODO: should probably transfer timestamps and other information
       Toshi::Models::UnconfirmedTransaction.where(hsh: tx_hashes).destroy
 
-      log.debug{ "MEMPOOL DEBUG2 took: #{Time.now.to_i - start_time.to_i}" }
+      logger.debug{ "MEMPOOL DEBUG2 took: #{Time.now.to_i - start_time.to_i}" }
 
       Toshi::Models::UnconfirmedRawTransaction.where(hsh: tx_hashes).delete
 
-      log.debug{ "MEMPOOL DEBUG3 took: #{Time.now.to_i - start_time.to_i}" }
+      logger.debug{ "MEMPOOL DEBUG3 took: #{Time.now.to_i - start_time.to_i}" }
 
       # make sure the transactions are on the tip pool (if they previously existed.)
       Toshi::Models::Transaction.where(hsh: tx_hashes)
