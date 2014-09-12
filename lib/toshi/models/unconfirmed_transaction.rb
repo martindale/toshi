@@ -478,13 +478,22 @@ module Toshi
       end
 
       def self.remove_for_block(hashes)
+        start_time = Time.now.to_i
+        puts "AADEBUG here"
         transaction_ids = Toshi.db[:unconfirmed_transactions].where(hsh: hashes).select_map(:id)
+        puts "AADEBUG2 here: #{Time.now.to_i - start_time}"
         output_ids = Toshi.db[:unconfirmed_outputs].where(hsh: hashes).select_map(:id)
+        puts "AADEBUG3 here: #{Time.now.to_i - start_time}"
         Toshi.db[:unconfirmed_addresses_outputs].where(output_id: output_ids).delete
+        puts "AADEBUG4 here: #{Time.now.to_i - start_time}"
         Toshi.db[:unconfirmed_ledger_entries].where(transaction_id: transaction_ids).delete
+        puts "AADEBUG5 here: #{Time.now.to_i - start_time}"
         Toshi.db[:unconfirmed_outputs].where(id: output_ids).delete
+        puts "AADEBUG6 here: #{Time.now.to_i - start_time}"
         Toshi.db[:unconfirmed_inputs].where(hsh: hashes).delete
+        puts "AADEBUG7 here: #{Time.now.to_i - start_time}"
         Toshi.db[:unconfirmed_transactions].where(id: transaction_ids).delete
+        puts "AADEBUG8 here: #{Time.now.to_i - start_time}"
       end
 
       def to_json(options={})
