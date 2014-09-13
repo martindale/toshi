@@ -23,7 +23,6 @@ module Toshi
   autoload :MemoryPool,         'toshi/memory_pool'
   autoload :OutputsCache,       'toshi/outputs_cache'
   autoload :Processor,          'toshi/processor'
-  autoload :Api,                'toshi/api'
 
   module Models
     autoload :Address,                    'toshi/models/address'

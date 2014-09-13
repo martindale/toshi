@@ -136,7 +136,7 @@ module Toshi
       # this is for peers
       @mq.workers_push_all({ 'msg' => 'relay_tx', 'hash' => tx.hash })
       # this is for websocket consumers
-      @mq.clients_push_all({ 'msg' => 'new_tx', 'hash' => tx.hash })
+      @mq.clients_push_all({ 'msg' => 'new_transaction', 'hash' => tx.hash })
     end
 
     # FIXME: bitcoind won't relay inventory to peers that are known to already have it.
