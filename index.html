@@ -1,0 +1,422 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <title>Toshi</title>
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="css/admin.css">
+  <link rel="shortcut icon" href="images/favicon.ico">
+
+
+  <meta property="og:title" content="Toshi - Open source Bitcoin Node">
+  <meta property="og:description" content="Toshi is a built on top of Ruby and PostgreSQL. It’s 100% Open source">
+  <meta property="og:image" content="https://coinbase.com/assets/toshi/og-toshi.jpg">
+  <meta property="og:type" content="website">
+  <meta itemprop="name" content="Toshi - Open source Bitcoin Node">
+  <meta itemprop="description" content="Toshi is a built on top of Ruby and PostgreSQL. It’s 100% Open source">
+  <meta itemprop="image" content="https://coinbase.com/assets/toshi/og-toshi.jpg">
+
+
+</head>
+<body class="home">
+  <header>
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12">
+          <nav class="navbar navbar-default" role="navigation">
+            <div class="container-fluid">
+              <ul class="nav navbar-nav">
+                <li class="active"><a href="index.html">Home</a></li>
+                <li><a href="stats.html">Documentation</a></li>
+              </ul>
+            </div><!-- /.container-fluid -->
+          </nav>
+        </div>
+      </div>
+    </div>
+    <div id="header" class="container">
+      <div class="row logo">
+        <div class="col-md-8 col-md-push-2">
+          <span class="toshi_logo"></span>
+          <h1>TOSHI</h1>
+          <p>The first open source Bitcoin node designed for large scale projects.<br/><i>Maintained by Coinbase.</i></p>
+          <div class="toshi_links">
+            <button>Documentation</button>
+            <button>VIEW ON GITHUB</button>
+          </div>
+        </div>
+      </div>
+    </div> <!-- container -->
+
+    <arrows id="scrollTriger">
+            <arrow ar-i="0"></arrow>
+            <arrow ar-i="1"></arrow>
+            <arrow ar-i="2"></arrow>
+        </arrows>
+
+  </header>
+
+  <section class="page_wraper">
+    <div class="container">
+
+      <article class="features">
+      <div class="container">
+        <div class="row">
+          <div class="col-sm-4 feature_a">
+            <div>
+              <h3>100% open source</h3>
+              <p>Toshi is a full open source Bitcoin node implementation built for web scale.</p>
+            </div>
+          </div>
+          <div class="col-sm-4 feature_b">
+            <div>
+              <h3>PostgreSQL</h3>
+              <p>Toshi is backed by PostgreSQL due to its impeccable reputation,
+                proven track record, and powerful feature set.
+              </p>
+            </div>
+          </div>
+          <div class="col-sm-4 feature_c">
+            <div>
+              <h3>powerful API</h3>
+              <p>Toshi provides powerful APIs to aid in blockchain exploration,
+                analysis, as well as wallet functionality at scale.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+      <article class="quick_api" id="scrollToId">
+
+        <div class="row">  
+            <div class="col-md-12">
+              <div class="section_title">
+                <h2>TOSHI IS DESIGNED FOR DEVELOPERS
+                  <span>AND WE'RE ACTIVELY SEEKING CONTRIBUTORS</span>
+                </h2>
+              </div>     
+            <div class="quick_api_nav">
+              <a class="active" data-section="block">BLOCK</a>
+              <a class="" data-section="transaction">TRANSACTION</a>
+              <a class="" data-section="address">ADDRESS</a>
+            </div>
+            </div>
+        </div>
+
+        <div class="section active" id="block">
+          <div class="row">
+            <div class="col-md-4">
+                <h4>GET LATEST BLOCK</h4>
+                <p>In this example we retrieve information about the lastest main branch block processed by Toshi. <br/>This same information is of course available for all blocks.</p>
+
+                <div class="documentation_link">
+                  <button>documentation</button>
+                </div>
+            </div>
+
+            <div class="col-md-8">
+              <div class="quick_api_link">
+                <h5>API Endpoint</h5>
+
+                <div class="code"> 
+                  <div class="link_wraper">
+                    <p>/api/blocks/latest</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="quick_api_code">
+                <h5>Response</h5>
+<div class="code">                
+<pre>
+{
+  "hash": "000000000000014bb22ba5dbb6f2d4a0ab571ae040f02e5e1bbc9b9e6b88fff8",
+  "branch": "main",
+  "previous_block_hash": "000000000000038aa0d5f287a62a541b4e6c42f09f74b67f2f279ef13db40b60",
+  "next_blocks": [
+  {
+    "hash": "0000000000000bef34ff0b2bb868658ea09ab2c365f5e9d576583f4c610ae5bc",
+    "branch": "main",
+    "height": 159422
+  }
+  ],
+  "height": 159421,
+  "confirmations": 7,
+  "merkle_root": "18376c68042d46242e815bc4c6a21394f8d36c20efaa639b713d0ce1bdba4b6f",
+  "time": "2011-12-27T17:54:24Z",
+  "nonce": 258521299,
+  "bits": 437155514,
+  "difficulty": 1159929.4972244,
+  "reward": 5000000000,
+  "fees": 100000,
+  "total_out": 43182367769,
+  "size": 11905,
+  "transactions_count": 12,
+  "version": 1,
+  "transaction_hashes": [
+    "b8dc1197e13a516965649373d8c6686058fd9cd08d9a61f082c49bd703afa34f",
+    "12f9072f2b5b232d915c7b57ec9616bbea2867627585372f4aee09d06c13678a",
+    "1f85d1a30a91b04b61ef36fd4d5ce5f7b407342f7245e6264732270ca41f9a60",
+    "108ebf6699b8427482f49eb5d98f3773df302b8c1d432ea213d69d493400442f",
+    "19be0a64c2095f8789ee598109f9c6152ee7213e824ecfb81f01dd93ed597d55",
+    "80857f4b61ffa29886de3b166728581e0d9a388959951a969da511b47e48b3a8",
+    "45c582b996585843379856ecf232d49f563b4ef5cfd4b53ae438017744a6bb59",
+    "c74db9130060bc9a1e33c76a873ce0e07124bfd56d77100fe9cc9dee5b75326e",
+    "9387e03b1123806eb922d0022555f6e226296fdd85e14f69e5c9f188a90804b6",
+    "8d0d73e0392584d838a8ffc1d289756ba1bbe93421ed5ffd111428bcb54ab35e",
+    "6bc9461e8b9725201916d227c2b12f3257467ff5e8e190d8c73c405f9cd5d56f",
+    "4a83dd4004e732a0219d32e140875cc591e29e0a3f167ba587ef99310754f9d1"
+  ]
+}
+</pre>
+</div>
+              </div>
+            </div>
+          </div>
+        </div> <!-- END block -->
+
+        <div class="section" id="transaction">
+          <div class="row">
+            <div class="col-md-4">
+              <h4>GET TRANSACTION DETAILS</h4>
+              <p>Retrieve information about a particular transaction on the network.</p>
+
+              <div class="documentation_link">
+                <button>documentation</button>
+              </div>
+          </div>
+
+          <div class="col-md-8">
+              <div class="quick_api_link">
+                <h5>API Endpoint</h5>
+
+                <div class="code"> 
+                  <div class="link_wraper">
+                    <p>/api/transactions/21c77bcc54405f011c64a77cb1f014ebcdfd05fc39654b43905a0e189be19ebf</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="quick_api_code">
+                <h5>Response</h5>
+          <div class="code">                
+<pre>          
+{
+    "hash": "21c77bcc54405f011c64a77cb1f014ebcdfd05fc39654b43905a0e189be19ebf",
+    "version": 1,
+    "lock_time": 0,
+    "size": 259,
+    "inputs": [
+        {
+            "previous_transaction_hash": "b0fb35f1e8168ab55a096f8c6415ec0fc529332aa88a1d8b9532e18f304e8f1f",
+            "output_index": 0,
+            "amount": 4860600000,
+            "script": "30460221008083b2e74c33f854442bd1f68db93c0c038bd45d6af72826ebed6e696b61418f0...",
+            "addresses": [
+                "17qHAnmp4UGxeR7Vpomc6tDBicauXRsfNX"
+            ]
+        }
+    ],
+    "outputs": [
+        {
+            "amount": 2360600000,
+            "spent": false,
+            "script": "OP_DUP OP_HASH160 5504ca6c54059e797a3b3a45e3c8e550421bc9fc OP_EQUALVERIFY OP_CHECKSIG",
+            "script_hex": "76a9145504ca6c54059e797a3b3a45e3c8e550421bc9fc88ac",
+            "script_type": "hash160",
+            "addresses": [
+                "18kYBAszeq1AmMqVh47r2fTQjihVcz9chN"
+            ]
+        },
+        {
+            "amount": 2500000000,
+            "spent": true,
+            "script": "OP_DUP OP_HASH160 2b9d62d43713e31a0ca6b9460faedb17b5419747 OP_EQUALVERIFY OP_CHECKSIG",
+            "script_hex": "76a9142b9d62d43713e31a0ca6b9460faedb17b541974788ac",
+            "script_type": "hash160",
+            "addresses": [
+                "14ycbd9W6vwtfKPgtbGFxE6YNeZR2B6cVE"
+            ]
+        }
+    ],
+    "amount": 4860600000,
+    "fees": 0,
+    "confirmations": 1402,
+    "block_height": 164353,
+    "block_hash": "00000000000002b0a927301832bca7eefc07b4391bfa037dd09a3fc4f1b85081",
+    "block_time": "2012-01-29T09:19:58Z",
+    "block_branch": "main"
+}
+</pre>
+</div>
+              </div>
+            </div>
+          </div>
+        </div> <!-- END Tx -->
+
+        <div class="section" id="address">
+          <div class="row">
+            <div class="col-md-4">
+              <h4>GET ADDRESS INFORMATION</h4>
+              <p>Retrieve information about a particular address on the network.<br/>
+                 The below example shows how you would query for address information including transaction history.</p>
+
+              <div class="documentation_link">
+                <button>documentation</button>
+              </div>
+          </div>
+
+          <div class="col-md-8">
+              <div class="quick_api_link">
+                <h5>API Endpoint</h5>
+
+                <div class="code"> 
+                  <div class="link_wraper">
+                    <p>/api/addresses/1sT8zQeXUXkS1qUULkC764ry9PZRrd72k/transactions</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="quick_api_code">
+                <h5>Response</h5>
+          <div class="code">                
+<pre> 
+{
+    "hash": "1sT8zQeXUXkS1qUULkC764ry9PZRrd72k",
+    "balance": 0,
+    "received": 18276000000,
+    "sent": 18276000000,
+    "unconfirmed_received": 0,
+    "unconfirmed_sent": 0,
+    "unconfirmed_balance": 0,
+    "transactions": [
+        {
+            "hash": "8151bb206249046f6d4a75be171ba9f3d5df408978cebe4bfa2a9340eb34cca4",
+            "version": 1,
+            "lock_time": 0,
+            "size": 0,
+            "inputs": [
+                {
+                    "previous_transaction_hash": "87368350c82de637f9491ebaab8ab299e4bd70c0173ff04c27936f902ff647e6",
+                    "output_index": 1,
+                    "amount": 18276000000,
+                    "script": "3045022074841df1a1ada0bcb2ce69a0a5b31914526cc7ce616baea97146498760de0ad6022100...",
+                    "addresses": [
+                        "1sT8zQeXUXkS1qUULkC764ry9PZRrd72k"
+                    ]
+                }
+            ],
+            "outputs": [
+                {
+                    "amount": 1945000000,
+                    "spent": true,
+                    "script": "OP_DUP OP_HASH160 564bc633dfedc6b761889ba02e7ae78851eea6cc OP_EQUALVERIFY OP_CHECKSIG",
+                    "script_hex": "76a914564bc633dfedc6b761889ba02e7ae78851eea6cc88ac",
+                    "script_type": "hash160",
+                    "addresses": [
+                        "18sHtPDv8KpafL4P93mBAAvgZmFeqAvp1y"
+                    ]
+                },
+                {
+                    "amount": 16331000000,
+                    "spent": true,
+                    "script": "OP_DUP OP_HASH160 655199b3fc6f878e3914db2603d609f40cc89e55 OP_EQUALVERIFY OP_CHECKSIG",
+                    "script_hex": "76a914655199b3fc6f878e3914db2603d609f40cc89e5588ac",
+                    "script_type": "hash160",
+                    "addresses": [
+                        "1AEj155JDgmp5wjFuskAPfcCAao2hyFjQL"
+                    ]
+                }
+            ],
+            "amount": 18276000000,
+            "fees": 0,
+            "confirmations": 95,
+            "block_height": 166161,
+            "block_hash": "00000000000006a26fe790fe5d6b77654038334295c076ed5d29473410db082b",
+            "block_time": "2012-02-10T07:51:47Z",
+            "block_branch": "main"
+        },
+        ...
+    ]
+}
+</pre>
+</div>
+              </div>
+            </div>
+          </div>
+        </div> <!-- END Address -->
+      </article>
+
+      <article>
+        <div class="row toshi_cite">
+          <div class="col-md-12">
+          <h2><strong>Toshi is currently in beta</strong>. Although we're passing TheBlueMatt's de facto standard Bitcoin <a href="https://github.com/TheBlueMatt/test-scripts">test-scripts</a> we still don't recommend using Toshi in production until its tires have been sufficiently kicked.</h2>
+         </div>
+        </div>
+       </article>
+
+    </div>
+  </section> <!-- page_wraper -->
+
+
+   <div class="container text-center">
+    <footer>
+      <div class="row">
+        <div class="col-md-6 col-md-push-3">
+          <p>Toshi is 100% open source and maintained by
+            <a href="https://coinbase.com/" target="_blank" class="coinbase_logo">Coinbase</a>
+          </p>
+        </div>
+      </div>
+    </footer>
+  </div> <!-- END footer -->
+
+
+
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+  <script src="js/plugins.js"></script>
+  <script src="js/bootstrap.js"></script>
+  <script type="text/javascript">
+    $(document).ready(function(){
+      $('.quick_api_code > pre').each(function(i, el) {
+        $(el).html(library.json.prettyPrint($(el).html()))
+      });
+
+      $('.quick_api_nav a').on('click', function(){
+        $('.quick_api_nav a').removeClass('active');
+        $(this).addClass('active');
+        $('.section').removeClass('active');
+        $('#'+$(this).data('section')+'.section').addClass('active');
+      });
+    })
+
+    $(window).scroll(function () {
+        if ($(window).scrollTop() >= 150) {
+            $('arrows').fadeOut('slow');
+        }
+        if ($(window).scrollTop() < 150) {
+            $('arrows').fadeIn('slow');
+        }
+    });
+    $(window).resize(function(){
+       $('#header').height($(window).height()); 
+    });
+    $('#header').height($(window).height());
+
+
+    $("#scrollTriger").click(function() {
+        $('html, body').animate({
+            scrollTop: $("#scrollToId").offset().top
+        }, 1000);
+    });
+
+  </script>
+</body>
+</html>
