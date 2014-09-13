@@ -18,7 +18,7 @@ Toshi was built at [Coinbase](https://coinbase.com) to meet our requirements for
 
 ## Comparison to Bitcoin Core
 
-Toshi is a Bitcoin implementation designed for building scalable web applications. It allows you to query the blockchain using a REST API or raw SQL. It comprises a number of individual services, using a shared database. Because Toshi indexes every transaction and block in the blockchain, it requires much more space to store the blockchain than Bitcoin Core (~270GB vs ~25GB as of September 2014). However, this makes it possible to run much richer queries that would otherwise not be possible with Bitcoin Core.
+Toshi is a Bitcoin implementation designed for building scalable web applications. It allows you to query the blockchain using a REST API or raw SQL. It comprises a number of individual services, using a shared database. Because Toshi indexes every transaction and block in the blockchain, it requires much more space to store the blockchain than Bitcoin Core (~220GB vs ~25GB as of September 2014). However, this makes it possible to run much richer queries that would otherwise not be possible with Bitcoin Core.
 
 Bitcoin Core (the reference implementation) is designed to run on a single server, and uses a mixture of raw files and LevelDB to store the blockchain. It allows you to query the blockchain using a limited JSON-RPC interface. Toshi can be run across multiple servers using replication and load balancing, and allows you to query the blockchain via SQL with more complex queries.
 
