@@ -75,7 +75,7 @@ module Toshi
 
         case format
         when 'json'
-          json(@block.to_hash(show_txs=true))
+          json(@block.to_hash(options={show_txs:true, offset:params[:offset], limit:params[:limit]}))
         else
           raise InvalidFormatError
         end

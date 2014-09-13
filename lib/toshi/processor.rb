@@ -926,11 +926,11 @@ module Toshi
 
       end # each tx in block
 
-      # Optimized method for marking outputs in the database in bulk
-      @storage.update_outputs_on_connect_block(block)
-
       # mempool.removeForBlock() normally done in ConnectTip()
       @mempool.remove_for_block(block)
+
+      # Optimized method for marking outputs in the database in bulk
+      @storage.update_outputs_on_connect_block(block)
 
       # Verify that coinbase pays no more than fees + block reward.
       coinbase_out_value = tx_value_out(block.tx[0])

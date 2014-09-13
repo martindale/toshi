@@ -299,18 +299,57 @@ module Toshi
         Toshi.db[:address_ledger_entries].multi_insert(entries)
       end
 
-      def self.multi_insert_inputs(tx_hsh_to_id, inputs, addresses, output_cache, branch, block_fees=0)
+      def self.multi_insert_inputs(tx_hsh_to_id, inputs, addresses, output_cache, branch, spent_outpoint_to_id, block_fees=0)
         # batch import inputs
         input_ids = Input.multi_insert(inputs, {:return => :primary_key})
+
         # update the address ledger table
         update_address_ledger_for_inputs(tx_hsh_to_id, input_ids, inputs, addresses, output_cache, branch, block_fees)
+
+        # record spending inputs in the join table
+        spending_inputs = []
+        inputs.each_with_index{|input,index|
+          next if input[:index] == 0xffffffff && input[:prev_out] == Input::INPUT_COINBASE_HASH
+          # add entries for outputs we just created
+          if prev_tx = spent_outpoint_to_id[input[:prev_out]]
+            if prev_tx[input[:index]]
+              spending_inputs << {
+                input_id: input_ids[index],
+                output_id: prev_tx[input[:index]]
+              }
+            end
+          else
+            # add entries for existing outputs
+            binary_hash = Toshi::Utils.hex_to_bin_hash(input[:prev_out])
+            output = output_cache.output_from_model_cache(binary_hash, input[:index])
+            if output && output.is_on_main_chain?
+              spending_inputs << {
+                input_id: input_ids[index],
+                output_id: output.id
+              }
+            elsif Block::MAIN_BRANCH == branch
+              raise "BUG: missing previous output!"
+            end
+          end
+        }
+
+        Toshi.db[:spending_inputs].multi_insert(spending_inputs)
       end
 
-      def self.multi_insert_outputs(tx_hsh_to_id, outputs, addresses, branch)
+      def self.multi_insert_outputs(tx_hsh_to_id, outputs, addresses, branch, spent_outpoint_to_id)
         # batch import outputs first then handle the addresses
         output_ids = Output.multi_insert(outputs, {:return => :primary_key})
+
         # this will also handle updating the address ledger table
         upsert_output_addresses(tx_hsh_to_id, output_ids, outputs, addresses, branch)
+
+        # save these for spending inputs
+        outputs.each_with_index{|output,index|
+          if output[:spent]
+            spent_outpoint_to_id[output[:hsh]] ||= []
+            spent_outpoint_to_id[output[:hsh]] << output_ids[index]
+          end
+        }
       end
 
       # we might not have been able to add a ledger entry for missing inputs
@@ -410,8 +449,11 @@ module Toshi
         # or else insert them all now and return a Transaction model
         transaction = Transaction.create(t)
         tx_hsh_to_id = { transaction.hsh => transaction.id }
-        multi_insert_outputs(tx_hsh_to_id, outputs, output_addresses, branch)
-        multi_insert_inputs(tx_hsh_to_id, inputs, input_addresses, output_cache, branch)
+
+        spent_outpoint_to_id = {}
+        multi_insert_outputs(tx_hsh_to_id, outputs, output_addresses, branch, spent_outpoint_to_id)
+        multi_insert_inputs(tx_hsh_to_id, inputs, input_addresses, output_cache, branch, spent_outpoint_to_id)
+
         transaction
       end
 
@@ -420,7 +462,7 @@ module Toshi
         self.class.to_hash_collection([self], options).first
       end
 
-      # 4 queries per transaction array (7 if block info also requested)
+      # 6 queries per transaction array (9 if block info also requested)
       def self.to_hash_collection(transactions, options = {})
         return [] unless transactions.any?
 
@@ -470,11 +512,21 @@ module Toshi
           inputs_by_hsh[input.hsh] << input
         }
 
-        outputs_by_hsh = {}
+        outputs_by_hsh, spent_output_ids, unspent_output_ids = {}, [], []
         Output.where(id: output_ids).each{|output|
           outputs_by_hsh[output.hsh] ||= []
           outputs_by_hsh[output.hsh] << output
+          if output.spent
+            spent_output_ids << output.id
+          else
+            # they may be unconfirmed spent though.
+            unspent_output_ids << output.id
+          end
         }
+
+        # gather spending inputs of any spent outputs
+        spending_input_by_output_id = {}
+        fetch_spending_inputs(spent_output_ids, unspent_output_ids, spending_input_by_output_id)
 
         # gather addresses
         addresses = {}
@@ -484,7 +536,7 @@ module Toshi
         txs = []
 
         # this is a query
-        max_height = Block.max_height
+        max_height = options[:show_block_info] ? Block.max_height : 0
 
         # construct the hashes
         transactions.each{|transaction|
@@ -524,6 +576,11 @@ module Toshi
             o = {}
             o[:amount] = output.amount
             o[:spent] = output.spent
+            if input = spending_input_by_output_id[output.id]
+              # NOTE: spent will be false if this is an unconfirmed spend
+              o[:spending_transaction_hash] = input.hsh
+              o[:input_index] = input.position
+            end
             o[:script] = parsed_script.to_string
             o[:script_hex] = output.script.unpack("H*")[0]
             o[:script_type] = parsed_script.type
@@ -547,6 +604,53 @@ module Toshi
           txs << tx
         }
         txs
+      end
+
+      # 2 queries: confirmed and unconfirmed
+      def self.fetch_spending_inputs(spent_output_ids, unspent_output_ids, spending_input_by_output_id)
+        if spent_output_ids.any?
+          sql_values = spent_output_ids.to_s.gsub('[', '(').gsub(']', ')')
+          # First find confirmed spends.
+          query = "select inputs.id as id,
+                          inputs.hsh as hsh,
+                          inputs.prev_out as prev_out,
+                          inputs.index as index,
+                          inputs.script as script,
+                          inputs.sequence as sequence,
+                          inputs.position as position,
+                          spending_inputs.output_id as output_id
+                          from inputs, spending_inputs
+                          where spending_inputs.output_id in #{sql_values} and
+                                inputs.id = spending_inputs.input_id"
+          Toshi.db.fetch(query).each{|row|
+            output_id = row.delete(:output_id)
+            spending_input_by_output_id[output_id] = Input.call(row)
+          }
+        end
+
+        if unspent_output_ids.any?
+          sql_values = unspent_output_ids.to_s.gsub('[', '(').gsub(']', ')')
+          # Now find any unconfirmed spends.
+          query = "select unconfirmed_inputs.id as id,
+                          unconfirmed_inputs.hsh as hsh,
+                          unconfirmed_inputs.prev_out as prev_out,
+                          unconfirmed_inputs.index as index,
+                          unconfirmed_inputs.script as script,
+                          unconfirmed_inputs.sequence as sequence,
+                          unconfirmed_inputs.position as position,
+                          outputs.id as output_id
+                          from unconfirmed_inputs, outputs, unconfirmed_transactions
+                          where outputs.id in #{sql_values} and
+                                unconfirmed_inputs.prev_out = outputs.hsh and
+                                unconfirmed_inputs.index = outputs.position and
+                                unconfirmed_transactions.hsh = unconfirmed_inputs.hsh and
+                                unconfirmed_transactions.pool = #{UnconfirmedTransaction::MEMORY_POOL}"
+          Toshi.db.fetch(query).each{|row|
+            output_id = row.delete(:output_id)
+            # Note that we're mixing models in this hash.
+            spending_input_by_output_id[output_id] = UnconfirmedInput.call(row)
+          }
+        end
       end
 
       def to_json(options={})

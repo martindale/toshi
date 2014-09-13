@@ -113,6 +113,12 @@ module Toshi
         Toshi::Models::RawBlock.where(hsh: hsh).first
       end
 
+      def transactions_offset_limit(offset, limit)
+        offset = [offset.to_i, 0].max
+        limit = [limit.to_i, 500].min
+        transactions_dataset.offset(offset).limit(limit)
+      end
+
       # calculate additional fields not part of the protocol
       def self.calculate_additional_fields(block, branch)
         fields = { total_in_value: 0, total_out_value: 0, fees: 0 }
@@ -249,8 +255,13 @@ module Toshi
           end
 
           # batch import the outputs, inputs, and upsert addresses
-          Transaction.multi_insert_outputs(tx_hsh_to_id, block_outputs, block_output_addresses, branch)
-          Transaction.multi_insert_inputs(tx_hsh_to_id, block_inputs, block_input_addresses, output_cache, branch, b.fees)
+          spent_outpoint_to_id = {}
+
+          Transaction.multi_insert_outputs(tx_hsh_to_id, block_outputs,
+                                           block_output_addresses, branch, spent_outpoint_to_id)
+
+          Transaction.multi_insert_inputs(tx_hsh_to_id, block_inputs,
+                                          block_input_addresses, output_cache, branch, spent_outpoint_to_id, b.fees)
         end
 
         # batch import associations
@@ -259,15 +270,13 @@ module Toshi
         [b, "Created block #{b.hsh} with height #{b.height} on branch #{b.branch} with #{b.transactions.count} transactions"]
       end
 
-      def to_hash(show_txs=false, offset=0, limit=100)
-        offset = 0 if !offset
-        limit = 100 if !limit
-        self.class.to_hash_collection([self], show_txs, offset, limit).first
+      def to_hash(options = {})
+        self.class.to_hash_collection([self], options).first
       end
 
-      def self.to_hash_collection(blocks, show_txs=false, offset=0, limit=100)
-        offset = 0 if !offset
-        limit = 100 if !limit
+      def self.to_hash_collection(blocks, options = {})
+        options[:offset] ||= 0
+        options[:limit] ||= 100
         collection = []
 
         blocks.each{|block|
@@ -294,8 +303,9 @@ module Toshi
           hash[:transactions_count] = block.transactions_count
           hash[:version] = block.ver
 
-          if show_txs
-            hash[:transactions] = Transaction.to_hash_collection(block.transactions)
+          if options[:show_txs]
+            transactions = block.transactions_offset_limit(options[:offset], options[:limit])
+            hash[:transactions] = Transaction.to_hash_collection(transactions, options)
           else
             hash[:transaction_hashes] = block.transactions.map {|tx| tx.hsh }
           end
@@ -306,10 +316,8 @@ module Toshi
         return collection
       end
 
-      def to_json(show_txs=false, offset=0, limit=100)
-        offset = 0 if !offset
-        limit = 100 if !limit
-        to_hash(show_txs, offset, limit).to_json
+      def to_json(options = {})
+        to_hash(options).to_json
       end
     end
   end

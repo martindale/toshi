@@ -264,10 +264,28 @@ module Toshi
                               addresses_outputs.output_id = outputs.id
                )"
       Toshi.db.run(query)
+
+      # Remove the outputs from the spending inputs table.
+      Toshi.db[:spending_inputs].where(output_id: output_ids).delete
     end
 
-    def self.remove_from_utxo_set(output_ids)
+    def self.remove_from_utxo_set(output_ids, spent)
       Toshi.db[:unspent_outputs].where(output_id: output_ids).delete
+      return unless spent
+
+      # Insert into the spending inputs table.
+      sql_values = output_ids.to_s.gsub('[', '(').gsub(']', ')')
+      query = "insert into spending_inputs (output_id, input_id) (
+                 select outputs.id as output_id,
+                        inputs.id as input_id
+                        from outputs, inputs, transactions
+                        where outputs.id in #{sql_values} and
+                              inputs.prev_out = outputs.hsh and
+                              inputs.index = outputs.position and
+                              transactions.hsh = inputs.hsh and
+                              transactions.pool = #{Toshi::Models::Transaction::TIP_POOL}
+               )"
+      Toshi.db.run(query)
     end
 
     # This only affects in-memory cache.
@@ -284,7 +302,7 @@ module Toshi
 
     # This only affects the database records.
     def mark_outputs_as_spent(output_ids)
-      self.class.remove_from_utxo_set(output_ids)
+      self.class.remove_from_utxo_set(output_ids, spent=true)
 
       # mark these spent all at once
       Toshi::Models::Output.where(id: output_ids)
@@ -321,7 +339,7 @@ module Toshi
 
     # This only affects the database records.
     def mark_outputs_as_unavailable(output_ids)
-      self.class.remove_from_utxo_set(output_ids)
+      self.class.remove_from_utxo_set(output_ids, spent=false)
 
       # mark these as side branch outputs all at once
       Toshi::Models::Output.where(id: output_ids)
