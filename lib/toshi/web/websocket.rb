@@ -122,7 +122,7 @@ module Toshi
 
       # send a transaction to a connected websocket
       def on_channel_send_transaction(msg)
-        tx = Toshi::Models::UnconfirmedTransaction.from_hsh(msg['hash']).first
+        tx = Toshi::Models::UnconfirmedTransaction.from_hsh(msg['hash'])
         return unless tx
         write_socket({ subscription: 'transactions', data: tx.to_hash }.to_json)
       end
