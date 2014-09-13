@@ -14,7 +14,7 @@ module Toshi
       }
 
       def pool_name
-        POOL_TO_NAME_TABLE[pool] || "unkown"
+        POOL_TO_NAME_TABLE[pool-1] || "unknown"
       end
 
       def bitcoin_tx
