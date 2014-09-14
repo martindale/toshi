@@ -79,11 +79,11 @@ module Toshi
           hash[:unconfirmed_balance] = unconfirmed_address ? unconfirmed_address.balance : 0
 
           if options[:show_txs]
-            hash[:transactions] = Transaction.to_hash_collection(address.transactions(options[:offset], options[:limit]))
-
             if unconfirmed_address
               hash[:unconfirmed_transactions] = UnconfirmedTransaction.to_hash_collection(unconfirmed_address.transactions)
             end
+
+            hash[:transactions] = Transaction.to_hash_collection(address.transactions(options[:offset], options[:limit]))
           end
 
           collection << hash
