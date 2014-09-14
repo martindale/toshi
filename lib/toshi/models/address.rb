@@ -28,13 +28,11 @@ module Toshi
       end
 
       def transactions(offset=0, limit=100)
-        offset = [offset, 0].max
-        limit = [limit, 500].min
         tids = Toshi.db[:address_ledger_entries].where(address_id: id)
                            .select(:transaction_id).group_by(:transaction_id)
                            .order(:transaction_id).offset(offset).limit(limit).map(:transaction_id)
         return [] unless tids.any?
-        Transaction.where(id: tids).order(Sequel.desc(:id))
+        Transaction.where(id: tids)
       end
 
       def btc
@@ -52,9 +50,6 @@ module Toshi
       end
 
       def to_hash(options={})
-        options[:offset] ||= 0
-        options[:limit] ||= 100
-
         self.class.to_hash_collection([self], options).first
       end
 
@@ -67,8 +62,7 @@ module Toshi
       end
 
       def self.to_hash_collection(addresses, options={})
-        options[:offset] ||= 0
-        options[:limit] ||= 100
+        Toshi::Utils.sanitize_options(options)
 
         collection = []
 
@@ -85,7 +79,7 @@ module Toshi
           hash[:unconfirmed_balance] = unconfirmed_address ? unconfirmed_address.balance : 0
 
           if options[:show_txs]
-            hash[:transactions] = Transaction.to_hash_collection(address.transactions(options[:offset].to_i, options[:limit].to_i))
+            hash[:transactions] = Transaction.to_hash_collection(address.transactions(options[:offset], options[:limit]))
 
             if unconfirmed_address
               hash[:unconfirmed_transactions] = UnconfirmedTransaction.to_hash_collection(unconfirmed_address.transactions)

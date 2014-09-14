@@ -273,7 +273,7 @@ module Toshi
 
     def on_mempool
       log ">> mempool" if @debug
-      inv = Toshi::Models::UnconfirmedTransaction.mempool.map{|t| t.hsh }
+      inv = Toshi::Models::UnconfirmedTransaction.mempool.select_map(:hsh)
       send_inv(:tx, inv) if inv.any?
     end
 

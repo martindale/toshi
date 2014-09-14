@@ -72,6 +72,16 @@ module Toshi
         "syncing"
       end
     end
+
+    def sanitize_options(options)
+      # default is 0
+      options[:offset] ||= 0
+      options[:offset] = [ options[:offset].to_i, 0 ].max
+
+      # default is 100; max is 500
+      options[:limit] ||= 100
+      options[:limit] = [ [ options[:limit].to_i, 0 ].max, 500 ].min
+    end
   end
 
   def self.db_stats

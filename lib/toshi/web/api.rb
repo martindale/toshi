@@ -75,7 +75,7 @@ module Toshi
 
         case format
         when 'json'
-          json(@block.to_hash(show_txs=true))
+          json(@block.to_hash({show_txs: true, offset: params[:offset], limit: params[:limit]}))
         else
           raise InvalidFormatError
         end
@@ -101,11 +101,11 @@ module Toshi
       end
 
       get '/transactions/unconfirmed' do
-        mempool = Toshi::Models::UnconfirmedTransaction.mempool
-        raise NotFoundError unless mempool
-
         case format
         when 'json'
+          options = {offset: params[:offset], limit: params[:limit]}
+          Toshi::Utils.sanitize_options(options)
+          mempool = Toshi::Models::UnconfirmedTransaction.mempool.offset(options[:offset]).limit(options[:limit])
           mempool = Toshi::Models::UnconfirmedTransaction.to_hash_collection(mempool)
           json(mempool)
         else
@@ -148,7 +148,7 @@ module Toshi
 
         case format
         when 'json'
-          json address.to_hash(options={show_txs:true, offset:params[:offset], limit:params[:limit]})
+          json address.to_hash(options={show_txs: true, offset: params[:offset], limit: params[:limit]})
         else
           raise InvalidFormatError
         end
@@ -160,7 +160,13 @@ module Toshi
 
         case format
         when 'json'
-          unspent_outputs = Toshi::Models::Output.to_hash_collection(@address.unspent_outputs)
+          options = {offset: params[:offset], limit: params[:limit]}
+          Toshi::Utils.sanitize_options(options)
+
+          unspent_outputs = @address.unspent_outputs.offset(options[:offset])
+            .limit(options[:limit]).order(:unspent_outputs__amount)
+
+          unspent_outputs = Toshi::Models::Output.to_hash_collection(unspent_outputs)
           json(unspent_outputs)
         else
           raise InvalidFormatError
