@@ -30,9 +30,9 @@ module Toshi
       def transactions(offset=0, limit=100)
         tids = Toshi.db[:address_ledger_entries].where(address_id: id)
                            .select(:transaction_id).group_by(:transaction_id)
-                           .order(:transaction_id).offset(offset).limit(limit).map(:transaction_id)
+                           .order(Sequel.desc(:transaction_id)).offset(offset).limit(limit).map(:transaction_id)
         return [] unless tids.any?
-        Transaction.where(id: tids)
+        Transaction.where(id: tids).order(Sequel.desc(:id))
       end
 
       def btc
