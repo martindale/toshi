@@ -100,19 +100,6 @@ module Toshi
         { hash: ptx.hash }.to_json
       end
 
-      get '/transactions/:hash.?:format?' do
-        @tx = (params[:hash].bytesize == 64 && Toshi::Models::Transaction.where(hsh: params[:hash]).first)
-        @tx ||= (params[:hash].bytesize == 64 && Toshi::Models::UnconfirmedTransaction.where(hsh: params[:hash]).first)
-        raise NotFoundError unless @tx
-
-        case format
-        when 'json'; json(@tx.to_hash)
-        when 'hex';  @tx.raw.payload.unpack("H*")[0]
-        when 'bin';  @tx.raw.payload
-        else raise InvalidFormatError
-        end
-      end
-
       get '/transactions/unconfirmed' do
         mempool = Toshi::Models::UnconfirmedTransaction.mempool
         raise NotFoundError unless mempool
@@ -123,6 +110,19 @@ module Toshi
           json(mempool)
         else
           raise InvalidFormatError
+        end
+      end
+
+      get '/transactions/:hash.?:format?' do
+        @tx = (params[:hash].bytesize == 64 && Toshi::Models::Transaction.where(hsh: params[:hash]).first)
+        @tx ||= (params[:hash].bytesize == 64 && Toshi::Models::UnconfirmedTransaction.where(hsh: params[:hash]).first)
+        raise NotFoundError unless @tx
+
+        case format
+        when 'json'; json(@tx.to_hash)
+        when 'hex';  @tx.raw.payload.unpack("H*")[0]
+        when 'bin';  @tx.raw.payload
+        else raise InvalidFormatError
         end
       end
 
