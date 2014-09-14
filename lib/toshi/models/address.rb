@@ -74,7 +74,7 @@ module Toshi
           hash[:sent] = address.total_sent
 
           unconfirmed_address = Toshi::Models::UnconfirmedAddress.where(address: address.address).first
-          hash[:unconfirmed_received] = unconfirmed_address ? unconfirmed_address.unspent_outputs.sum(:amount).to_i : 0
+          hash[:unconfirmed_received] = unconfirmed_address ? unconfirmed_address.outputs.sum(:amount).to_i : 0
           hash[:unconfirmed_sent] = unconfirmed_address ? unconfirmed_address.spent_outputs.sum(:amount).to_i : 0
           hash[:unconfirmed_balance] = unconfirmed_address ? unconfirmed_address.balance : 0
 

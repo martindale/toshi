@@ -39,6 +39,10 @@ module Toshi
         query[:total].to_i
       end
 
+      def outputs
+        unconfirmed_outputs_dataset
+      end
+
       def unspent_outputs
         unconfirmed_outputs_dataset.where(spent: false)
       end
@@ -58,11 +62,9 @@ module Toshi
       end
 
       def transactions(offset=0, limit=100)
-        offset = [offset, 0].max
-        limit = [limit, 500].min
         tids = Toshi.db[:unconfirmed_ledger_entries].where(address_id: id)
                            .select(:transaction_id).group_by(:transaction_id)
-                           .order(:transaction_id).offset(offset).limit(limit).map(:transaction_id)
+                           .order(Sequel.desc(:transaction_id)).offset(offset).limit(limit).map(:transaction_id)
         return [] unless tids.any?
         UnconfirmedTransaction.where(id: tids).order(Sequel.desc(:id))
       end
