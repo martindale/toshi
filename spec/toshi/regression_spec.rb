@@ -17,7 +17,7 @@ rescue Timeout::Error
   return false
 end
 
-describe 'TheBlueMatt BitcoindComparisionTool', type: :regression do
+describe 'TheBlueMatt BitcoindComparisonTool', type: :regression do
   before(:all) do
     # setup regtest environment
     run_env = ENV.to_hash.merge(
@@ -31,7 +31,7 @@ describe 'TheBlueMatt BitcoindComparisionTool', type: :regression do
     _, _, _, wait_thr = Open3.popen3(run_env, cmd + " 1>>#{logfile} 2>>#{logfile}" + " &")
     @pids << wait_thr.pid
     begin
-      # wait until io_worker is accepting connections (port 18444)
+      # wait until the peer manager is accepting connections (port 18444)
       Timeout::timeout(10) do
         until is_port_open?('127.0.0.1', "18444")
         end
