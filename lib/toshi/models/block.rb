@@ -250,8 +250,8 @@ module Toshi
           end
 
           # batch import the outputs, inputs, and upsert addresses
-          Transaction.multi_insert_outputs(tx_hsh_to_id, block_outputs, block_output_addresses, branch, total_received)
-          Transaction.multi_insert_inputs(tx_hsh_to_id, block_inputs, block_input_addresses, output_cache, branch, total_sent, b.fees)
+          Transaction.multi_insert_outputs(tx_hsh_to_id, block_outputs, block_output_addresses, branch, total_received, total_sent)
+          Transaction.multi_insert_inputs(tx_hsh_to_id, block_inputs, block_input_addresses, output_cache, branch, b.fees)
         end
 
         # batch import associations
