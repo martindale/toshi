@@ -71,7 +71,7 @@ Toshi uses [Vagrant](http://www.vagrantup.com/) to install and run all prerequis
     $ foreman start
     $ open http://localhost:5000/
 
-Alternatively, you can use Docker:
+Alternatively, you can use [Docker](https://www.docker.com/):
 
     $ docker build -t=coinbase/node .
     $ docker run -e REDIS_URL=redis://... -e DATABASE_URL=postgres://... -e TOSHI_ENV=production coinbase/node foreman start
