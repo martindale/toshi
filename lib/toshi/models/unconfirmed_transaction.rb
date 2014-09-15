@@ -28,7 +28,7 @@ module Toshi
       def mark_spent_outputs
         # FIXME: there's probably a nicer way to do this with the interface
         query = "update unconfirmed_outputs
-                        set spent = 't'
+                        set spent = true
                         from (select unconfirmed_outputs.id as output_id
                                      from unconfirmed_outputs,
                                           unconfirmed_inputs

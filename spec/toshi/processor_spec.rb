@@ -1193,6 +1193,15 @@ describe Toshi::Processor do
       expect(Toshi::Models::UnconfirmedAddress.where(address: address).first.balance).to eq(balances[:B] * 10**8)
       address = blockchain.address_from_label('C')
       expect(Toshi::Models::UnconfirmedAddress.where(address: address).first.balance).to eq(balances[:C] * 10**8)
+
+      # test more unconfirmed address values
+      address = blockchain.address_from_label('A')
+      expect(Toshi::Models::UnconfirmedAddress.where(address: address).first.unspent_outputs.sum(:amount)).to eq(10 * 10**8)
+      address = blockchain.address_from_label('B')
+      expect(Toshi::Models::UnconfirmedAddress.where(address: address).first.unspent_outputs.sum(:amount)).to eq(10 * 10**8)
+      address = blockchain.address_from_label('C')
+      expect(Toshi::Models::UnconfirmedAddress.where(address: address).first.unspent_outputs.sum(:amount)).to eq(30 * 10**8)
+      expect(Toshi::Models::UnconfirmedAddress.where(address: address).first.spent_outputs.sum(:amount)).to eq(40 * 10**8)
     end
   end
 end
