@@ -11,7 +11,7 @@ For much of the core protocol logic, Toshi makes use of the [bitcoin-ruby](https
 library written and maintained by Julian Langschaedel.
 
 Toshi was built at [Coinbase](https://coinbase.com), with the goal of replacing
-our core bitcoin network infrastructure in the near future. It is currently in beta,
+our core Bitcoin network infrastructure in the near future. It is currently in beta,
 and not recommended for production use until it has received sufficient testing
 from the Bitcoin community.
 
