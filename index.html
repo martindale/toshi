@@ -10,6 +10,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="css/admin.css">
   <link rel="shortcut icon" href="images/favicon.ico">
+  <script src="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.2/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body class="home">
   <header>
@@ -30,23 +32,24 @@
     </div>
     <div id="header" class="container">
       <div class="row logo">
-        <div class="col-md-8 col-md-push-2">
+        <div class="col-md-10 col-md-push-1">
           <span class="toshi_logo"></span>
           <h1>TOSHI</h1>
           <p>An open source Bitcoin node built to power large scale web applications.</p>
           <div class="toshi_links">
             <a href="/docs" class="btn">Documentation</a>
-            <a href="https://github.com/coinbase/toshi" class="btn">VIEW ON GITHUB</a>
+            <a href="http://network.coinbase.com" target="_blank" class="btn">VIEW DEMO</a>
+            <a href="https://github.com/coinbase/toshi" target="_blank" class="btn">VIEW ON GITHUB</a>
           </div>
         </div>
       </div>
     </div> <!-- container -->
 
     <arrows id="scrollTriger">
-            <arrow ar-i="0"></arrow>
-            <arrow ar-i="1"></arrow>
-            <arrow ar-i="2"></arrow>
-        </arrows>
+        <arrow ar-i="0"></arrow>
+        <arrow ar-i="1"></arrow>
+        <arrow ar-i="2"></arrow>
+    </arrows>
 
   </header>
 
@@ -112,25 +115,26 @@
 
                 <div class="code">
                   <div class="link_wraper">
-                    <p>/api/blocks/latest</p>
+                    <p>/api/v0/blocks/latest</p>
                   </div>
                 </div>
               </div>
 
               <div class="quick_api_code">
                 <h5>Response</h5>
-<div class="code">
-<pre>
+                <div class="code">
+                  <pre>
+<code class="json">
 {
   "hash": "000000000000014bb22ba5dbb6f2d4a0ab571ae040f02e5e1bbc9b9e6b88fff8",
   "branch": "main",
   "previous_block_hash": "000000000000038aa0d5f287a62a541b4e6c42f09f74b67f2f279ef13db40b60",
   "next_blocks": [
-  {
-    "hash": "0000000000000bef34ff0b2bb868658ea09ab2c365f5e9d576583f4c610ae5bc",
-    "branch": "main",
-    "height": 159422
-  }
+    {
+      "hash": "0000000000000bef34ff0b2bb868658ea09ab2c365f5e9d576583f4c610ae5bc",
+      "branch": "main",
+      "height": 159422
+    }
   ],
   "height": 159421,
   "confirmations": 7,
@@ -160,9 +164,10 @@
     "4a83dd4004e732a0219d32e140875cc591e29e0a3f167ba587ef99310754f9d1"
   ]
 }
-</pre>
-</div>
-              </div>
+</code>
+              </pre>
+            </div>
+          </div>
             </div>
           </div>
         </div> <!-- END block -->
@@ -184,7 +189,7 @@
 
                 <div class="code">
                   <div class="link_wraper">
-                    <p>/api/transactions/21c77bcc54405f011c64a77cb1f014ebcdfd05fc39654b43905a0e189be19ebf</p>
+                    <p>/api/v0/transactions/21c77bcc54405f011c64a77cb1f014ebcdfd05fc39654b43905a0e189be19ebf</p>
                   </div>
                 </div>
               </div>
@@ -192,55 +197,57 @@
               <div class="quick_api_code">
                 <h5>Response</h5>
           <div class="code">
-<pre>
+            <pre>
+<code class="json">
 {
-    "hash": "21c77bcc54405f011c64a77cb1f014ebcdfd05fc39654b43905a0e189be19ebf",
-    "version": 1,
-    "lock_time": 0,
-    "size": 259,
-    "inputs": [
-        {
-            "previous_transaction_hash": "b0fb35f1e8168ab55a096f8c6415ec0fc529332aa88a1d8b9532e18f304e8f1f",
-            "output_index": 0,
-            "amount": 4860600000,
-            "script": "30460221008083b2e74c33f854442bd1f68db93c0c038bd45d6af72826ebed6e696b61418f0...",
-            "addresses": [
-                "17qHAnmp4UGxeR7Vpomc6tDBicauXRsfNX"
-            ]
-        }
-    ],
-    "outputs": [
-        {
-            "amount": 2360600000,
-            "spent": false,
-            "script": "OP_DUP OP_HASH160 5504ca6c54059e797a3b3a45e3c8e550421bc9fc OP_EQUALVERIFY OP_CHECKSIG",
-            "script_hex": "76a9145504ca6c54059e797a3b3a45e3c8e550421bc9fc88ac",
-            "script_type": "hash160",
-            "addresses": [
-                "18kYBAszeq1AmMqVh47r2fTQjihVcz9chN"
-            ]
-        },
-        {
-            "amount": 2500000000,
-            "spent": true,
-            "script": "OP_DUP OP_HASH160 2b9d62d43713e31a0ca6b9460faedb17b5419747 OP_EQUALVERIFY OP_CHECKSIG",
-            "script_hex": "76a9142b9d62d43713e31a0ca6b9460faedb17b541974788ac",
-            "script_type": "hash160",
-            "addresses": [
-                "14ycbd9W6vwtfKPgtbGFxE6YNeZR2B6cVE"
-            ]
-        }
-    ],
-    "amount": 4860600000,
-    "fees": 0,
-    "confirmations": 1402,
-    "block_height": 164353,
-    "block_hash": "00000000000002b0a927301832bca7eefc07b4391bfa037dd09a3fc4f1b85081",
-    "block_time": "2012-01-29T09:19:58Z",
-    "block_branch": "main"
+  "hash": "21c77bcc54405f011c64a77cb1f014ebcdfd05fc39654b43905a0e189be19ebf",
+  "version": 1,
+  "lock_time": 0,
+  "size": 259,
+  "inputs": [
+    {
+      "previous_transaction_hash": "b0fb35f1e8168ab55a096f8c6415ec0fc529332aa88a1d8b9532e18f304e8f1f",
+      "output_index": 0,
+      "amount": 4860600000,
+      "script": "30460221008083b2e74c33f854442bd1f68db93c0c038bd45d6af72826ebed6e696b61418f0...",
+      "addresses": [
+        "17qHAnmp4UGxeR7Vpomc6tDBicauXRsfNX"
+      ]
+    }
+  ],
+  "outputs": [
+    {
+      "amount": 2360600000,
+      "spent": false,
+      "script": "OP_DUP OP_HASH160 5504ca6c54059e797a3b3a45e3c8e550421bc9fc OP_EQUALVERIFY OP_CHECKSIG",
+      "script_hex": "76a9145504ca6c54059e797a3b3a45e3c8e550421bc9fc88ac",
+      "script_type": "hash160",
+      "addresses": [
+        "18kYBAszeq1AmMqVh47r2fTQjihVcz9chN"
+      ]
+    },
+    {
+      "amount": 2500000000,
+      "spent": true,
+      "script": "OP_DUP OP_HASH160 2b9d62d43713e31a0ca6b9460faedb17b5419747 OP_EQUALVERIFY OP_CHECKSIG",
+      "script_hex": "76a9142b9d62d43713e31a0ca6b9460faedb17b541974788ac",
+      "script_type": "hash160",
+      "addresses": [
+        "14ycbd9W6vwtfKPgtbGFxE6YNeZR2B6cVE"
+      ]
+    }
+  ],
+  "amount": 4860600000,
+  "fees": 0,
+  "confirmations": 1402,
+  "block_height": 164353,
+  "block_hash": "00000000000002b0a927301832bca7eefc07b4391bfa037dd09a3fc4f1b85081",
+  "block_time": "2012-01-29T09:19:58Z",
+  "block_branch": "main"
 }
-</pre>
-</div>
+</code>
+                  </pre>
+                </div>
               </div>
             </div>
           </div>
@@ -264,75 +271,76 @@
 
                 <div class="code">
                   <div class="link_wraper">
-                    <p>/api/addresses/1sT8zQeXUXkS1qUULkC764ry9PZRrd72k/transactions</p>
+                    <p>/api/v0/addresses/1sT8zQeXUXkS1qUULkC764ry9PZRrd72k/transactions</p>
                   </div>
                 </div>
               </div>
 
               <div class="quick_api_code">
                 <h5>Response</h5>
-          <div class="code">
-<pre>
+                <div class="code">
+                  <pre>
+<code class="json">
 {
-    "hash": "1sT8zQeXUXkS1qUULkC764ry9PZRrd72k",
-    "balance": 0,
-    "received": 18276000000,
-    "sent": 18276000000,
-    "unconfirmed_received": 0,
-    "unconfirmed_sent": 0,
-    "unconfirmed_balance": 0,
-    "transactions": [
+  "hash": "1sT8zQeXUXkS1qUULkC764ry9PZRrd72k",
+  "balance": 0,
+  "received": 18276000000,
+  "sent": 18276000000,
+  "unconfirmed_received": 0,
+  "unconfirmed_sent": 0,
+  "unconfirmed_balance": 0,
+  "transactions": [
+    {
+      "hash": "8151bb206249046f6d4a75be171ba9f3d5df408978cebe4bfa2a9340eb34cca4",
+      "version": 1,
+      "lock_time": 0,
+      "size": 258,
+      "inputs": [
         {
-            "hash": "8151bb206249046f6d4a75be171ba9f3d5df408978cebe4bfa2a9340eb34cca4",
-            "version": 1,
-            "lock_time": 0,
-            "size": 0,
-            "inputs": [
-                {
-                    "previous_transaction_hash": "87368350c82de637f9491ebaab8ab299e4bd70c0173ff04c27936f902ff647e6",
-                    "output_index": 1,
-                    "amount": 18276000000,
-                    "script": "3045022074841df1a1ada0bcb2ce69a0a5b31914526cc7ce616baea97146498760de0ad6022100...",
-                    "addresses": [
-                        "1sT8zQeXUXkS1qUULkC764ry9PZRrd72k"
-                    ]
-                }
-            ],
-            "outputs": [
-                {
-                    "amount": 1945000000,
-                    "spent": true,
-                    "script": "OP_DUP OP_HASH160 564bc633dfedc6b761889ba02e7ae78851eea6cc OP_EQUALVERIFY OP_CHECKSIG",
-                    "script_hex": "76a914564bc633dfedc6b761889ba02e7ae78851eea6cc88ac",
-                    "script_type": "hash160",
-                    "addresses": [
-                        "18sHtPDv8KpafL4P93mBAAvgZmFeqAvp1y"
-                    ]
-                },
-                {
-                    "amount": 16331000000,
-                    "spent": true,
-                    "script": "OP_DUP OP_HASH160 655199b3fc6f878e3914db2603d609f40cc89e55 OP_EQUALVERIFY OP_CHECKSIG",
-                    "script_hex": "76a914655199b3fc6f878e3914db2603d609f40cc89e5588ac",
-                    "script_type": "hash160",
-                    "addresses": [
-                        "1AEj155JDgmp5wjFuskAPfcCAao2hyFjQL"
-                    ]
-                }
-            ],
-            "amount": 18276000000,
-            "fees": 0,
-            "confirmations": 95,
-            "block_height": 166161,
-            "block_hash": "00000000000006a26fe790fe5d6b77654038334295c076ed5d29473410db082b",
-            "block_time": "2012-02-10T07:51:47Z",
-            "block_branch": "main"
+          "previous_transaction_hash": "87368350c82de637f9491ebaab8ab299e4bd70c0173ff04c27936f902ff647e6",
+          "output_index": 1,
+          "amount": 18276000000,
+          "script": "3045022074841df1a1ada0bcb2ce69a0a5b31914526cc7ce616baea97146498760de0ad6022100afabc07b28b8c300db751f79449b2981fac952c1c3180d334166d8ce3718c00501 046f22072f5655c4b4567037793ca640e6f8ea6359c21cc9acdb10eec9faf4004ac87809c490640c8c72ee74a728f5f691a83ac7f55b0a32735f5b3e6b150ffa19",
+          "addresses": [
+            "1sT8zQeXUXkS1qUULkC764ry9PZRrd72k"
+          ]
+        }
+      ],
+      "outputs": [
+        {
+          "amount": 1945000000,
+          "spent": true,
+          "script": "OP_DUP OP_HASH160 564bc633dfedc6b761889ba02e7ae78851eea6cc OP_EQUALVERIFY OP_CHECKSIG",
+          "script_hex": "76a914564bc633dfedc6b761889ba02e7ae78851eea6cc88ac",
+          "script_type": "hash160",
+          "addresses": [
+            "18sHtPDv8KpafL4P93mBAAvgZmFeqAvp1y"
+          ]
         },
-        ...
-    ]
+        {
+          "amount": 16331000000,
+          "spent": true,
+          "script": "OP_DUP OP_HASH160 655199b3fc6f878e3914db2603d609f40cc89e55 OP_EQUALVERIFY OP_CHECKSIG",
+          "script_hex": "76a914655199b3fc6f878e3914db2603d609f40cc89e5588ac",
+          "script_type": "hash160",
+          "addresses": [
+            "1AEj155JDgmp5wjFuskAPfcCAao2hyFjQL"
+          ]
+        }
+      ],
+      "amount": 18276000000,
+      "fees": 0,
+      "confirmations": 154705,
+      "block_height": 166161,
+      "block_hash": "00000000000006a26fe790fe5d6b77654038334295c076ed5d29473410db082b",
+      "block_time": "2012-02-10T07:51:47Z",
+      "block_branch": "main"
+    }
+  ]
 }
-</pre>
-</div>
+</code>
+                  </pre>
+                </div>
               </div>
             </div>
           </div>
