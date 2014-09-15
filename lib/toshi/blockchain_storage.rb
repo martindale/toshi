@@ -270,12 +270,11 @@ module Toshi
         query = "update addresses
                         set total_received = total_received + o.total
                         from (select sum(outputs.amount) as total,
-                                     addresses.id addr_id
-                                     from addresses, addresses_outputs, outputs
+                                     addresses_outputs.address_id addr_id
+                                     from addresses_outputs, outputs
                                      where outputs.id in #{sql_values} and
-                                           addresses_outputs.address_id = addresses.id and
                                            addresses_outputs.output_id = outputs.id
-                                     group by addresses.id) o
+                                     group by addresses_outputs.address_id) o
                         where addresses.id = o.addr_id"
         Toshi.db.run(query)
       else
@@ -283,12 +282,11 @@ module Toshi
         query = "update addresses
                         set total_sent = total_sent - o.total
                         from (select sum(outputs.amount) as total,
-                                     addresses.id addr_id
-                                     from addresses, addresses_outputs, outputs
+                                     addresses_outputs.address_id addr_id
+                                     from addresses_outputs, outputs
                                      where outputs.id in #{sql_values} and
-                                           addresses_outputs.address_id = addresses.id and
                                            addresses_outputs.output_id = outputs.id
-                                     group by addresses.id) o
+                                     group by addresses_outputs.address_id) o
                         where addresses.id = o.addr_id"
         Toshi.db.run(query)
       end
@@ -303,12 +301,11 @@ module Toshi
         query = "update addresses
                         set total_sent = total_sent + o.total
                         from (select sum(outputs.amount) as total,
-                                     addresses.id addr_id
-                                     from addresses, addresses_outputs, outputs
+                                     addresses_outputs.address_id addr_id
+                                     from addresses_outputs, outputs
                                      where outputs.id in #{sql_values} and
-                                           addresses_outputs.address_id = addresses.id and
                                            addresses_outputs.output_id = outputs.id
-                                     group by addresses.id) o
+                                     group by addresses_outputs.address_id) o
                         where addresses.id = o.addr_id"
         Toshi.db.run(query)
       else
@@ -316,25 +313,23 @@ module Toshi
         query = "update addresses
                         set total_received = total_received - o.total
                         from (select sum(outputs.amount) as total,
-                                     addresses.id addr_id
-                                     from addresses, addresses_outputs, outputs
+                                     addresses_outputs.address_id addr_id
+                                     from addresses_outputs, outputs
                                      where outputs.id in #{sql_values} and
-                                           addresses_outputs.address_id = addresses.id and
                                            addresses_outputs.output_id = outputs.id
-                                     group by addresses.id) o
+                                     group by addresses_outputs.address_id) o
                          where addresses.id = o.addr_id"
         Toshi.db.run(query)
         # Subtract from cache of total_sent if it was spent
         query = "update addresses
                         set total_sent = total_sent - o.total
                         from (select sum(outputs.amount) as total,
-                                     addresses.id addr_id
-                                     from addresses, addresses_outputs, outputs
+                                     addresses_outputs.address_id addr_id
+                                     from addresses_outputs, outputs
                                      where outputs.id in #{sql_values} and
                                            outputs.spent = true and
-                                           addresses_outputs.address_id = addresses.id and
                                            addresses_outputs.output_id = outputs.id
-                                     group by addresses.id) o
+                                     group by addresses_outputs.address_id) o
                          where addresses.id = o.addr_id"
         Toshi.db.run(query)
       end

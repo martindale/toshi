@@ -62,32 +62,38 @@ task :perf do
   system "time BOOTSTRAP_FILE=#{bootstrap_file} bin/bootstrap.rb 40000 > log/bootstrap-perf.log"
 end
 
+task :double_check do
+  Toshi.db = Sequel.connect(Toshi.settings[:database_url])
+  Toshi::Models::Address.all.each{|a|
+    raise "BUG: balances don't match" if a.balance != a.utxo_balance
+  }
+end
+
 task :cache_totals do
-  Toshi.db = Sequel.connect(settings[:database_url])
-  puts "Updating received"
-  query = "update addresses
-                  set total_received = o.total
-                  from (select sum(outputs.amount) as total,
-                               addresses.id as addr_id
-                               from addresses, addresses_outputs, outputs
-                               where addresses_outputs.address_id = addresses.id and
-                                     addresses_outputs.output_id = outputs.id and
-                                     outputs.branch = #{Toshi::Models::Block::MAIN_BRANCH}
-                               group by addresses.id) o
-                  where addresses.id = o.addr_id"
-  Toshi.db.run(query)
-  puts "Updating sent"
-  query = "update addresses
-                  set total_sent = o.total
-                  from (select sum(outputs.amount) as total,
-                               addresses.id as addr_id
-                               from addresses, addresses_outputs, outputs
-                               where addresses_outputs.address_id = addresses.id and
-                                     addresses_outputs.output_id = outputs.id and
-                                     outputs.spent = true and
-                                     outputs.branch = #{Toshi::Models::Block::MAIN_BRANCH}
-                               group by addresses.id) o
-                  where addresses.id = o.addr_id"
-  Toshi.db.run(query)
-  puts "Checking"
+  Toshi.db = Sequel.connect(Toshi.settings[:database_url])
+  Toshi.db.transaction do
+    puts "#{Time.now.to_i}| Updating received"
+    query = "update addresses
+                    set total_received = o.total
+                    from (select sum(outputs.amount) as total,
+                                 addresses_outputs.address_id as addr_id
+                                 from addresses_outputs, outputs
+                                 where addresses_outputs.output_id = outputs.id and
+                                       outputs.branch = #{Toshi::Models::Block::MAIN_BRANCH}
+                                 group by addresses_outputs.address_id) o
+                    where addresses.id = o.addr_id"
+    Toshi.db.run(query)
+    puts "#{Time.now.to_i}| Updating sent"
+    query = "update addresses
+                    set total_sent = o.total
+                    from (select sum(outputs.amount) as total,
+                                 addresses_outputs.address_id as addr_id
+                                 from addresses_outputs, outputs
+                                 where addresses_outputs.output_id = outputs.id and
+                                       outputs.spent = true and
+                                       outputs.branch = #{Toshi::Models::Block::MAIN_BRANCH}
+                                 group by addresses_outputs.address_id) o
+                    where addresses.id = o.addr_id"
+    Toshi.db.run(query)
+  end
 end
