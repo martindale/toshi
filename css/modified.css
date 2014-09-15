@@ -761,6 +761,11 @@ footer a:hover {
   .features p {
     padding: 0;
   }
+  .quick_api h2,
+  .features h2  {
+    text-align: left;
+    padding-left: 0;
+  }
   .page_wraper article.features {
     padding-top: 100px;
   }
@@ -825,18 +830,20 @@ footer a:hover {
     padding: 0;
     margin: 0;
   }
-  .quick_api h2,
-  .features h2  {
-    text-align: left;
+  div[class*="feature"] > div {
     padding-left: 15px;
   }
   .toshi_cite h2:before {
-    top: 135px;
+    top: -98px;
+    height: 74px;
+    margin-left: -35px;
+    width: 70px;
   }
   arrows {
     bottom: 5px;
   }
-  .page_wraper article {
+  .page_wraper article,
+  .page_wraper article.features {
     padding: 60px 0;
   } 
 }
