@@ -88,7 +88,7 @@ module Toshi
         return [ inputs, addresses ]
       end
 
-      def self.create_outputs(tx, branch, output_cache)
+      def self.create_outputs(tx, branch, output_cache, total_received, total_sent)
         outputs, addresses = [], []
         tx.out.each_with_index{|output, tx_position|
           script = Bitcoin::Script.new(output.script)
@@ -105,11 +105,21 @@ module Toshi
           }
           outputs << o
           addresses << addrs
+          if branch == Block::MAIN_BRANCH
+            addrs.each{|addr|
+              total_received[addr] ||= 0
+              total_received[addr] += output.value
+              if spent == true
+                total_sent[addr] ||= 0
+                total_sent[addr] += output.value
+              end
+            }
+          end
         }
         return [ outputs, addresses ]
       end
 
-      def self.upsert_output_addresses(tx_hsh_to_id, output_ids, outputs, addresses, branch)
+      def self.upsert_output_addresses(tx_hsh_to_id, output_ids, outputs, addresses, branch, total_received, total_sent)
         all_addresses = addresses.flatten.uniq
         existing_address_ids = {}
 
@@ -117,6 +127,13 @@ module Toshi
         if all_addresses.any?
           Address.where(address: all_addresses).each{|address|
             existing_address_ids[address.address] = address.id
+            if branch == Block::MAIN_BRANCH
+              address.total_received += total_received[address.address]
+              if addr_total_sent = total_sent[address.address]
+                address.total_sent += addr_total_sent
+              end
+              address.save
+            end
           }
         end
 
@@ -132,10 +149,13 @@ module Toshi
               output_indexes[address] << index
               if !existing_address_ids[address] && !new_addresses[address]
                 output = outputs[index]
+                addr_total_sent = total_sent[address] || 0
                 a = {
                   address: address,
                   hash160: Bitcoin.hash160_from_address(address),
                   address_type: (output[:type] == "p2sh") ? Address::P2SH_TYPE : Address::HASH160_TYPE,
+                  total_received: branch == Block::MAIN_BRANCH ? total_received[address] : 0,
+                  total_sent: branch == Block::MAIN_BRANCH ? addr_total_sent : 0
                 }
                 new_addresses[address] = a
               end
@@ -306,11 +326,11 @@ module Toshi
         update_address_ledger_for_inputs(tx_hsh_to_id, input_ids, inputs, addresses, output_cache, branch, block_fees)
       end
 
-      def self.multi_insert_outputs(tx_hsh_to_id, outputs, addresses, branch)
+      def self.multi_insert_outputs(tx_hsh_to_id, outputs, addresses, branch, total_received, total_sent)
         # batch import outputs first then handle the addresses
         output_ids = Output.multi_insert(outputs, {:return => :primary_key})
         # this will also handle updating the address ledger table
-        upsert_output_addresses(tx_hsh_to_id, output_ids, outputs, addresses, branch)
+        upsert_output_addresses(tx_hsh_to_id, output_ids, outputs, addresses, branch, total_received, total_sent)
       end
 
       # we might not have been able to add a ledger entry for missing inputs
@@ -375,7 +395,7 @@ module Toshi
           .where(input_id: inputs.first.id).update(:amount => (block_reward * -1))
       end
 
-      def self.create_from_tx(tx, pool, branch, output_cache=nil, block=nil, index=0)
+      def self.create_from_tx(tx, pool, branch, output_cache=nil, block=nil, index=0, total_received=nil, total_sent=nil)
         RawTransaction.new(hsh: tx.hash, payload: Sequel.blob(tx.payload)).save unless !RawTransaction.where(hsh: tx.hash).empty?
 
         fields = tx.additional_fields || {}
@@ -397,8 +417,11 @@ module Toshi
         # this should only be nil in tests
         output_cache = Toshi::OutputsCache.new if !output_cache
 
+        total_received ||= {}
+        total_sent ||= {}
+
         # create outputs first
-        outputs, output_addresses = create_outputs(tx, branch, output_cache)
+        outputs, output_addresses = create_outputs(tx, branch, output_cache, total_received, total_sent)
 
         # then create inputs
         inputs, input_addresses = create_inputs(tx, branch, output_cache)
@@ -410,8 +433,10 @@ module Toshi
         # or else insert them all now and return a Transaction model
         transaction = Transaction.create(t)
         tx_hsh_to_id = { transaction.hsh => transaction.id }
-        multi_insert_outputs(tx_hsh_to_id, outputs, output_addresses, branch)
+
+        multi_insert_outputs(tx_hsh_to_id, outputs, output_addresses, branch, total_received, total_sent)
         multi_insert_inputs(tx_hsh_to_id, inputs, input_addresses, output_cache, branch)
+
         transaction
       end
 

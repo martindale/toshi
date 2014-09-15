@@ -63,8 +63,9 @@ module Toshi
 
       def transactions(offset=0, limit=100)
         tids = Toshi.db[:unconfirmed_ledger_entries].where(address_id: id)
-                           .select(:transaction_id).group_by(:transaction_id)
-                           .order(Sequel.desc(:transaction_id)).offset(offset).limit(limit).map(:transaction_id)
+          .join(:unconfirmed_transactions, :id => :transaction_id).where(pool: UnconfirmedTransaction::MEMORY_POOL)
+          .select(:transaction_id).group_by(:transaction_id).order(Sequel.desc(:transaction_id))
+          .offset(offset).limit(limit).map(:transaction_id)
         return [] unless tids.any?
         UnconfirmedTransaction.where(id: tids).order(Sequel.desc(:id))
       end
