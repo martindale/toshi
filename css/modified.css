@@ -248,6 +248,7 @@ arrows arrow[ar-i="2"] {
   background: transparent;
   color: #D3E3EE;
   margin: 0 15px 10px 10px;
+  border-radius: 0;
   -webkit-transition: all 0.2s ease-in;
   -moz-transition: all 0.2s ease-in;
   -o-transition: all 0.2s ease-in;
@@ -443,7 +444,7 @@ div[class*="feature"] > div {
   height: 1px;
   left: 0;
   bottom: -10px;
-  background-color: #fff;
+  background-color: rgba(255, 255, 255, 0.2);
 }
 .link_wraper p {
   color: #C6CEDD;
@@ -804,6 +805,9 @@ footer a:hover {
     width: 110px;
     height: 125px;
   }
+  #header {
+    padding: 25px 0 0px;
+  }
   #header h1 {
     letter-spacing: 20px;
     font-size: 36px;
@@ -816,14 +820,25 @@ footer a:hover {
     padding: 0 30px;
   }
   .toshi_cite h2 {
-    line-height: 28px;
-    font-size: 19px;
+    line-height: 26px;
+    font-size: 17px;
+    padding: 0;
+    margin: 0;
   }
   .quick_api h2,
   .features h2  {
     text-align: left;
     padding-left: 15px;
   }
+  .toshi_cite h2:before {
+    top: 135px;
+  }
+  arrows {
+    bottom: 5px;
+  }
+  .page_wraper article {
+    padding: 60px 0;
+  } 
 }
 @media (max-height: 500px) {
   #header .toshi_logo {
