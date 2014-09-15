@@ -113,21 +113,21 @@ Any API call which returns as list can also be passed an `offset` or `limit` par
 
 
     # Blocks
-    GET /api/blocks                             # Get a paginated list of blocks
-    GET /api/blocks/<hash>                      # Get a block by hash
-    GET /api/blocks/<height>                    # Get a block by height
-    GET /api/blocks/latest                      # Get the latest block
-    GET /api/blocks/<hash>/transactions         # Get transactions in a block
+    GET /api/v0/blocks                             # Get a paginated list of blocks
+    GET /api/v0/blocks/<hash>                      # Get a block by hash
+    GET /api/v0/blocks/<height>                    # Get a block by height
+    GET /api/v0/blocks/latest                      # Get the latest block
+    GET /api/v0/blocks/<hash>/transactions         # Get transactions in a block
 
     # Transactions
-    GET /api/transactions/<hash>                # Get transaction by hash
-    GET /api/transactions/unconfirmed           # Get list of unconfirmed transactions
-    POST /api/transactions                      # Broadcast a transaction to the network
+    GET /api/v0/transactions/<hash>                # Get transaction by hash
+    GET /api/v0/transactions/unconfirmed           # Get list of unconfirmed transactions
+    POST /api/v0/transactions                      # Broadcast a transaction to the network
 
     # Addresses
-    GET /api/addresses/<hash>                   # Get address balance and details
-    GET /api/addresses/<hash>/transactions      # Get address transactions
-    GET /api/addresses/<hash>/unspent_outputs   # Get unspent outputs on an address
+    GET /api/v0/addresses/<hash>                   # Get address balance and details
+    GET /api/v0/addresses/<hash>/transactions      # Get address transactions
+    GET /api/v0/addresses/<hash>/unspent_outputs   # Get unspent outputs on an address
 
 
 ## Configuration
