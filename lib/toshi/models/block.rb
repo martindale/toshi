@@ -229,10 +229,11 @@ module Toshi
           # containers for hashes we plan on bulk importing at once
           transactions, block_inputs, block_outputs = [], [], []
           block_input_addresses, block_output_addresses = [], []
+          total_received, total_sent = {}, {}
 
           tx_index_hash.each do |tx_hash, tx_index|
             t, inputs, input_addresses, outputs, output_addresses =
-              Transaction.create_from_tx(block.tx[tx_index], pool, branch, output_cache, b, tx_index)
+              Transaction.create_from_tx(block.tx[tx_index], pool, branch, output_cache, b, tx_index, total_received, total_sent)
             transactions << t
             block_inputs += inputs
             block_input_addresses += input_addresses
@@ -249,8 +250,8 @@ module Toshi
           end
 
           # batch import the outputs, inputs, and upsert addresses
-          Transaction.multi_insert_outputs(tx_hsh_to_id, block_outputs, block_output_addresses, branch)
-          Transaction.multi_insert_inputs(tx_hsh_to_id, block_inputs, block_input_addresses, output_cache, branch, b.fees)
+          Transaction.multi_insert_outputs(tx_hsh_to_id, block_outputs, block_output_addresses, branch, total_received)
+          Transaction.multi_insert_inputs(tx_hsh_to_id, block_inputs, block_input_addresses, output_cache, branch, total_sent, b.fees)
         end
 
         # batch import associations

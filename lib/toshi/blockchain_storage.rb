@@ -251,7 +251,7 @@ module Toshi
       return dict[:spent_outputs][output_index]
     end
 
-    def self.add_to_utxo_set(output_ids)
+    def self.add_to_utxo_set(output_ids, on_disconnect)
       # FIXME: Figure out how to use the Sequel gem for this.
       # Raw SQL is fragile.
       sql_values = output_ids.to_s.gsub('[', '(').gsub(']', ')')
@@ -264,10 +264,80 @@ module Toshi
                               addresses_outputs.output_id = outputs.id
                )"
       Toshi.db.run(query)
+
+      if !on_disconnect
+        # Add to cache of total_received
+        query = "update addresses
+                        set total_received = total_received + o.total
+                        from (select sum(outputs.amount) as total,
+                                     addresses.id addr_id
+                                     from addresses, addresses_outputs, outputs
+                                     where outputs.id in #{sql_values} and
+                                           addresses_outputs.address_id = addresses.id and
+                                           addresses_outputs.output_id = outputs.id
+                                     group by addresses.id) o
+                        where addresses.id = o.addr_id"
+        Toshi.db.run(query)
+      else
+        # Subtract from cache of total_sent
+        query = "update addresses
+                        set total_sent = total_sent - o.total
+                        from (select sum(outputs.amount) as total,
+                                     addresses.id addr_id
+                                     from addresses, addresses_outputs, outputs
+                                     where outputs.id in #{sql_values} and
+                                           addresses_outputs.address_id = addresses.id and
+                                           addresses_outputs.output_id = outputs.id
+                                     group by addresses.id) o
+                        where addresses.id = o.addr_id"
+        Toshi.db.run(query)
+      end
     end
 
-    def self.remove_from_utxo_set(output_ids)
+    def self.remove_from_utxo_set(output_ids, spent)
       Toshi.db[:unspent_outputs].where(output_id: output_ids).delete
+
+      sql_values = output_ids.to_s.gsub('[', '(').gsub(']', ')')
+      if spent
+        # Add to cache of total_sent
+        query = "update addresses
+                        set total_sent = total_sent + o.total
+                        from (select sum(outputs.amount) as total,
+                                     addresses.id addr_id
+                                     from addresses, addresses_outputs, outputs
+                                     where outputs.id in #{sql_values} and
+                                           addresses_outputs.address_id = addresses.id and
+                                           addresses_outputs.output_id = outputs.id
+                                     group by addresses.id) o
+                        where addresses.id = o.addr_id"
+        Toshi.db.run(query)
+      else
+        # Subtract from cache of total_received
+        query = "update addresses
+                        set total_received = total_received - o.total
+                        from (select sum(outputs.amount) as total,
+                                     addresses.id addr_id
+                                     from addresses, addresses_outputs, outputs
+                                     where outputs.id in #{sql_values} and
+                                           addresses_outputs.address_id = addresses.id and
+                                           addresses_outputs.output_id = outputs.id
+                                     group by addresses.id) o
+                         where addresses.id = o.addr_id"
+        Toshi.db.run(query)
+        # Subtract from cache of total_sent if it was spent
+        query = "update addresses
+                        set total_sent = total_sent - o.total
+                        from (select sum(outputs.amount) as total,
+                                     addresses.id addr_id
+                                     from addresses, addresses_outputs, outputs
+                                     where outputs.id in #{sql_values} and
+                                           outputs.spent = true and
+                                           addresses_outputs.address_id = addresses.id and
+                                           addresses_outputs.output_id = outputs.id
+                                     group by addresses.id) o
+                         where addresses.id = o.addr_id"
+        Toshi.db.run(query)
+      end
     end
 
     # This only affects in-memory cache.
@@ -284,7 +354,7 @@ module Toshi
 
     # This only affects the database records.
     def mark_outputs_as_spent(output_ids)
-      self.class.remove_from_utxo_set(output_ids)
+      self.class.remove_from_utxo_set(output_ids, spent=true)
 
       # mark these spent all at once
       Toshi::Models::Output.where(id: output_ids)
@@ -304,8 +374,8 @@ module Toshi
     end
 
     # This only affects the database records.
-    def mark_outputs_as_unspent(output_ids)
-      self.class.add_to_utxo_set(output_ids)
+    def mark_outputs_as_unspent(output_ids, on_disconnect)
+      self.class.add_to_utxo_set(output_ids, on_disconnect)
 
       # mark these unspent all at once
       Toshi::Models::Output.where(id: output_ids)
@@ -321,7 +391,7 @@ module Toshi
 
     # This only affects the database records.
     def mark_outputs_as_unavailable(output_ids)
-      self.class.remove_from_utxo_set(output_ids)
+      self.class.remove_from_utxo_set(output_ids, spent=false)
 
       # mark these as side branch outputs all at once
       Toshi::Models::Output.where(id: output_ids)
@@ -346,7 +416,7 @@ module Toshi
         end
       end
 
-      mark_outputs_as_unspent(unspent_output_ids) if unspent_output_ids.any?
+      mark_outputs_as_unspent(unspent_output_ids, on_disconnect=false) if unspent_output_ids.any?
       mark_outputs_as_spent(spent_output_ids) if spent_output_ids.any?
     end
 
@@ -368,7 +438,7 @@ module Toshi
         end
       end
 
-      mark_outputs_as_unspent(unspent_output_ids) if unspent_output_ids.any?
+      mark_outputs_as_unspent(unspent_output_ids, on_disconnect=true) if unspent_output_ids.any?
       mark_outputs_as_unavailable(unavailable_output_ids) if unavailable_output_ids.any?
     end
 

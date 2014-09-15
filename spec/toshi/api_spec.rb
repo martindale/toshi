@@ -186,7 +186,7 @@ describe Toshi::Web::Api, :type => :request do
   describe "Test filled previous output info for inputs to reorg blockchain transactions" do
     # helper used by the two test cases: check API output for 3A, 4A and 5A.
     # they're interesting because they end up on the tip after reorg.
-    def check_api(blockchain, json)
+    def check_api(blockchain)
       # block 3A
       block_3a = blockchain.chain['main']['3']
       get "/blocks/#{block_3a.hash}/transactions"
@@ -269,6 +269,47 @@ describe Toshi::Web::Api, :type => :request do
       expect(json['transactions'][1]['outputs'][0]['amount']).to eq(50*(10**8))
       expect(json['transactions'][1]['outputs'][0]['addresses'].count).to eq(1)
       expect(json['transactions'][1]['outputs'][0]['addresses'].first).to eq(blockchain.address_from_label('D'))
+
+      # check address balances and totals
+      balances = { A: 150, B: 10,  C: 0,  D: 140 }
+      received = { A: 150, B: 150, C: 10, D: 140 }
+          sent = { A: 0,   B: 140, C: 10, D: 0   }
+
+      address = blockchain.address_from_label('A')
+      get "/addresses/#{address}"
+      json = JSON.parse(last_response.body)
+      expect(last_response).to be_ok
+      expect(json['hash']).to eq(address)
+      expect(json['balance']).to eq(balances[:A] * (10**8))
+      expect(json['received']).to eq(received[:A] * (10**8))
+      expect(json['sent']).to eq(sent[:A] * (10**8))
+
+      address = blockchain.address_from_label('B')
+      get "/addresses/#{address}"
+      json = JSON.parse(last_response.body)
+      expect(last_response).to be_ok
+      expect(json['hash']).to eq(address)
+      expect(json['balance']).to eq(balances[:B] * (10**8))
+      expect(json['received']).to eq(received[:B] * (10**8))
+      expect(json['sent']).to eq(sent[:B] * (10**8))
+
+      address = blockchain.address_from_label('C')
+      get "/addresses/#{address}"
+      json = JSON.parse(last_response.body)
+      expect(last_response).to be_ok
+      expect(json['hash']).to eq(address)
+      expect(json['balance']).to eq(balances[:C] * (10**8))
+      expect(json['received']).to eq(received[:C] * (10**8))
+      expect(json['sent']).to eq(sent[:C] * (10**8))
+
+      address = blockchain.address_from_label('D')
+      get "/addresses/#{address}"
+      json = JSON.parse(last_response.body)
+      expect(last_response).to be_ok
+      expect(json['hash']).to eq(address)
+      expect(json['balance']).to eq(balances[:D] * (10**8))
+      expect(json['received']).to eq(received[:D] * (10**8))
+      expect(json['sent']).to eq(sent[:D] * (10**8))
     end
 
     it "checks previous outputs for etotheipi's chain", :skip_before do
@@ -295,7 +336,7 @@ describe Toshi::Web::Api, :type => :request do
       expect(json[7]['hash']).to eq(blockchain.chain['main']['0'].hash)
 
       # verify the API output for the txs is what we expect
-      check_api(blockchain, json)
+      check_api(blockchain)
     end
 
     it "checks previous outputs for etotheipi's chain when processed with an orphan", :skip_before do
@@ -331,7 +372,7 @@ describe Toshi::Web::Api, :type => :request do
       expect(json[7]['hash']).to eq(blockchain.chain['main']['0'].hash)
 
       # verify the API output for the txs is what we expect
-      check_api(blockchain, json)
+      check_api(blockchain)
     end
   end
 end
