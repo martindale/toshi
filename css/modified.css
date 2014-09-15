@@ -811,7 +811,7 @@ footer a:hover {
     height: 125px;
   }
   #header {
-    padding: 25px 0 0px;
+    padding: 60px 0 0px;
   }
   #header h1 {
     letter-spacing: 20px;
@@ -831,7 +831,7 @@ footer a:hover {
     margin: 0;
   }
   div[class*="feature"] > div {
-    padding-left: 15px;
+    padding-left: 15%;
   }
   .toshi_cite h2:before {
     top: -98px;
@@ -845,7 +845,20 @@ footer a:hover {
   .page_wraper article,
   .page_wraper article.features {
     padding: 60px 0;
-  } 
+  }
+  .navbar-nav > li {
+    float: none;
+  }
+  .nav {
+    text-align: center;
+  }
+  .nav > li {
+    display: inline-block;
+  }
+  arrows arrow[ar-i="1"],
+  arrows arrow[ar-i="2"] {
+    display: none;
+  }  
 }
 @media (max-height: 500px) {
   #header .toshi_logo {
