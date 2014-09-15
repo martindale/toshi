@@ -177,6 +177,11 @@ arrows arrow[ar-i="2"] {
   padding: 40px 0 60px;
   min-height: 325px;
 }
+.logo_placement {
+  position: relative;
+  text-align: center;
+  margin-bottom: 50px;
+}
 #header .logo,
 #header .header-text {
   display: table-row;
@@ -207,16 +212,17 @@ arrows arrow[ar-i="2"] {
   letter-spacing: 30px;
   font-size: 70px;
   text-align: center;
-  margin:0 auto 50px;
+  margin:0 auto;
   font-weight: lighter;
-  display: block;
+  display: inline-block;
   position: relative;
+  margin-right: -1%;
 }
 #header h1 i {
-  display: block;
-  position: relative;
-  right: -118px;
-  bottom: 11px;
+  display: inline-block;
+  position: absolute;
+  right: 36px;
+  bottom: 1px;
   font-size: 12px;
   font-weight: bold;
   letter-spacing: 0px;
@@ -763,9 +769,6 @@ footer a:hover {
     font-size: 60px;
     margin-bottom: 30px;
   }
-  #header h1 i {
-    right: -107px;
-  }
   .features h3 {
     position: static;
   }
@@ -815,31 +818,48 @@ footer a:hover {
     font-size: 50px;
     margin-bottom: 10px;
   }
-  #header h1 i {
-    right: -92px;
-  }
   .btn {
     width: 70%;
-    margin: 0 0 20px;
+    margin: 0 0 10px;
+    padding: 10px 35px;
+    font-size: 13px;
   }
 }
 @media (max-width: 400px) {
   #header .toshi_logo {
-    width: 110px;
-    height: 125px;
+    display: none;
   }
   #header {
-    padding: 60px 0 0px;
+    padding: 30px 0 0px;
+  }
+  .logo_placement {
+    margin-bottom: 30px;
   }
   #header h1 {
-    letter-spacing: 20px;
+    letter-spacing: 17px;
     font-size: 36px;
     margin-bottom: 8px;
     margin-top: 15px;
+    padding-left: 55px;
+    margin-right: -4%;
+  }
+  #header h1:before {
+    content: "";
+    position: absolute;
+    display: block;
+    width: 40px;
+    height: 60px;
+    background-image: url("../images/toshi_logo_white.png");
+    background-repeat: no-repeat;
+    background-position: fixed;
+    background-size: 100%;
+    margin: 0 auto;
+    left: 0;
+    top: -5px;
   }
   #header h1 i {
-    right: -58px;
-    bottom: 7px;
+    right: 20px;
+    bottom: -5px;
   }
   #header p {
     font-size: 13px;
