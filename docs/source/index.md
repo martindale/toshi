@@ -19,7 +19,7 @@ Welcome to the Toshi API! You can use our API to access Toshi API endpoints, whi
 ## Get latest blocks
 
 ```shell
-curl "https://network.coinbase.com/api/v0/blocks"
+curl "https://bitcoin.toshi.io/api/v0/blocks"
 ```
 
 > The above command returns JSON structured like this:
@@ -87,12 +87,12 @@ This endpoint retrieves list of latest blocks.
 
 ### HTTP Request
 
-`GET https://network.coinbase.com/api/<version>/blocks`
+`GET https://bitcoin.toshi.io/api/<version>/blocks`
 
 ## Get latest block
 
 ```shell
-curl "https://network.coinbase.com/api/v0/blocks/latest"
+curl "https://bitcoin.toshi.io/api/v0/blocks/latest"
 ```
 
 > The above command returns JSON structured like this:
@@ -134,12 +134,12 @@ This endpoint retrieves latest block.
 
 ### HTTP Request
 
-`GET https://network.coinbase.com/api/<version>/blocks/latest`
+`GET https://bitcoin.toshi.io/api/<version>/blocks/latest`
 
 ## Get block by hash or height
 
 ```shell
-curl "https://network.coinbase.com/api/v0/blocks/00000000839a8e6886ab5951d76f411475428afc90947ee320161bbf18eb6048"
+curl "https://bitcoin.toshi.io/api/v0/blocks/00000000839a8e6886ab5951d76f411475428afc90947ee320161bbf18eb6048"
 ```
 
 > The above command returns JSON structured like this:
@@ -180,12 +180,12 @@ This endpoint retrieves block by hash or height.
 
 ### HTTP Request
 
-`GET https://network.coinbase.com/api/<version>/blocks/<hash or height>`
+`GET https://bitcoin.toshi.io/api/<version>/blocks/<hash or height>`
 
 ## Get block transactions
 
 ```shell
-curl "https://network.coinbase.com/api/v0/blocks/00000000839a8e6886ab5951d76f411475428afc90947ee320161bbf18eb6048/transactions"
+curl "https://bitcoin.toshi.io/api/v0/blocks/00000000839a8e6886ab5951d76f411475428afc90947ee320161bbf18eb6048/transactions"
 ```
 
 > The above command returns JSON structured like this:
@@ -258,14 +258,14 @@ This endpoint retrieves latest block and full transactions list.
 
 ### HTTP Request
 
-`GET https://network.coinbase.com/api/<version>/blocks/<hash or height>/transactions`
+`GET https://bitcoin.toshi.io/api/<version>/blocks/<hash or height>/transactions`
 
 # Transactions
 
 ## Get transaction
 
 ```shell
-curl "https://network.coinbase.com/api/v0/transactions/0e3e2357e806b6cdb1f70b54c3a3a17b6714ee1f0e68bebb44a74b1efd512098"
+curl "https://bitcoin.toshi.io/api/v0/transactions/0e3e2357e806b6cdb1f70b54c3a3a17b6714ee1f0e68bebb44a74b1efd512098"
 ```
 
 > The above command returns JSON structured like this:
@@ -310,12 +310,12 @@ This endpoint retrieves transaction information.
 
 ### HTTP Request
 
-`GET https://network.coinbase.com/api/<version>/transactions/<hash>`
+`GET https://bitcoin.toshi.io/api/<version>/transactions/<hash>`
 
 ## Relay transaction
 
 ```shell
-curl https://network.coinbase.com/api/v0/transactions \
+curl https://bitcoin.toshi.io/api/v0/transactions \
     -d '{"hex": "0100000001ea..."}' \
     -X PUT
 ```
@@ -332,7 +332,7 @@ This endpoint accepts a signed transaction in hex format and sends it to the net
 
 ### HTTP Request
 
-`GET https://network.coinbase.com/api/<version>/transactions/<hash>`
+`GET https://bitcoin.toshi.io/api/<version>/transactions/<hash>`
 
 ### Arguments
 
@@ -349,7 +349,7 @@ hash | string | The newly created transaction hash.
 ## Unconfirmed transactions
 
 ```shell
-curl "https://network.coinbase.com/api/v0/transactions/unconfirmed"
+curl "https://bitcoin.toshi.io/api/v0/transactions/unconfirmed"
 ```
 
 > The above command returns JSON structured like this:
@@ -405,14 +405,14 @@ This endpoint returns a list of unconfirmed transactions
 
 ### HTTP Request
 
-`GET https://network.coinbase.com/api/<version>/transactions/unconfirmed`
+`GET https://bitcoin.toshi.io/api/<version>/transactions/unconfirmed`
 
 # Addresses
 
 ## Get address balance
 
 ```shell
-curl "https://network.coinbase.com/api/v0/addresses/12c6DSiU4Rq3P4ZxziKxzrL5LmMBrzjrJX"
+curl "https://bitcoin.toshi.io/api/v0/addresses/12c6DSiU4Rq3P4ZxziKxzrL5LmMBrzjrJX"
 ```
 
 > The above command returns JSON structured like this:
@@ -433,12 +433,12 @@ This endpoint returns address balance and details
 
 ### HTTP Request
 
-`GET https://network.coinbase.com/api/<version>/addresses/<hash>`
+`GET https://bitcoin.toshi.io/api/<version>/addresses/<hash>`
 
 ## Get address transactions
 
 ```shell
-curl "https://network.coinbase.com/api/v0/addresses/12c6DSiU4Rq3P4ZxziKxzrL5LmMBrzjrJX/transactions"
+curl "https://bitcoin.toshi.io/api/v0/addresses/12c6DSiU4Rq3P4ZxziKxzrL5LmMBrzjrJX/transactions"
 ```
 
 > The above command returns JSON structured like this:
@@ -522,12 +522,12 @@ This endpoint returns address balance and transactions
 
 ### HTTP Request
 
-`GET https://network.coinbase.com/api/<version>/addresses/<hash>/transactions`
+`GET https://bitcoin.toshi.io/api/<version>/addresses/<hash>/transactions`
 
 ## Get address unspent outputs
 
 ```shell
-curl "https://network.coinbase.com/api/v0/addresses/12c6DSiU4Rq3P4ZxziKxzrL5LmMBrzjrJX/unspent_outputs"
+curl "https://bitcoin.toshi.io/api/v0/addresses/12c6DSiU4Rq3P4ZxziKxzrL5LmMBrzjrJX/unspent_outputs"
 ```
 
 > The above command returns JSON structured like this:
@@ -555,7 +555,7 @@ This endpoint returns address unspent outputs
 
 ### HTTP Request
 
-`GET https://network.coinbase.com/api/<version>/addresses/<hash>/unspent_outputs`
+`GET https://bitcoin.toshi.io/api/<version>/addresses/<hash>/unspent_outputs`
 
 # Websockets
 
@@ -600,7 +600,7 @@ Receive notifications when a new block is found.
 
 ### Connection URL
 
-`wss://network.coinbase.com`
+`wss://bitcoin.toshi.io`
 
 ## Subscribe to transactions
 
@@ -643,7 +643,7 @@ Receive notifications when a new transactions is submited to the network.
 
 ### Connection URL
 
-`wss://network.coinbase.com`
+`wss://bitcoin.toshi.io`
 
 ## Fetch latest block
 
@@ -686,7 +686,7 @@ Fetch latest block data.
 
 ### Connection URL
 
-`wss://network.coinbase.com`
+`wss://bitcoin.toshi.io`
 
 ## Fetch latest transaction
 
@@ -729,4 +729,4 @@ Fetch latest submited transaction data.
 
 ### Connection URL
 
-`wss://network.coinbase.com`
+`wss://bitcoin.toshi.io`

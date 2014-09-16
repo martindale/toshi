@@ -17,8 +17,8 @@ from the Bitcoin community.
 
 You can see Toshi running on various networks at the following URLs:
 
-* https://network.coinbase.com/
-* https://testnet3.network.coinbase.com/
+* https://bitcoin.toshi.io/
+* https://testnet3.toshi.io/
 
 ## Features
 
@@ -26,7 +26,7 @@ You can see Toshi running on various networks at the following URLs:
  * Fully passes TheBlueMatt's [regression test suite](https://github.com/TheBlueMatt/test-scripts)
  * PostgeSQL backed (more convenient for web applications and research)
  * JSON, Hex, and Binary API
- * Simple web [interface](https://network.coinbase.com) to monitor node status
+ * Simple web [interface](https://bitcoin.toshi.io) to monitor node status
 
 ## What is a Bitcoin node?
 
@@ -54,7 +54,7 @@ Some examples of queries which Toshi can easily answer, which are not possible w
 
 Coinbase maintains a hosted version of Toshi that you can use at:
 
-**[https://network.coinbase.com](https://network.coinbase.com)**
+**[https://bitcoin.toshi.io](https://bitcoin.toshi.io)**
 
 This is the easiest way to get up and running. You can also run your own version of Toshi as described below.
 
