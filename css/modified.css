@@ -222,7 +222,7 @@ arrows arrow[ar-i="2"] {
   display: inline-block;
   position: absolute;
   right: 36px;
-  bottom: 1px;
+  bottom: -3px;
   font-size: 12px;
   font-weight: bold;
   letter-spacing: 0px;
@@ -426,7 +426,9 @@ div[class*="feature"] > div {
 .quick_api_nav a:hover {
   color: #fff;
 }
-
+.hljs-value {
+  white-space: nowrap;
+}
 .quick_api_nav a.active {
   border-bottom: 2px solid #fff;
   color: #fff;
@@ -441,10 +443,38 @@ div[class*="feature"] > div {
   margin-bottom: 30px;
 }
 .quick_api_link .code,
-.quick_api_code .code {
-  padding: 20px;
-  margin-bottom: 30px;
+.quick_api_code pre {
+  padding: 0;
   background-color: rgba(0, 0, 0, 0.4);
+  border: none;
+  display: block;
+  color: #C6CEDD;
+  overflow: scroll;
+  word-break: break-all;
+  word-wrap: break-word;
+  border-radius: 0;
+}
+.quick_api_link .code {
+  padding: 20px;
+}
+.hljs-number {
+  color: #FF9393;
+}
+.hljs-string {
+  color: #83ACCE;
+}
+code {
+  display: block;
+  background: transparent !important;
+  padding: 20px !important;
+  word-wrap: normal;
+  width: auto !important;
+  overflow-x: scroll;
+  -ms-overflow-style: none;
+  width: 100%;
+}
+.quick_api_code code {
+  white-space: pre !important;
 }
 .quick_api_link h5,
 .quick_api_code h5 {
@@ -467,13 +497,6 @@ div[class*="feature"] > div {
 .link_wraper p {
   color: #C6CEDD;
   margin: 0;
-}
-.quick_api_code pre {
-  background: transparent;
-  border: none;
-  padding: 0;
-  margin: 0;
-  color: #C6CEDD;
 }
 .quick_api h4 {
   padding-bottom: 20px;
@@ -800,10 +823,16 @@ footer a:hover {
     margin-bottom: 0;
     padding-bottom: 0;
   }
+  .btn {
+    margin: 0 10px 10px 5px;
+    padding: 10px 25px;
+    font-size: 13px;
+  }
 }
 @media (max-width: 540px) {
   #header {
     padding: 25px 0 70px;
+    min-height: 300px;
   }
   #header p {
     font-size: 15px;
@@ -830,10 +859,10 @@ footer a:hover {
     display: none;
   }
   #header {
-    padding: 30px 0 0px;
+    padding: 40px 0 0px;
   }
   .logo_placement {
-    margin-bottom: 30px;
+    margin-bottom: 40px;
   }
   #header h1 {
     letter-spacing: 17px;
@@ -859,7 +888,7 @@ footer a:hover {
   }
   #header h1 i {
     right: 20px;
-    bottom: -5px;
+    bottom: -4px;
   }
   #header p {
     font-size: 13px;
@@ -882,7 +911,7 @@ footer a:hover {
     width: 70px;
   }
   arrows {
-    bottom: 5px;
+    bottom: 15px;
   }
   .page_wraper article,
   .page_wraper article.features {
