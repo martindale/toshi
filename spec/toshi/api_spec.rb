@@ -142,7 +142,7 @@ describe Toshi::Web::Api, :type => :request do
       expect(json['sent']).to eq(0)
       expect(json['unconfirmed_received']).to eq(0)
       expect(json['unconfirmed_sent']).to eq(0)
-      expect(json['unconfirmed_balance']).to eq(0)
+      expect(json['unconfirmed_balance']).to eq(5000000000)
     end
   end
 
@@ -157,7 +157,7 @@ describe Toshi::Web::Api, :type => :request do
       expect(json['sent']).to eq(0)
       expect(json['unconfirmed_received']).to eq(0)
       expect(json['unconfirmed_sent']).to eq(0)
-      expect(json['unconfirmed_balance']).to eq(0)
+      expect(json['unconfirmed_balance']).to eq(5000000000)
 
       expect(json['transactions'][0]['hash']).to eq('40d17ca54556e99e1dec77324f99da327c7c6fde243ab069dec1d5b5352fc768')
       expect(json['transactions'][0]['version']).to eq(1)
