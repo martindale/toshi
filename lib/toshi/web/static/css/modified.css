@@ -173,15 +173,29 @@ h1,h2, h3, h4, h5 {
   Header Style
   ========================================================================== */
 header {
-  background-color: #142d5c;
-  background-image: url("../images/toshi_net.png");
-  background-repeat: no-repeat;
-  background-position: center bottom;
-  background-size: 100%;
+  position: relative;
+  background: -webkit-linear-gradient(0deg, #2C7FA2 5%, #25497E 100%); /* Chrome 10+, Saf5.1+ */
+  background:    -moz-linear-gradient(0deg, #2C7FA2 5%, #25497E 100%); /* FF3.6+ */
+  background:     -ms-linear-gradient(0deg, #2C7FA2 5%, #25497E 100%); /* IE10 */
+  background:      -o-linear-gradient(0deg, #2C7FA2 5%, #25497E 100%); /* Opera 11.10+ */
+  background:         linear-gradient(0deg, #2C7FA2 5%, #25497E 100%); /* W3C */
+
   -webkit-transition: all 0.3s ease-in-out;
   -moz-transition: all 0.3s ease-in-out;
   -o-transition: all 0.3s ease-in-out;
   transition: all 0.3s ease-in-out;
+}
+header:before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background-image: url("../images/bg_repeat.png");
+  background-repeat: repeat;
+  background-position: center;
+  background-attachment: fixed;
 }
 
 header .fork {
@@ -280,7 +294,7 @@ header .fork {
 .section_title .left h2 {
   text-align: left;
   margin: 0;
-  color: #132b58;
+  color: #25497E;
   text-transform: uppercase;
   font-family: "proxima-nova-bold", sans-serif;
   display: block;
@@ -383,7 +397,7 @@ header .fork {
 
 .stats_block .block,
 .last_tx .tx {
-  border-top: 2px solid #132b58;
+  border-top: 2px solid #25497E;
   display: block;
   padding: 45px 0;
   color: #333333;
@@ -409,7 +423,7 @@ header .fork {
 
 .stats_block .block_num,
 .last_tx .tx_num {
-  background-color: #132b58;
+  background-color: #25497E;
   padding: 5px 10px;
   position: absolute;
   left: -10px;
