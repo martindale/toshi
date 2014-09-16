@@ -57,10 +57,10 @@ html, body {
 }
 .navbar .navbar-brand {
   float: left;
-  height: 40px;
-  width: 160px;
+  height: 30px;
+  width: 140px;
   display: block;
-  margin: 5px 20px;
+  margin: 10px 20px;
   background-image: url("../images/toshi_logo_full.png");
   background-repeat: no-repeat;
   background-position: center center;
@@ -584,10 +584,10 @@ html, body {
   }
 }
 .highlight .m, .highlight .mf, .highlight .mh, .highlight .mi, .highlight .il, .highlight .mo, .highlight .mb, .highlight .mx {
-  color: #4D6D06;
+  color: #B94646;
 }
 .highlight .s, .highlight .sb, .highlight .sc, .highlight .sd, .highlight .s2, .highlight .sh, .highlight .sx, .highlight .s1 {
-  color: #031830;
+  color: #102C4D;
 }
 .highlight, .highlight .w, .highlight .p {
   color: #272822;
@@ -601,7 +601,7 @@ html, body {
 }
 
 .highlight .s2 {
-  white-space: nowrap
+  white-space: nowrap;
 }
 
 .s2 + .p {
@@ -648,7 +648,7 @@ html, body {
 
   pre {
     @extend %code-font;
-    border: 1px solid rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(0, 0, 0, 0.1);
     border-radius: 3px;
     background-color: #F2F2F3;
   }
