@@ -15,6 +15,7 @@ gem 'sinatra-contrib'
 gem 'puma'
 gem 'faye-websocket'
 gem 'bugsnag-em'
+gem 'scrypt'
 
 group :test do
   gem 'rspec'
