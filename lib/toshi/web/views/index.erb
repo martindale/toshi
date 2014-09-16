@@ -3,13 +3,69 @@
     <div class="col-md-8 col-lg-7">
       <!-- Nav tabs -->
       <ul class="nav nav-tabs" role="tablist">
-        <li class="active"><a href="#block" role="tab" data-toggle="tab">Blocks</a></li>
-        <li><a href="#transaction" role="tab" data-toggle="tab">Transactions</a></li>
+        <li class="active"><a href="#transaction" role="tab" data-toggle="tab">Transactions</a></li>
+        <li><a href="#block" role="tab" data-toggle="tab">Blocks</a></li>
       </ul>
 
       <!-- Tab panes -->
       <div class="tab-content">
-        <div class="tab-pane active" id="block">
+        <div class="tab-pane active" id="transaction">
+          <div class="last_tx">
+            <script id="tx-template" type="text/x-handlebars-template">
+              <div class="tx">
+                <span class="tx_num">Unconfirmed Transaction</span>
+                 <ul class="clearfix">
+                  <li>
+                    <h5>Size</h5>
+                    <span>{{size}}</span>
+                  </li>
+                  {{#if amount}}
+                  <li>
+                    <h5>Amount</h5>
+                    <span>{{amount}}</span>
+                  </li>
+                  {{/if}}
+                  <li>
+                    <h5>Created At</h5>
+                    <span>{{created_at}}</span>
+                  </li>
+                </ul>
+                <div class="clearfix tx_hash">
+                  <h5>Hash</h5>
+                  <a href="/api/v0/transactions/{{hash}}"><span>{{hash}}</span></a>
+                </div>
+              </div>
+            </script>
+            <div class="stats_tx">
+              <% Toshi::Models::UnconfirmedTransaction.offset(0).limit(5).order(Sequel.desc(:id)).each{|tx| %>
+              <div class="tx">
+                <span class="tx_num">Unconfirmed Transaction</span>
+                 <ul class="clearfix">
+                  <li>
+                    <h5>Size</h5>
+                    <span><%= tx.size %></span>
+                  </li>
+                  <% if tx.pool_name == 'memory' %>
+                  <li>
+                    <h5>Amount</h5>
+                    <span><%= "%.8f" % (tx.total_out_value / 1e8) %></span>
+                  </li>
+                  <% end %>
+                  <li>
+                    <h5>Created At</h5>
+                    <span><%= Time.at(tx.created_at).utc %></span>
+                  </li>
+                </ul>
+                <div class="clearfix tx_hash">
+                  <h5>Hash</h5>
+                  <a href="/api/v0/transactions/<%= tx.hsh %>"><span><%= tx.hsh %></span></a>
+                </div>
+              </div>
+              <% } %>
+            </div>
+          </div><!-- last_tx -->
+        </div><!-- tab-pane -->
+        <div class="tab-pane" id="block">
           <div class="last_block">
             <script id="block-template" type="text/x-handlebars-template">
               <div class="block">
@@ -30,7 +86,7 @@
                 </ul>
                 <div class="clearfix block_hash">
                   <h5>Block Hash</h5>
-                  <a href="/api/blocks/{{hash}}" target="_blank"><span>{{hash}}</span></a>
+                  <a href="/api/v0/blocks/{{hash}}" target="_blank"><span>{{hash}}</span></a>
                 </div>
               </div>
             </script>
@@ -54,78 +110,22 @@
                 </ul>
                 <div class="clearfix block_hash">
                   <h5>Block Hash</h5>
-                  <a href="/api/blocks/<%= block.hsh %>" target="_blank"><span><%= block.hsh %></span></a>
+                  <a href="/api/v0/blocks/<%= block.hsh %>" target="_blank"><span><%= block.hsh %></span></a>
                 </div>
               </div>
               <% } %>
             </div>
           </div><!-- last_block -->
         </div><!-- tab-pane -->
-        <div class="tab-pane" id="transaction">
-          <div class="last_tx">
-            <script id="tx-template" type="text/x-handlebars-template">
-              <div class="tx">
-                <span class="tx_num">Unconfirmed {{pool}} pool transaction</span>
-                 <ul class="clearfix">
-                  <li>
-                    <h5>Size</h5>
-                    <span>{{size}}</span>
-                  </li>
-                  {{#if amount}}
-                  <li>
-                    <h5>Amount</h5>
-                    <span>{{amount}}</span>
-                  </li>
-                  {{/if}}
-                  <li>
-                    <h5>Created At</h5>
-                    <span>{{created_at}}</span>
-                  </li>
-                </ul>
-                <div class="clearfix tx_hash">
-                  <h5>Hash</h5>
-                  <a href="/api/transactions/{{hash}}"><span>{{hash}}</span></a>
-                </div>
-              </div>
-            </script>
-            <div class="stats_tx">
-              <% Toshi::Models::UnconfirmedTransaction.offset(0).limit(5).order(Sequel.desc(:id)).each{|tx| %>
-              <div class="tx">
-                <span class="tx_num">Unconfirmed <%= tx.pool_name %> pool transaction</span>
-                 <ul class="clearfix">
-                  <li>
-                    <h5>Size</h5>
-                    <span><%= tx.size %></span>
-                  </li>
-                  <% if tx.pool_name == 'memory' %>
-                  <li>
-                    <h5>Amount</h5>
-                    <span><%= "%.8f" % (tx.total_out_value / 1e8) %></span>
-                  </li>
-                  <% end %>
-                  <li>
-                    <h5>Created At</h5>
-                    <span><%= Time.at(tx.created_at).utc %></span>
-                  </li>
-                </ul>
-                <div class="clearfix tx_hash">
-                  <h5>Hash</h5>
-                  <a href="/api/transactions/<%= tx.hsh %>"><span><%= tx.hsh %></span></a>
-                </div>
-              </div>
-              <% } %>
-            </div>
-          </div><!-- last_tx -->
-        </div><!-- tab-pane -->
       </div><!-- tab-content -->
     </div>
 
     <div class="col-md-4 col-lg-offset-1">
       <div class="toshi_links">
-        <iframe src="http://ghbtns.com/github-btn.html?user=coinbase&repo=toshi&type=watch&count=true"
+        <iframe src="/github-btn.html?user=coinbase&repo=toshi&type=watch&count=true"
         allowtransparency="true" frameborder="0" scrolling="0" width="110" height="20"></iframe>
 
-        <iframe src="http://ghbtns.com/github-btn.html?user=coinbase&repo=toshi&type=fork&count=true"
+        <iframe src="/github-btn.html?user=coinbase&repo=toshi&type=fork&count=true"
         allowtransparency="true" frameborder="0" scrolling="0" width="95" height="20"></iframe>
       </div>
       <div class="section_title clearfix">

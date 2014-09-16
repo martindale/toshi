@@ -13,6 +13,11 @@ module Toshi
       end
 
       def balance
+        total_received - total_sent
+      end
+
+      def utxo_balance
+        # if this isn't the same as the cached balance it's a problem.
         Toshi.db[:unspent_outputs].where(address_id: id).sum(:amount).to_i || 0
       end
 
@@ -53,14 +58,6 @@ module Toshi
         self.class.to_hash_collection([self], options).first
       end
 
-      def total_received
-        Toshi.db[:address_ledger_entries].where(address_id: id, input_id: nil).sum(:amount).to_i
-      end
-
-      def total_sent
-        Toshi.db[:address_ledger_entries].where(address_id: id, output_id: nil).sum(:amount).to_i * -1
-      end
-
       def self.to_hash_collection(addresses, options={})
         Toshi::Utils.sanitize_options(options)
 
@@ -81,7 +78,7 @@ module Toshi
           hash[:unconfirmed_received] = unconfirmed_address ? unconfirmed_address.outputs.sum(:amount).to_i : 0
           hash[:unconfirmed_sent] = unconfirmed_address ? unconfirmed_address.spent_outputs.sum(:amount).to_i : 0
           hash[:unconfirmed_sent] += amount_unconfirmed_spent
-          hash[:unconfirmed_balance] = unconfirmed_address ? unconfirmed_address.balance : 0
+          hash[:unconfirmed_balance] = unconfirmed_address ? unconfirmed_address.balance : address.balance
 
           if options[:show_txs]
             if unconfirmed_address

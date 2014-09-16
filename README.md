@@ -17,8 +17,8 @@ from the Bitcoin community.
 
 You can see Toshi running on various networks at the following URLs:
 
-* https://network.coinbase.com/
-* https://testnet3.network.coinbase.com/
+* https://bitcoin.toshi.io/
+* https://testnet3.toshi.io/
 
 ## Features
 
@@ -26,7 +26,7 @@ You can see Toshi running on various networks at the following URLs:
  * Fully passes TheBlueMatt's [regression test suite](https://github.com/TheBlueMatt/test-scripts)
  * PostgeSQL backed (more convenient for web applications and research)
  * JSON, Hex, and Binary API
- * Simple web [interface](http://network.coinbase.com) to monitor node status
+ * Simple web [interface](https://bitcoin.toshi.io) to monitor node status
 
 ## What is a Bitcoin node?
 
@@ -54,7 +54,7 @@ Some examples of queries which Toshi can easily answer, which are not possible w
 
 Coinbase maintains a hosted version of Toshi that you can use at:
 
-**[http://network.coinbase.com](http://network.coinbase.com)**
+**[https://bitcoin.toshi.io](https://bitcoin.toshi.io)**
 
 This is the easiest way to get up and running. You can also run your own version of Toshi as described below.
 
@@ -64,10 +64,12 @@ Toshi uses [Vagrant](http://www.vagrantup.com/) to install and run all prerequis
 
     $ git clone https://github.com/coinbase/toshi.git
     $ cd toshi
-    $ vagrant up # other useful commands: 'vagrant halt', 'vagrant reload --provision', 'vagrant destroy'
+    $ vagrant up
+    $ createdb -U postgres -h 127.0.0.1 -p 21001 toshi_development
+    $ createdb -U postgres -h 127.0.0.1 -p 21001 toshi_test
     $ gem install bundler
     $ bundle install
-    $ foreman run rake db:create
+    $ bundle exec rake db:migrate
     $ foreman start
     $ open http://localhost:5000/
 
@@ -113,21 +115,21 @@ Any API call which returns as list can also be passed an `offset` or `limit` par
 
 
     # Blocks
-    GET /api/blocks                             # Get a paginated list of blocks
-    GET /api/blocks/<hash>                      # Get a block by hash
-    GET /api/blocks/<height>                    # Get a block by height
-    GET /api/blocks/latest                      # Get the latest block
-    GET /api/blocks/<hash>/transactions         # Get transactions in a block
+    GET /api/v0/blocks                             # Get a paginated list of blocks
+    GET /api/v0/blocks/<hash>                      # Get a block by hash
+    GET /api/v0/blocks/<height>                    # Get a block by height
+    GET /api/v0/blocks/latest                      # Get the latest block
+    GET /api/v0/blocks/<hash>/transactions         # Get transactions in a block
 
     # Transactions
-    GET /api/transactions/<hash>                # Get transaction by hash
-    GET /api/transactions/unconfirmed           # Get list of unconfirmed transactions
-    POST /api/transactions                      # Broadcast a transaction to the network
+    GET /api/v0/transactions/<hash>                # Get transaction by hash
+    GET /api/v0/transactions/unconfirmed           # Get list of unconfirmed transactions
+    POST /api/v0/transactions                      # Broadcast a transaction to the network
 
     # Addresses
-    GET /api/addresses/<hash>                   # Get address balance and details
-    GET /api/addresses/<hash>/transactions      # Get address transactions
-    GET /api/addresses/<hash>/unspent_outputs   # Get unspent outputs on an address
+    GET /api/v0/addresses/<hash>                   # Get address balance and details
+    GET /api/v0/addresses/<hash>/transactions      # Get address transactions
+    GET /api/v0/addresses/<hash>/unspent_outputs   # Get unspent outputs on an address
 
 
 ## Configuration

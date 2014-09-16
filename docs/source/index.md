@@ -5,7 +5,7 @@ language_tabs:
   - shell
 
 toc_footers:
-  - <a href='http://github.com/tripit/slate'>Documentation Powered by Slate</a>
+  - <a href='https://github.com/tripit/slate'>Documentation Powered by Slate</a>
 
 search: true
 ---
@@ -19,7 +19,7 @@ Welcome to the Toshi API! You can use our API to access Toshi API endpoints, whi
 ## Get latest blocks
 
 ```shell
-curl "http://toshi.io/api/blocks"
+curl "https://bitcoin.toshi.io/api/v0/blocks"
 ```
 
 > The above command returns JSON structured like this:
@@ -87,12 +87,12 @@ This endpoint retrieves list of latest blocks.
 
 ### HTTP Request
 
-`GET http://toshi.io/api/blocks`
+`GET https://bitcoin.toshi.io/api/<version>/blocks`
 
 ## Get latest block
 
 ```shell
-curl "http://toshi.io/api/blocks/latest"
+curl "https://bitcoin.toshi.io/api/v0/blocks/latest"
 ```
 
 > The above command returns JSON structured like this:
@@ -134,38 +134,44 @@ This endpoint retrieves latest block.
 
 ### HTTP Request
 
-`GET http://toshi.io/api/blocks/latest`
+`GET https://bitcoin.toshi.io/api/<version>/blocks/latest`
 
 ## Get block by hash or height
 
 ```shell
-curl "http://toshi.io/api/blocks/<hash or height>"
+curl "https://bitcoin.toshi.io/api/v0/blocks/00000000839a8e6886ab5951d76f411475428afc90947ee320161bbf18eb6048"
 ```
 
 > The above command returns JSON structured like this:
 
 ```json
 {
-  "hash": "00000...",
+  "hash": "00000000839a8e6886ab5951d76f411475428afc90947ee320161bbf18eb6048",
   "branch": "main",
-  "previous_block_hash": "00000...",
-  "next_blocks": [],
-  "height": 307596,
-  "confirmations": 0,
-  "merkle_root": "aad54...",
-  "time": "2014-06-24T17:11:39Z",
-  "created_at": "2014-09-08T19:12:20Z",
-  "nonce": 2876412913,
-  "bits": 408005538,
-  "difficulty": 13462580114.52535,
-  "reward": 2500000000,
-  "fees": 4953955,
-  "total_out": 193727634504,
-  "size": 214712,
-  "transactions_count": 300,
-  "version": 2,
+  "previous_block_hash": "000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f",
+  "next_blocks": [
+    {
+      "hash": "000000006a625f06636b8bb6ac7b960a8d03705d1ace08b1a19da3fdcc99ddbd",
+      "branch": "main",
+      "height": 2
+    }
+  ],
+  "height": 1,
+  "confirmations": 320849,
+  "merkle_root": "0e3e2357e806b6cdb1f70b54c3a3a17b6714ee1f0e68bebb44a74b1efd512098",
+  "time": "2009-01-09T02:54:25Z",
+  "created_at": "2014-09-05T01:01:26Z",
+  "nonce": 2573394689,
+  "bits": 486604799,
+  "difficulty": 1,
+  "reward": 5000000000,
+  "fees": 0,
+  "total_out": 5000000000,
+  "size": 215,
+  "transactions_count": 1,
+  "version": 1,
   "transaction_hashes": [
-    "ea59d...",
+    "0e3e2357e806b6cdb1f70b54c3a3a17b6714ee1f0e68bebb44a74b1efd512098"
   ]
 }
 ```
@@ -174,34 +180,34 @@ This endpoint retrieves block by hash or height.
 
 ### HTTP Request
 
-`GET http://toshi.io/api/blocks/<hash or height>`
+`GET https://bitcoin.toshi.io/api/<version>/blocks/<hash or height>`
 
 ## Get block transactions
 
 ```shell
-curl "http://toshi.io/api/blocks/<hash or height>/transactions"
+curl "https://bitcoin.toshi.io/api/v0/blocks/00000000839a8e6886ab5951d76f411475428afc90947ee320161bbf18eb6048/transactions"
 ```
 
 > The above command returns JSON structured like this:
 
 ```json
 {
-  "hash": "00000...",
+  "hash": "00000000839a8e6886ab5951d76f411475428afc90947ee320161bbf18eb6048",
   "branch": "main",
-  "previous_block_hash": "00000...",
+  "previous_block_hash": "000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f",
   "next_blocks": [
     {
-      "hash": "00000...",
+      "hash": "000000006a625f06636b8bb6ac7b960a8d03705d1ace08b1a19da3fdcc99ddbd",
       "branch": "main",
-      "height": 11
+      "height": 2
     }
   ],
-  "height": 10,
-  "confirmations": 308258,
-  "merkle_root": "d3ad3...",
-  "time": "2009-01-09T04:05:52Z",
-  "created_at": "2014-09-05T01:01:27Z",
-  "nonce": 1709518110,
+  "height": 1,
+  "confirmations": 320849,
+  "merkle_root": "0e3e2357e806b6cdb1f70b54c3a3a17b6714ee1f0e68bebb44a74b1efd512098",
+  "time": "2009-01-09T02:54:25Z",
+  "created_at": "2014-09-05T01:01:26Z",
+  "nonce": 2573394689,
   "bits": 486604799,
   "difficulty": 1,
   "reward": 5000000000,
@@ -212,36 +218,36 @@ curl "http://toshi.io/api/blocks/<hash or height>/transactions"
   "version": 1,
   "transactions": [
     {
-      "hash": "d3ad3...",
+      "hash": "0e3e2357e806b6cdb1f70b54c3a3a17b6714ee1f0e68bebb44a74b1efd512098",
       "version": 1,
       "lock_time": 0,
       "size": 134,
       "inputs": [
         {
-          "previous_transaction_hash": "00000...",
+          "previous_transaction_hash": "0000000000000000000000000000000000000000000000000000000000000000",
           "output_index": 4294967295,
           "amount": 5000000000,
-          "coinbase": "04ffff001d0136"
+          "coinbase": "04ffff001d0104"
         }
       ],
       "outputs": [
         {
           "amount": 5000000000,
           "spent": false,
-          "script": "04fcc...",
-          "script_hex": "4104f...",
+          "script": "0496b538e853519c726a2c91e61ec11600ae1390813a627c66fb8be7947be63c52da7589379515d4e0a604f8141781e62294721166bf621e73a82cbf2342c858ee OP_CHECKSIG",
+          "script_hex": "410496b538e853519c726a2c91e61ec11600ae1390813a627c66fb8be7947be63c52da7589379515d4e0a604f8141781e62294721166bf621e73a82cbf2342c858eeac",
           "script_type": "pubkey",
           "addresses": [
-            "15yN7NPEpu82sHhB6TzCW5z5aXoamiKeGy"
+            "12c6DSiU4Rq3P4ZxziKxzrL5LmMBrzjrJX"
           ]
         }
       ],
       "amount": 5000000000,
       "fees": 0,
-      "confirmations": 308258,
-      "block_height": 10,
-      "block_hash": "00000...",
-      "block_time": "2009-01-09T04:05:52Z",
+      "confirmations": 320849,
+      "block_height": 1,
+      "block_hash": "00000000839a8e6886ab5951d76f411475428afc90947ee320161bbf18eb6048",
+      "block_time": "2009-01-09T02:54:25Z",
       "block_branch": "main"
     }
   ]
@@ -252,51 +258,50 @@ This endpoint retrieves latest block and full transactions list.
 
 ### HTTP Request
 
-`GET http://toshi.io/api/blocks/<hash or height>/transactions`
+`GET https://bitcoin.toshi.io/api/<version>/blocks/<hash or height>/transactions`
 
 # Transactions
 
 ## Get transaction
 
 ```shell
-curl "http://toshi.io/api/transactions/<hash>"
+curl "https://bitcoin.toshi.io/api/v0/transactions/0e3e2357e806b6cdb1f70b54c3a3a17b6714ee1f0e68bebb44a74b1efd512098"
 ```
 
 > The above command returns JSON structured like this:
 
 ```json
 {
-  "hash": "2eaa7...",
+  "hash": "0e3e2357e806b6cdb1f70b54c3a3a17b6714ee1f0e68bebb44a74b1efd512098",
   "version": 1,
   "lock_time": 0,
-  "size": 157,
+  "size": 134,
   "inputs": [
     {
-      "previous_transaction_hash": "00000...",
+      "previous_transaction_hash": "0000000000000000000000000000000000000000000000000000000000000000",
       "output_index": 4294967295,
-      "sequence": 0,
-      "amount": 2500000000,
-      "coinbase": "03c6b..."
+      "amount": 5000000000,
+      "coinbase": "04ffff001d0104"
     }
   ],
   "outputs": [
     {
-      "amount": 2509020981,
+      "amount": 5000000000,
       "spent": false,
-      "script": "OP_DUP...",
-      "script_hex": "76a91...",
-      "script_type": "hash160",
+      "script": "0496b538e853519c726a2c91e61ec11600ae1390813a627c66fb8be7947be63c52da7589379515d4e0a604f8141781e62294721166bf621e73a82cbf2342c858ee OP_CHECKSIG",
+      "script_hex": "410496b538e853519c726a2c91e61ec11600ae1390813a627c66fb8be7947be63c52da7589379515d4e0a604f8141781e62294721166bf621e73a82cbf2342c858eeac",
+      "script_type": "pubkey",
       "addresses": [
-        "1CjPR7Z5ZSyWk6WtXvSFgkptmpoi4UM9BC"
+        "12c6DSiU4Rq3P4ZxziKxzrL5LmMBrzjrJX"
       ]
     }
   ],
-  "amount": 2509020981,
+  "amount": 5000000000,
   "fees": 0,
-  "confirmations": 6,
-  "block_height": 309958,
-  "block_hash": "00000...",
-  "block_time": "2014-07-09T17:09:48Z",
+  "confirmations": 320849,
+  "block_height": 1,
+  "block_hash": "00000000839a8e6886ab5951d76f411475428afc90947ee320161bbf18eb6048",
+  "block_time": "2009-01-09T02:54:25Z",
   "block_branch": "main"
 }
 ```
@@ -305,12 +310,12 @@ This endpoint retrieves transaction information.
 
 ### HTTP Request
 
-`GET http://toshi.io/api/transactions/<hash>`
+`GET https://bitcoin.toshi.io/api/<version>/transactions/<hash>`
 
 ## Relay transaction
 
 ```shell
-curl https://toshi.io/api/transactions \
+curl https://bitcoin.toshi.io/api/v0/transactions \
     -d '{"hex": "0100000001ea..."}' \
     -X PUT
 ```
@@ -327,7 +332,7 @@ This endpoint accepts a signed transaction in hex format and sends it to the net
 
 ### HTTP Request
 
-`GET http://toshi.io/api/transactions/<hash>`
+`GET https://bitcoin.toshi.io/api/<version>/transactions/<hash>`
 
 ### Arguments
 
@@ -344,7 +349,7 @@ hash | string | The newly created transaction hash.
 ## Unconfirmed transactions
 
 ```shell
-curl "http://toshi.io/api/transactions/unconfirmed"
+curl "https://bitcoin.toshi.io/api/v0/transactions/unconfirmed"
 ```
 
 > The above command returns JSON structured like this:
@@ -352,44 +357,43 @@ curl "http://toshi.io/api/transactions/unconfirmed"
 ```json
 [
   {
-    "hash": "33ba6...",
+    "hash": "2555e6ce792de8060e0128f613898a089ef76d4772e995cfec559b5cb09fe0e1",
     "version": 1,
     "lock_time": 0,
-    "size": 192,
+    "size": 403,
     "inputs": [
       {
-        "previous_transaction_hash": "3f1d2...",
-        "output_index": 0,
-        "amount": 5000000000,
-        "script": "30450...",
+        "previous_transaction_hash": "38c1e2ed3bc97505f7087d4e4c3c8573ba6a3c0dd213a697d77362e9a00eb0d4",
+        "output_index": 4,
+        "amount": 6150,
+        "script": "3044022061419e5a780cf3df182c8a22345bc607385e7566c1dd1b27a4482cb9e540c51902200f87da133fa7dc298df4d1da382be914362206600b012083837fb6e99bbdec0901 042ce9a47c8ef78395e64e454d72898c522443adddbd4fe7adfd6d7b6a19f2603cb555f54e70a78b32a07c6ee2c1624dc85a2b397b3bfe8d4651baf0e7745dae84",
         "addresses": [
-          "1E3hS1LuZYgqqbzhSr87CQxoQWzcYb5XuA"
+          "1D7A41TZFdEfkgvX3rJRWaodRyby7aeoMx"
+        ]
+      },
+      {
+        "previous_transaction_hash": "91f6428581eb2ee287415238c64d043d21db2ab9918cf81f9d62413a57ab8dbf",
+        "output_index": 27,
+        "amount": 5620,
+        "script": "3045022100a9bdd2d33e9d7f3e33559855f8127f0ff4282457d88263a7e832636eb6963d4902201acde649f156967c3c52cf86383ab956d5418c143adf3e268e27019e55dcdf9e01 042ce9a47c8ef78395e64e454d72898c522443adddbd4fe7adfd6d7b6a19f2603cb555f54e70a78b32a07c6ee2c1624dc85a2b397b3bfe8d4651baf0e7745dae84",
+        "addresses": [
+          "1D7A41TZFdEfkgvX3rJRWaodRyby7aeoMx"
         ]
       }
     ],
     "outputs": [
-      {
-        "amount": 50000000,
-        "spent": true,
-        "script": "OP_DUP...",
-        "script_hex": "76a91...",
-        "script_type": "hash160",
-        "addresses": [
-          "1K37W5r7qSN2dWRYMv1PuXGSjoHgrVoieg"
-        ]
-      },
-      {
-        "amount": 4950000000,
-        "spent": false,
-        "script": "OP_DUP...",
-        "script_hex": "76a91...",
-        "script_type": "hash160",
-        "addresses": [
-          "1H53U7XocygtWd1dYv3YwgapfEHyoS94KH"
-        ]
-      }
+    {
+      "amount": 11770,
+      "spent": false,
+      "script": "OP_DUP OP_HASH160 2aa131bc2ef23c552edba80f8af020b996afbd5e OP_EQUALVERIFY OP_CHECKSIG",
+      "script_hex": "76a9142aa131bc2ef23c552edba80f8af020b996afbd5e88ac",
+      "script_type": "hash160",
+      "addresses": [
+        "14tQV2qSYKn8yFmsU9tuRkwK6RoMZqyDLA"
+      ]
+    }
     ],
-    "amount": 5000000000,
+    "amount": 11770,
     "fees": 0,
     "confirmations": 0,
     "pool": "memory"
@@ -401,14 +405,14 @@ This endpoint returns a list of unconfirmed transactions
 
 ### HTTP Request
 
-`GET http://toshi.io/api/addresses/<hash>`
+`GET https://bitcoin.toshi.io/api/<version>/transactions/unconfirmed`
 
 # Addresses
 
 ## Get address balance
 
 ```shell
-curl "http://toshi.io/api/addresses/12c6DSiU4Rq3P4ZxziKxzrL5LmMBrzjrJX"
+curl "https://bitcoin.toshi.io/api/v0/addresses/12c6DSiU4Rq3P4ZxziKxzrL5LmMBrzjrJX"
 ```
 
 > The above command returns JSON structured like this:
@@ -429,12 +433,12 @@ This endpoint returns address balance and details
 
 ### HTTP Request
 
-`GET http://toshi.io/api/addresses/<hash>`
+`GET https://bitcoin.toshi.io/api/<version>/addresses/<hash>`
 
 ## Get address transactions
 
 ```shell
-curl "http://toshi.io/api/addresses/12c6DSiU4Rq3P4ZxziKxzrL5LmMBrzjrJX/transactions"
+curl "https://bitcoin.toshi.io/api/v0/addresses/12c6DSiU4Rq3P4ZxziKxzrL5LmMBrzjrJX/transactions"
 ```
 
 > The above command returns JSON structured like this:
@@ -518,12 +522,12 @@ This endpoint returns address balance and transactions
 
 ### HTTP Request
 
-`GET http://toshi.io/api/addresses/<hash>/transactions`
+`GET https://bitcoin.toshi.io/api/<version>/addresses/<hash>/transactions`
 
 ## Get address unspent outputs
 
 ```shell
-curl "http://toshi.io/api/addresses/12c6DSiU4Rq3P4ZxziKxzrL5LmMBrzjrJX/unspent_outputs"
+curl "https://bitcoin.toshi.io/api/v0/addresses/12c6DSiU4Rq3P4ZxziKxzrL5LmMBrzjrJX/unspent_outputs"
 ```
 
 > The above command returns JSON structured like this:
@@ -551,7 +555,7 @@ This endpoint returns address unspent outputs
 
 ### HTTP Request
 
-`GET http://toshi.io/api/addresses/<hash>/unspent_outputs`
+`GET https://bitcoin.toshi.io/api/<version>/addresses/<hash>/unspent_outputs`
 
 # Websockets
 
@@ -596,7 +600,7 @@ Receive notifications when a new block is found.
 
 ### Connection URL
 
-`ws://toshi.io`
+`wss://bitcoin.toshi.io`
 
 ## Subscribe to transactions
 
@@ -639,7 +643,7 @@ Receive notifications when a new transactions is submited to the network.
 
 ### Connection URL
 
-`ws://toshi.io`
+`wss://bitcoin.toshi.io`
 
 ## Fetch latest block
 
@@ -682,7 +686,7 @@ Fetch latest block data.
 
 ### Connection URL
 
-`ws://toshi.io`
+`wss://bitcoin.toshi.io`
 
 ## Fetch latest transaction
 
@@ -725,4 +729,4 @@ Fetch latest submited transaction data.
 
 ### Connection URL
 
-`ws://toshi.io`
+`wss://bitcoin.toshi.io`

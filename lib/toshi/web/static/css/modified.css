@@ -409,12 +409,6 @@ header .fork {
   transition: all 0.3s ease-in-out;
 }
 
-.stats_block:hover .block,
-.stats_tx:hover .tx {
-  filter: alpha(opacity=30);
-  opacity: .3;
-}
-
 .stats_block .block:hover,
 .stats_tx .tx:hover {
   filter: alpha(opacity=100);
