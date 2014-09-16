@@ -405,7 +405,7 @@ This endpoint returns a list of unconfirmed transactions
 
 ### HTTP Request
 
-`GET https://network.coinbase.com/api/<version>/addresses/<hash>`
+`GET https://network.coinbase.com/api/<version>/transactions/unconfirmed`
 
 # Addresses
 
