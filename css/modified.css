@@ -218,16 +218,6 @@ arrows arrow[ar-i="2"] {
   position: relative;
   margin-right: -1%;
 }
-#header h1 i {
-  display: inline-block;
-  position: absolute;
-  right: 36px;
-  bottom: -3px;
-  font-size: 12px;
-  font-weight: bold;
-  letter-spacing: 0px;
-  color: rgba(255, 255, 255, 0.701961);
-}
 #header h1 {
   -webkit-animation-name: fadeInUp;
   animation-name: fadeInUp;
