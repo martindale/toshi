@@ -197,7 +197,7 @@ arrows arrow[ar-i="2"] {
   background-repeat: no-repeat;
   background-position: fixed;
   background-size: 100%;
-  margin: 0 auto;
+  margin: 0 auto 20px;
 
   -webkit-animation-name: fadeInDown;
   animation-name: fadeInDown;
