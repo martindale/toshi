@@ -470,7 +470,15 @@ code {
   -ms-overflow-style: none;
   width: 100%;
 }
-.quick_api_code code {
+pre code {
+  padding: 0;
+  font-size: inherit;
+  color: inherit;
+  white-space: pre-wrap;
+  background-color: transparent;
+  border-radius: 0;
+}
+.quick_api_code pre code {
   white-space: pre !important;
 }
 .quick_api_link h5,
