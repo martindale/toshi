@@ -26,7 +26,7 @@ You can see Toshi running on various networks at the following URLs:
  * Fully passes TheBlueMatt's [regression test suite](https://github.com/TheBlueMatt/test-scripts)
  * PostgeSQL backed (more convenient for web applications and research)
  * JSON, Hex, and Binary API
- * Simple web [interface](http://network.coinbase.com) to monitor node status
+ * Simple web [interface](https://network.coinbase.com) to monitor node status
 
 ## What is a Bitcoin node?
 
@@ -54,7 +54,7 @@ Some examples of queries which Toshi can easily answer, which are not possible w
 
 Coinbase maintains a hosted version of Toshi that you can use at:
 
-**[http://network.coinbase.com](http://network.coinbase.com)**
+**[https://network.coinbase.com](https://network.coinbase.com)**
 
 This is the easiest way to get up and running. You can also run your own version of Toshi as described below.
 
@@ -64,10 +64,12 @@ Toshi uses [Vagrant](http://www.vagrantup.com/) to install and run all prerequis
 
     $ git clone https://github.com/coinbase/toshi.git
     $ cd toshi
-    $ vagrant up # other useful commands: 'vagrant halt', 'vagrant reload --provision', 'vagrant destroy'
+    $ vagrant up
+    $ createdb -U postgres -h 127.0.0.1 -p 21001 toshi_development
+    $ createdb -U postgres -h 127.0.0.1 -p 21001 toshi_test
     $ gem install bundler
     $ bundle install
-    $ foreman run rake db:create
+    $ bundle exec rake db:migrate
     $ foreman start
     $ open http://localhost:5000/
 
