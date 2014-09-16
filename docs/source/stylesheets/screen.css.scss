@@ -74,11 +74,12 @@ html, body {
   padding: 17px 0;
   a {
     color: #fff;
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
     text-decoration: none;
     padding: 0 10px;
-    font-size: 12px;
-    font-weight: bold;
-    opacity: .5;
+    font-size: 14px;
+    opacity: .8;
+    font-weight: 400;
   }
   a:hover {
     opacity: 1;
