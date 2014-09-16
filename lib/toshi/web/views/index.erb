@@ -30,7 +30,7 @@
                 </ul>
                 <div class="clearfix block_hash">
                   <h5>Block Hash</h5>
-                  <a href="/api/blocks/{{hash}}" target="_blank"><span>{{hash}}</span></a>
+                  <a href="/api/v0/blocks/{{hash}}" target="_blank"><span>{{hash}}</span></a>
                 </div>
               </div>
             </script>
@@ -54,7 +54,7 @@
                 </ul>
                 <div class="clearfix block_hash">
                   <h5>Block Hash</h5>
-                  <a href="/api/blocks/<%= block.hsh %>" target="_blank"><span><%= block.hsh %></span></a>
+                  <a href="/api/v0/blocks/<%= block.hsh %>" target="_blank"><span><%= block.hsh %></span></a>
                 </div>
               </div>
               <% } %>
@@ -84,7 +84,7 @@
                 </ul>
                 <div class="clearfix tx_hash">
                   <h5>Hash</h5>
-                  <a href="/api/transactions/{{hash}}"><span>{{hash}}</span></a>
+                  <a href="/api/v0/transactions/{{hash}}"><span>{{hash}}</span></a>
                 </div>
               </div>
             </script>
@@ -110,7 +110,7 @@
                 </ul>
                 <div class="clearfix tx_hash">
                   <h5>Hash</h5>
-                  <a href="/api/transactions/<%= tx.hsh %>"><span><%= tx.hsh %></span></a>
+                  <a href="/api/v0/transactions/<%= tx.hsh %>"><span><%= tx.hsh %></span></a>
                 </div>
               </div>
               <% } %>
