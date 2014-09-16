@@ -374,18 +374,19 @@
   <script src="js/bootstrap.js"></script>
   <script type="text/javascript">
     $(document).ready(function(){
-      $('.quick_api_code > pre').each(function(i, el) {
-        $(el).html(library.json.prettyPrint($(el).html()))
-      });
-
       $('.quick_api_nav a').on('click', function(){
         $('.quick_api_nav a').removeClass('active');
         $(this).addClass('active');
         $('.section').removeClass('active');
         $('#'+$(this).data('section')+'.section').addClass('active');
       });
-    })
 
+      $("#scrollTriger").click(function() {
+        $('html, body').animate({
+          scrollTop: $("#scrollToId").offset().top
+        }, 1000);
+      });
+    })
     $(window).scroll(function () {
         if ($(window).scrollTop() >= 150) {
             $('arrows').fadeOut('slow');
@@ -398,14 +399,6 @@
        $('#header').height($(window).height());
     });
     $('#header').height($(window).height());
-
-
-    $("#scrollTriger").click(function() {
-        $('html, body').animate({
-            scrollTop: $("#scrollToId").offset().top
-        }, 1000);
-    });
-
   </script>
 </body>
 </html>
