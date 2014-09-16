@@ -426,9 +426,6 @@ div[class*="feature"] > div {
 .quick_api_nav a:hover {
   color: #fff;
 }
-.hljs-value {
-  white-space: nowrap;
-}
 .quick_api_nav a.active {
   border-bottom: 2px solid #fff;
   color: #fff;
@@ -929,8 +926,8 @@ footer a:hover {
   arrows arrow[ar-i="1"],
   arrows arrow[ar-i="2"] {
     display: none;
-  } 
-  
+  }
+
 }
 @media (max-height: 500px) {
   #header .toshi_logo {
