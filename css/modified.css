@@ -503,6 +503,11 @@ pre code {
   color: #C6CEDD;
   margin: 0;
 }
+.link_wraper p a {
+  color: #C6CEDD;
+  margin: 0;
+  text-decoration: none;
+}
 .quick_api h4 {
   padding-bottom: 20px;
   margin-bottom: 20px;
